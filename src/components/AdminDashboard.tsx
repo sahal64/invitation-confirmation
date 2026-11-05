@@ -322,29 +322,29 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
   // ---------------------------------------------------------------------------
   if (!isAuthenticated) {
     return (
-      <div className="max-w-md mx-auto px-4 py-16">
+      <div className="max-w-md mx-auto px-3 sm:px-4 py-8 sm:py-16">
         <div className="bg-white rounded-2xl shadow-xl shadow-slate-900/5 border border-slate-200 overflow-hidden">
           <div className="h-3 bg-gradient-to-r from-slate-900 via-emerald-800 to-slate-900" />
-          <div className="p-8">
-            <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center text-slate-800 mb-6 ring-4 ring-slate-50">
-              <Lock className="w-6 h-6 text-emerald-600" />
+          <div className="p-5 sm:p-8">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 bg-slate-100 rounded-xl flex items-center justify-center text-slate-800 mb-5 sm:mb-6 ring-4 ring-slate-50">
+              <Lock className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600" />
             </div>
 
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
               {t.adminLoginTitle}
             </h1>
-            <p className="text-xs text-slate-500 mt-1.5 mb-6">
+            <p className="text-xs text-slate-500 mt-1 mb-5 sm:mb-6">
               {t.adminLoginSubtitle}
             </p>
 
             {loginError && (
-              <div className="mb-6 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+              <div className="mb-5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
                 <span>{loginError}</span>
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-3.5 sm:space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
                   {t.adminEmailLabel}
@@ -376,7 +376,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
               <button
                 type="submit"
                 disabled={loginLoading}
-                className="w-full mt-2 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-md"
+                className="w-full mt-2 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-md active:scale-95"
               >
                 {loginLoading ? (
                   <span>{t.adminLoggingIn}</span>
@@ -391,14 +391,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
 
             {/* Dev helper only visible in local development */}
             {import.meta.env.DEV && (
-              <div className="mt-6 pt-5 border-t border-slate-100">
+              <div className="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => {
                     setLoginEmail('admin@event.local');
                     setLoginPassword('admin123');
                   }}
-                  className="w-full py-2 px-3 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs transition-colors"
+                  className="w-full py-2.5 px-3 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs transition-colors"
                 >
                   Quick Fill Test Credentials (admin@event.local / admin123)
                 </button>
@@ -414,29 +414,29 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
   // AUTHENTICATED ADMIN DASHBOARD VIEW
   // ---------------------------------------------------------------------------
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-6">
       {/* Top Header Card */}
       <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
         <div className="h-1.5 bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-700" />
-        <div className="p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+        <div className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="space-y-1 w-full sm:w-auto">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
                 <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
                 <span>National Day 2026</span>
               </span>
-              <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+              <h1 className="text-lg xs:text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-tight">
                 {t.adminTitle}
               </h1>
             </div>
             <p className="text-xs sm:text-sm text-slate-500">{t.adminSubtitle}</p>
           </div>
 
-          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
-            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <div className="text-left">
-                <div className="text-xs font-bold text-slate-800 truncate max-w-[160px] sm:max-w-[200px]">
+          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-2.5 sm:px-3 py-1.5 rounded-xl min-w-0 flex-1 sm:flex-initial">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
+              <div className="min-w-0">
+                <div className="text-xs font-bold text-slate-800 truncate max-w-[140px] xs:max-w-[180px] sm:max-w-[200px]">
                   {adminEmail || t.administrator}
                 </div>
                 <div className="text-[10px] text-slate-400 font-medium leading-none">Online &bull; Admin</div>
@@ -445,7 +445,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
 
             <button
               onClick={handleLogout}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 hover:border-rose-200 hover:bg-rose-50 text-slate-600 hover:text-rose-700 text-xs font-semibold transition-all shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 hover:border-rose-200 hover:bg-rose-50 text-slate-700 hover:text-rose-700 text-xs font-bold transition-all shadow-xs flex-shrink-0 active:scale-95"
               title="Sign out"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -456,20 +456,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
       </div>
 
       {/* Navigation Tabs Switcher */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-        <div className="inline-flex p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80">
+      <div className="flex flex-col xs:flex-row items-stretch xs:items-center justify-between gap-2.5 border-b border-slate-200 pb-3">
+        <div className="grid grid-cols-2 xs:inline-flex p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80 w-full xs:w-auto">
           <button
             onClick={() => setActiveTab('submissions')}
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+            className={`inline-flex items-center justify-center xs:justify-start gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
               activeTab === 'submissions'
                 ? 'bg-white text-emerald-800 shadow-sm border border-slate-200/60'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Users className="w-4 h-4 text-emerald-600" />
-            <span>{t.tabSubmissions}</span>
+            <Users className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+            <span className="truncate">{t.tabSubmissions}</span>
             <span
-              className={`px-2 py-0.5 rounded-full text-xs font-extrabold ${
+              className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-extrabold ${
                 activeTab === 'submissions'
                   ? 'bg-emerald-100 text-emerald-800'
                   : 'bg-slate-200 text-slate-600'
@@ -481,16 +481,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
 
           <button
             onClick={() => setActiveTab('organisations')}
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+            className={`inline-flex items-center justify-center xs:justify-start gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
               activeTab === 'organisations'
                 ? 'bg-white text-emerald-800 shadow-sm border border-slate-200/60'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Building2 className="w-4 h-4 text-emerald-600" />
-            <span>{t.tabOrganisations}</span>
+            <Building2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+            <span className="truncate">{t.tabOrganisations}</span>
             <span
-              className={`px-2 py-0.5 rounded-full text-xs font-extrabold ${
+              className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-extrabold ${
                 activeTab === 'organisations'
                   ? 'bg-emerald-100 text-emerald-800'
                   : 'bg-slate-200 text-slate-600'
@@ -504,11 +504,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
         <button
           onClick={loadData}
           disabled={loadingData}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-white text-slate-600 text-xs font-semibold transition-all shadow-sm disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 bg-white/70 hover:bg-white text-slate-700 text-xs font-semibold transition-all shadow-xs disabled:opacity-50 active:scale-95 flex-shrink-0"
           title="Refresh Data"
         >
           <RotateCcw className={`w-3.5 h-3.5 ${loadingData ? 'animate-spin text-emerald-600' : 'text-slate-500'}`} />
-          <span className="hidden sm:inline">Refresh</span>
+          <span>Refresh</span>
         </button>
       </div>
 
@@ -516,10 +516,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
         /* ========================================================================= */
         /* DYNAMIC ORGANISATIONS MANAGEMENT VIEW                                    */
         /* ========================================================================= */
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Add Organisation Section */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3.5 sm:mb-4">
               <div>
                 <h2 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
                   <Building2 className="w-5 h-5 text-emerald-600" />
@@ -534,7 +534,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
               </span>
             </div>
 
-            <form onSubmit={handleAddOrg} className="flex flex-col sm:flex-row gap-2.5">
+            <form onSubmit={handleAddOrg} className="flex flex-col sm:flex-row gap-2">
               <div className="relative flex-1">
                 <Building2 className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
@@ -542,13 +542,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                   value={newOrgName}
                   onChange={(e) => setNewOrgName(e.target.value)}
                   placeholder={t.addOrganisationPlaceholder}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm bg-slate-50/50 focus:bg-white transition-all"
+                  className="w-full h-11 pl-10 pr-4 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm bg-slate-50/50 focus:bg-white transition-all"
                 />
               </div>
               <button
                 type="submit"
                 disabled={!newOrgName.trim()}
-                className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold text-xs sm:text-sm shadow-sm transition-all flex-shrink-0"
+                className="h-11 inline-flex items-center justify-center gap-1.5 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-bold text-xs sm:text-sm shadow-sm transition-all flex-shrink-0 active:scale-95"
               >
                 <Plus className="w-4 h-4" />
                 <span>{t.addOrganisationButton}</span>
@@ -576,20 +576,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
           {/* Compact Organisations Directory Grid */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
             {/* Search and Reset Toolbar */}
-            <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-              <div className="relative flex-1 max-w-md">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <div className="p-3.5 sm:p-5 border-b border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
+              <div className="relative flex-1 max-w-full sm:max-w-md">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   value={orgSearch}
                   onChange={(e) => setOrgSearch(e.target.value)}
                   placeholder={t.searchOrganisationsPlaceholder}
-                  className="w-full pl-9 pr-8 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm bg-white"
+                  className="w-full h-10 pl-9 pr-8 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm bg-white"
                 />
                 {orgSearch && (
                   <button
                     onClick={() => setOrgSearch('')}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
                     title="Clear search"
                   >
                     <X className="w-3.5 h-3.5" />
@@ -604,7 +604,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                 <button
                   type="button"
                   onClick={handleResetDemoOrgs}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-300 hover:bg-white text-slate-700 text-xs font-semibold shadow-sm transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-xs transition-colors active:scale-95"
                   title="Reset to 20 default demo organisations"
                 >
                   <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
@@ -628,14 +628,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                 )}
               </div>
             ) : (
-              <div className="p-4 sm:p-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5">
+              <div className="p-3.5 sm:p-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-2.5">
                   {filteredOrganisations.map((org, index) => {
                     const isEditing = editingOrg === org;
                     return (
                       <div
                         key={org}
-                        className={`group flex items-center justify-between gap-2 px-3 py-2 rounded-xl border transition-all bg-white shadow-xs ${
+                        className={`group flex items-center justify-between gap-2 px-3 py-2 rounded-xl border transition-all bg-white shadow-xs min-h-[44px] ${
                           isEditing
                             ? 'border-emerald-500 ring-2 ring-emerald-500/20 bg-emerald-50/20'
                             : 'border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/30'
@@ -643,7 +643,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                       >
                         {isEditing ? (
                           <div className="flex items-center gap-1.5 w-full">
-                            <span className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-800 font-mono text-[11px] font-bold flex items-center justify-center flex-shrink-0 border border-emerald-200">
+                            <span className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-800 font-mono text-[10px] sm:text-[11px] font-bold flex items-center justify-center flex-shrink-0 border border-emerald-200">
                               {String(index + 1).padStart(2, '0')}
                             </span>
                             <input
@@ -659,23 +659,23 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                                 }
                               }}
                               autoFocus
-                              className="flex-1 min-w-0 px-2 py-1 rounded-lg border border-emerald-300 text-xs sm:text-sm text-slate-900 font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-white"
+                              className="flex-1 min-w-0 h-9 px-2.5 rounded-lg border border-emerald-400 text-xs sm:text-sm text-slate-900 font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-white"
                             />
                             <button
                               type="button"
                               onClick={() => handleSaveEditOrg(org)}
-                              className="p-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-colors flex-shrink-0"
+                              className="w-9 h-9 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-colors flex items-center justify-center flex-shrink-0 active:scale-95"
                               title="Save changes (Enter)"
                             >
-                              <Check className="w-3.5 h-3.5" />
+                              <Check className="w-4 h-4" />
                             </button>
                             <button
                               type="button"
                               onClick={handleCancelEditOrg}
-                              className="p-1 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 transition-colors flex-shrink-0"
+                              className="w-9 h-9 rounded-lg border border-slate-300 hover:bg-slate-100 text-slate-600 transition-colors flex items-center justify-center flex-shrink-0 active:scale-95"
                               title="Cancel (Esc)"
                             >
-                              <X className="w-3.5 h-3.5" />
+                              <X className="w-4 h-4" />
                             </button>
                           </div>
                         ) : (
@@ -689,11 +689,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                               </span>
                             </div>
 
-                            <div className="flex items-center gap-0.5 flex-shrink-0">
+                            <div className="flex items-center gap-1 flex-shrink-0">
                               <button
                                 type="button"
                                 onClick={() => handleStartEditOrg(org)}
-                                className="p-1 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 transition-colors opacity-80 group-hover:opacity-100"
+                                className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 transition-colors active:scale-95"
                                 title={`Edit "${org}"`}
                                 aria-label={`Edit ${org}`}
                               >
@@ -702,7 +702,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                               <button
                                 type="button"
                                 onClick={() => handleDeleteOrg(org)}
-                                className="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors opacity-80 group-hover:opacity-100"
+                                className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors active:scale-95"
                                 title={`Delete "${org}"`}
                                 aria-label={`Delete ${org}`}
                               >
@@ -738,7 +738,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
 
           {/* Database Error Banner */}
           {dataError && (
-            <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 text-xs text-rose-900 flex items-center justify-between gap-3">
+            <div className="bg-rose-50 border border-rose-200 rounded-2xl p-3.5 sm:p-4 text-xs text-rose-900 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <AlertCircle className="w-5 h-5 text-rose-600 flex-shrink-0" />
                 <span>
@@ -755,87 +755,87 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
           )}
 
           {/* Modern 4-Card Analytics Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
             {/* Total Submissions */}
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+                <span className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wide truncate">
                   {t.totalSubmissions}
                 </span>
-                <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
-                  <Users className="w-4 h-4" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center flex-shrink-0">
+                  <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
               </div>
-              <div className="mt-3">
-                <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              <div className="mt-2.5 sm:mt-3">
+                <div className="text-xl xs:text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                   {stats.total}
                 </div>
-                <div className="text-[11px] text-slate-400 font-medium mt-0.5">
+                <div className="text-[10px] sm:text-[11px] text-slate-400 font-medium mt-0.5 truncate">
                   Total RSVPs received
                 </div>
               </div>
             </div>
 
             {/* Confirmed Attending */}
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-emerald-200/80 shadow-sm flex flex-col justify-between">
+            <div className="bg-white p-3 sm:p-5 rounded-2xl border border-emerald-200/80 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-emerald-700 uppercase tracking-wide">
+                <span className="text-[10px] sm:text-xs font-bold text-emerald-700 uppercase tracking-wide truncate">
                   {t.attendingCount}
                 </span>
-                <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
-                  <UserCheck className="w-4 h-4" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0">
+                  <UserCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
               </div>
-              <div className="mt-3">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl sm:text-3xl font-black text-emerald-700 tracking-tight">
+              <div className="mt-2.5 sm:mt-3">
+                <div className="flex items-baseline gap-1.5 sm:gap-2 flex-wrap">
+                  <span className="text-xl xs:text-2xl sm:text-3xl font-black text-emerald-700 tracking-tight">
                     {stats.attending}
                   </span>
-                  <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
+                  <span className="text-[10px] sm:text-xs font-bold text-emerald-700 bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded border border-emerald-100">
                     {stats.total > 0 ? Math.round((stats.attending / stats.total) * 100) : 0}%
                   </span>
                 </div>
-                <div className="text-[11px] text-emerald-600/80 font-medium mt-0.5">
+                <div className="text-[10px] sm:text-[11px] text-emerald-600/80 font-medium mt-0.5 truncate">
                   Confirmed primary guests
                 </div>
               </div>
             </div>
 
             {/* Total Headcount (Attending + Accompanied Guests) */}
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-teal-200/80 shadow-sm flex flex-col justify-between">
+            <div className="bg-white p-3 sm:p-5 rounded-2xl border border-teal-200/80 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-teal-700 uppercase tracking-wide">
+                <span className="text-[10px] sm:text-xs font-bold text-teal-700 uppercase tracking-wide truncate">
                   Total Headcount
                 </span>
-                <div className="w-8 h-8 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center">
-                  <Sparkles className="w-4 h-4" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center flex-shrink-0">
+                  <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
               </div>
-              <div className="mt-3">
-                <div className="text-2xl sm:text-3xl font-black text-teal-800 tracking-tight">
+              <div className="mt-2.5 sm:mt-3">
+                <div className="text-xl xs:text-2xl sm:text-3xl font-black text-teal-800 tracking-tight">
                   {stats.attending + stats.totalGuests}
                 </div>
-                <div className="text-[11px] text-teal-600 font-medium mt-0.5">
+                <div className="text-[10px] sm:text-[11px] text-teal-600 font-medium mt-0.5 truncate">
                   {stats.attending} primary + {stats.totalGuests} guests
                 </div>
               </div>
             </div>
 
             {/* Declined Invitations */}
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-rose-600 uppercase tracking-wide">
+                <span className="text-[10px] sm:text-xs font-bold text-rose-600 uppercase tracking-wide truncate">
                   {t.notAttendingCount}
                 </span>
-                <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
-                  <XCircle className="w-4 h-4" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center flex-shrink-0">
+                  <XCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
               </div>
-              <div className="mt-3">
-                <div className="text-2xl sm:text-3xl font-black text-rose-700 tracking-tight">
+              <div className="mt-2.5 sm:mt-3">
+                <div className="text-xl xs:text-2xl sm:text-3xl font-black text-rose-700 tracking-tight">
                   {stats.declined}
                 </div>
-                <div className="text-[11px] text-slate-400 font-medium mt-0.5">
+                <div className="text-[10px] sm:text-[11px] text-slate-400 font-medium mt-0.5 truncate">
                   Declined invitations
                 </div>
               </div>
@@ -845,22 +845,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
           {/* Submissions Data Center */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
             {/* Unified Command & Filter Bar */}
-            <div className="p-4 sm:p-5 border-b border-slate-200 space-y-3.5 bg-slate-50/40">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+            <div className="p-3.5 sm:p-5 border-b border-slate-200 space-y-3 bg-slate-50/40">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 sm:gap-3">
                 {/* Search Bar */}
-                <div className="relative flex-1 max-w-md">
+                <div className="relative flex-1 w-full lg:max-w-md">
                   <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                   <input
                     type="text"
                     value={filters.search}
                     onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
                     placeholder={t.searchPlaceholder}
-                    className="w-full pl-10 pr-8 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm bg-white"
+                    className="w-full h-10 sm:h-auto pl-10 pr-8 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm bg-white"
                   />
                   {filters.search && (
                     <button
                       onClick={() => setFilters({ ...filters, search: '', page: 1 })}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
                       title="Clear search"
                     >
                       <X className="w-3.5 h-3.5" />
@@ -869,11 +869,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                 </div>
 
                 {/* Export Buttons and Data Tools */}
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto">
                   {hasSampleData && (
                     <button
                       onClick={handleClearSampleData}
-                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold border border-amber-200 transition-colors"
+                      className="col-span-2 sm:col-span-1 h-10 sm:h-auto inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold border border-amber-200 transition-colors active:scale-95"
                       title="Remove mock/sample submissions"
                     >
                       <Trash2 className="w-3.5 h-3.5 text-amber-700" />
@@ -884,7 +884,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                   <button
                     onClick={() => exportToCSV(sortedSubmissions, currentLang)}
                     disabled={sortedSubmissions.length === 0}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-50 text-slate-700 text-xs font-semibold shadow-xs transition-colors"
+                    className="h-10 sm:h-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-50 text-slate-700 text-xs font-bold shadow-xs transition-colors active:scale-95"
                     title={t.exportCsv}
                   >
                     <Download className="w-3.5 h-3.5 text-slate-600" />
@@ -894,7 +894,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                   <button
                     onClick={() => exportToExcel(sortedSubmissions, currentLang)}
                     disabled={sortedSubmissions.length === 0}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-semibold shadow-xs transition-colors"
+                    className="h-10 sm:h-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold shadow-xs transition-colors active:scale-95"
                     title={t.exportExcel}
                   >
                     <FileSpreadsheet className="w-3.5 h-3.5 text-white" />
@@ -904,15 +904,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
               </div>
 
               {/* Filter Pills & Counters */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs">
-                <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pt-1 text-xs">
+                <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
                   {/* Status Dropdown */}
-                  <div className="flex items-center gap-1.5 bg-white px-2.5 py-1.5 rounded-xl border border-slate-200 shadow-xs">
-                    <span className="text-slate-400 font-medium">{t.filterJoin}:</span>
+                  <div className="flex items-center gap-1.5 bg-white px-2.5 py-2 sm:py-1.5 rounded-xl border border-slate-200 shadow-xs min-h-[40px] sm:min-h-0">
+                    <span className="text-slate-400 font-medium text-[11px] sm:text-xs">{t.filterJoin}:</span>
                     <select
                       value={filters.joinFilter}
                       onChange={(e) => setFilters({ ...filters, joinFilter: e.target.value as any, page: 1 })}
-                      className="bg-transparent text-slate-800 font-bold focus:outline-none cursor-pointer"
+                      className="bg-transparent text-slate-800 font-bold focus:outline-none cursor-pointer text-xs w-full"
                     >
                       <option value="ALL">{t.filterAll}</option>
                       <option value="YES">YES (Attending)</option>
@@ -921,19 +921,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                   </div>
 
                   {/* Language Dropdown */}
-                  <div className="flex items-center gap-1.5 bg-white px-2.5 py-1.5 rounded-xl border border-slate-200 shadow-xs">
-                    <span className="text-slate-400 font-medium">{t.filterLanguage}:</span>
+                  <div className="flex items-center gap-1.5 bg-white px-2.5 py-2 sm:py-1.5 rounded-xl border border-slate-200 shadow-xs min-h-[40px] sm:min-h-0">
+                    <span className="text-slate-400 font-medium text-[11px] sm:text-xs">{t.filterLanguage}:</span>
                     <select
                       value={filters.localeFilter}
                       onChange={(e) => setFilters({ ...filters, localeFilter: e.target.value as any, page: 1 })}
-                      className="bg-transparent text-slate-800 font-bold focus:outline-none cursor-pointer"
+                      className="bg-transparent text-slate-800 font-bold focus:outline-none cursor-pointer text-xs w-full"
                     >
                       <option value="ALL">All Languages</option>
                       <option value="en">English (EN)</option>
                       <option value="ru">Russian (RU)</option>
                     </select>
                   </div>
+                </div>
 
+                <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
                   {/* Clear Filter Shortcut */}
                   {(filters.search || filters.joinFilter !== 'ALL' || filters.localeFilter !== 'ALL') && (
                     <button
@@ -952,15 +954,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                       <span>Reset Filters</span>
                     </button>
                   )}
-                </div>
 
-                {/* Record Counter */}
-                <div className="text-slate-500 font-medium text-xs">
-                  {t.showingRecords(
-                    totalRecords === 0 ? 0 : startIndex + 1,
-                    Math.min(startIndex + filters.pageSize, totalRecords),
-                    totalRecords
-                  )}
+                  {/* Record Counter */}
+                  <div className="text-slate-500 font-medium text-xs ml-auto">
+                    {t.showingRecords(
+                      totalRecords === 0 ? 0 : startIndex + 1,
+                      Math.min(startIndex + filters.pageSize, totalRecords),
+                      totalRecords
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -980,11 +982,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                   const isAttending = sub.join.includes('YES');
                   const guestCount = Number(sub.guest_count) || 0;
                   return (
-                    <div key={sub.id} className="p-4 space-y-3 hover:bg-slate-50/70 transition-colors">
+                    <div key={sub.id} className="p-3.5 xs:p-4 space-y-2.5 hover:bg-slate-50/70 transition-colors">
+                      {/* Top Bar: Date & Status */}
                       <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
-                          <Calendar className="w-3 h-3 text-slate-400" />
-                          <span>
+                        <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-md">
+                          <Calendar className="w-3 h-3 text-slate-400 flex-shrink-0" />
+                          <span className="truncate">
                             {new Date(sub.created_at).toLocaleDateString(currentLang === 'ru' ? 'ru-RU' : 'en-US', {
                               month: 'short',
                               day: 'numeric',
@@ -994,47 +997,56 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                         </div>
 
                         {isAttending ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex-shrink-0">
                             <CheckCircle className="w-3 h-3 text-emerald-600" />
                             <span>YES</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200 flex-shrink-0">
                             <XCircle className="w-3 h-3 text-rose-600" />
                             <span>No</span>
                           </span>
                         )}
                       </div>
 
+                      {/* Attendee Info */}
                       <div>
-                        <div className="font-bold text-slate-900 text-sm">{sub.name}</div>
+                        <div className="font-bold text-slate-900 text-sm sm:text-base flex items-center gap-1.5 flex-wrap">
+                          <span>{sub.name}</span>
+                          {sub.is_sample && (
+                            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 border border-amber-300">
+                              {t.sampleBadge}
+                            </span>
+                          )}
+                        </div>
                         {sub.email && (
-                          <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-mono mt-0.5">
-                            <Mail className="w-3 h-3 text-emerald-600 flex-shrink-0" />
-                            <span className="break-all">{sub.email}</span>
+                          <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-mono mt-0.5 break-all">
+                            <Mail className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+                            <span>{sub.email}</span>
                           </div>
                         )}
                         {sub.organisation && (
-                          <div className="flex items-center gap-1.5 text-xs text-slate-700 font-medium mt-1">
-                            <Building2 className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-                            <span>{sub.organisation}</span>
+                          <div className="flex items-center gap-1.5 text-xs text-slate-800 font-semibold mt-1">
+                            <Building2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+                            <span className="break-words">{sub.organisation}</span>
                           </div>
                         )}
                         <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-0.5">
                           <Briefcase className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-                          <span>{sub.job_title}</span>
+                          <span className="break-words">{sub.job_title}</span>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
-                        <div className="flex items-center gap-2">
+                      {/* Bottom Bar: Guests pill + View Details button */}
+                      <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs gap-2">
+                        <div className="flex items-center gap-1.5 flex-wrap">
                           {guestCount > 0 ? (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                               <Users className="w-3 h-3 text-emerald-600" />
-                              <span>+{guestCount} guests</span>
+                              <span>+{guestCount}</span>
                             </span>
                           ) : (
-                            <span className="text-slate-400 text-[11px]">No guests</span>
+                            <span className="text-slate-400 text-[11px] px-1.5 py-0.5 rounded bg-slate-100">0 guests</span>
                           )}
                           <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-100 text-slate-600">
                             {sub.locale}
@@ -1043,7 +1055,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
 
                         <button
                           onClick={() => setSelectedSubmission(sub)}
-                          className="inline-flex items-center gap-1 font-semibold text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-xs transition-colors"
+                          className="inline-flex items-center gap-1.5 font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:scale-95 px-3 py-1.5 rounded-xl text-xs transition-all shadow-xs flex-shrink-0 min-h-[34px]"
                         >
                           <Eye className="w-3.5 h-3.5" />
                           <span>{t.viewDetails}</span>
@@ -1286,17 +1298,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
             </div>
 
             {/* Pagination Footer */}
-            <div className="p-4 border-t border-slate-200 bg-slate-50/70 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="text-xs text-slate-500 font-medium">
+            <div className="p-3.5 sm:p-4 border-t border-slate-200 bg-slate-50/70 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3">
+              <div className="text-xs text-slate-500 font-medium text-center">
                 Page <span className="font-bold text-slate-800">{currentPage}</span> of{' '}
                 <span className="font-bold text-slate-800">{totalPages}</span>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="grid grid-cols-2 sm:flex items-center gap-2 w-full sm:w-auto">
                 <button
                   onClick={() => setFilters({ ...filters, page: Math.max(1, filters.page - 1) })}
                   disabled={currentPage <= 1}
-                  className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
+                  className={`inline-flex items-center justify-center gap-1 px-4 py-2 sm:py-1.5 rounded-xl text-xs font-bold border transition-all active:scale-95 ${
                     currentPage <= 1
                       ? 'bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed'
                       : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100 shadow-xs'
@@ -1309,7 +1321,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                 <button
                   onClick={() => setFilters({ ...filters, page: Math.min(totalPages, filters.page + 1) })}
                   disabled={currentPage >= totalPages}
-                  className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
+                  className={`inline-flex items-center justify-center gap-1 px-4 py-2 sm:py-1.5 rounded-xl text-xs font-bold border transition-all active:scale-95 ${
                     currentPage >= totalPages
                       ? 'bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed'
                       : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100 shadow-xs'
