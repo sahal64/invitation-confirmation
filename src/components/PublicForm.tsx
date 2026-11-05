@@ -1,9 +1,23 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { FormValues, FormErrors, Language } from '../types';
 import { translations } from '../i18n/translations';
 import { submitResponse } from '../services/supabase';
+import { getOrganisations } from '../services/organisations';
 import { RecaptchaWidget, RecaptchaWidgetRef } from './RecaptchaWidget';
-import { CheckCircle2, AlertCircle, Sparkles, Send, ChevronDown, Users, RotateCcw } from 'lucide-react';
+import {
+  CheckCircle2,
+  AlertCircle,
+  Sparkles,
+  Send,
+  ChevronDown,
+  ChevronUp,
+  Users,
+  RotateCcw,
+  Search,
+  X,
+  Check,
+  Building2,
+} from 'lucide-react';
 
 interface PublicFormProps {
   currentLang: Language;
@@ -26,6 +40,74 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  // Dynamic Organisations list
+  const [organisationsList, setOrganisationsList] = useState<string[]>(() => getOrganisations());
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setOrganisationsList(getOrganisations());
+    };
+    window.addEventListener('organisations-updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('organisations-updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
+
+  // Organisation selection state: '', preset name, or 'other'
+  const [organisationOption, setOrganisationOption] = useState<string>('');
+  const [customOrganisation, setCustomOrganisation] = useState<string>('');
+  const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false);
+  const [orgSearchQuery, setOrgSearchQuery] = useState('');
+  const orgDropdownRef = useRef<HTMLDivElement>(null);
+  const orgSearchInputRef = useRef<HTMLInputElement>(null);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (orgDropdownRef.current && !orgDropdownRef.current.contains(event.target as Node)) {
+        setIsOrgDropdownOpen(false);
+      }
+    };
+    if (isOrgDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOrgDropdownOpen]);
+
+  // Filtered organisations based on user search query
+  const filteredOrganisations = useMemo(() => {
+    if (!orgSearchQuery.trim()) return organisationsList;
+    const q = orgSearchQuery.toLowerCase().trim();
+    return organisationsList.filter((org) => org.toLowerCase().includes(q));
+  }, [organisationsList, orgSearchQuery]);
+
+  const toggleOrgDropdown = () => {
+    setIsOrgDropdownOpen((prev) => {
+      const next = !prev;
+      if (next) {
+        setOrgSearchQuery('');
+        setTimeout(() => orgSearchInputRef.current?.focus(), 60);
+      }
+      return next;
+    });
+  };
+
+  const handleSelectOrganisation = (org: string) => {
+    handleOrganisationChange(org);
+    setIsOrgDropdownOpen(false);
+    setOrgSearchQuery('');
+  };
+
+  const handleSelectOther = () => {
+    handleOrganisationChange('other');
+    setIsOrgDropdownOpen(false);
+    setOrgSearchQuery('');
+  };
+
   // Accompany Guest selection state: '', '1', '2', '3', '4', '5', 'custom'
   const [guestOption, setGuestOption] = useState<string>('');
   const [customGuestCount, setCustomGuestCount] = useState<string>('');
@@ -42,8 +124,16 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
       newErrors.name = t.valNameRequired;
     }
 
-    if (!values.organisation.trim()) {
+    if (!organisationOption) {
       newErrors.organisation = t.valOrganisationRequired;
+    } else if (organisationOption === 'other') {
+      if (!customOrganisation.trim()) {
+        newErrors.organisation = t.valOrganisationOtherRequired;
+      }
+    } else {
+      if (!values.organisation.trim()) {
+        newErrors.organisation = t.valOrganisationRequired;
+      }
     }
 
     if (!values.job_title.trim()) {
@@ -81,6 +171,29 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  // Handles organisation dropdown selection
+  const handleOrganisationChange = (selected: string) => {
+    setOrganisationOption(selected);
+    if (selected === 'other') {
+      setValues((prev) => ({ ...prev, organisation: customOrganisation.trim() }));
+    } else {
+      setCustomOrganisation('');
+      setValues((prev) => ({ ...prev, organisation: selected }));
+    }
+    if (errors.organisation) {
+      setErrors((prev) => ({ ...prev, organisation: undefined }));
+    }
+  };
+
+  // Handles custom organisation text input when "Others" is chosen
+  const handleCustomOrganisationChange = (val: string) => {
+    setCustomOrganisation(val);
+    setValues((prev) => ({ ...prev, organisation: val }));
+    if (errors.organisation) {
+      setErrors((prev) => ({ ...prev, organisation: undefined }));
+    }
   };
 
   // Handles attendance dropdown selection
@@ -203,6 +316,10 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
       if (res.success) {
         setIsSubmitted(true);
         setValues(INITIAL_VALUES);
+        setOrganisationOption('');
+        setCustomOrganisation('');
+        setIsOrgDropdownOpen(false);
+        setOrgSearchQuery('');
         setGuestOption('');
         setCustomGuestCount('');
         setRecaptchaToken(null);
@@ -225,6 +342,10 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
   const handleClear = () => {
     if (window.confirm(t.clearConfirm)) {
       setValues(INITIAL_VALUES);
+      setOrganisationOption('');
+      setCustomOrganisation('');
+      setIsOrgDropdownOpen(false);
+      setOrgSearchQuery('');
       setGuestOption('');
       setCustomGuestCount('');
       setErrors({});
@@ -311,7 +432,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
           </div>
         )}
 
-        {/* Question 1: Name */}
+        {/* Question 1: Full Name */}
         <div
           className={`bg-white rounded-xl shadow-sm border p-6 transition-all duration-200 ${
             errors.name ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200 hover:border-slate-300'
@@ -344,31 +465,185 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
           )}
         </div>
 
-        {/* Question 2: Organisation Name */}
+        {/* Question 2: Organisation Name Searchable Dropdown with "Others" custom input */}
         <div
+          ref={orgDropdownRef}
           className={`bg-white rounded-xl shadow-sm border p-6 transition-all duration-200 ${
             errors.organisation ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200 hover:border-slate-300'
           }`}
         >
-          <label htmlFor="organisation-input" className="block text-base font-semibold text-slate-900 mb-1">
+          <label className="block text-base font-semibold text-slate-900 mb-1">
             {t.organisationLabel} <span className="text-rose-500 font-bold">*</span>
           </label>
-          <div className="mt-3">
-            <input
-              id="organisation-input"
-              type="text"
-              value={values.organisation}
-              onChange={(e) => {
-                setValues({ ...values, organisation: e.target.value });
-                if (errors.organisation) setErrors({ ...errors, organisation: undefined });
-              }}
-              placeholder={t.organisationPlaceholder}
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 placeholder:text-slate-400 text-sm sm:text-base transition-colors"
-              aria-required="true"
-              aria-invalid={Boolean(errors.organisation)}
-              aria-describedby={errors.organisation ? 'organisation-error' : undefined}
-            />
+
+          {/* Searchable Select Trigger Button */}
+          <div className="mt-3 relative">
+            <button
+              type="button"
+              onClick={toggleOrgDropdown}
+              aria-haspopup="listbox"
+              aria-expanded={isOrgDropdownOpen}
+              className={`w-full px-4 py-2.5 rounded-lg border text-left flex items-center justify-between transition-colors bg-white ${
+                isOrgDropdownOpen
+                  ? 'border-emerald-500 ring-2 ring-emerald-500/20'
+                  : 'border-slate-300 hover:border-slate-400'
+              }`}
+            >
+              <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                <Building2
+                  className={`w-4 h-4 flex-shrink-0 ${
+                    organisationOption ? 'text-emerald-600' : 'text-slate-400'
+                  }`}
+                />
+                <span
+                  className={`text-sm sm:text-base truncate ${
+                    organisationOption ? 'text-slate-900 font-medium' : 'text-slate-400'
+                  }`}
+                >
+                  {organisationOption === 'other'
+                    ? t.organisationOtherOption
+                    : organisationOption || t.organisationSelectPlaceholder}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                {organisationOption && (
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOrganisationChange('');
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.stopPropagation();
+                        handleOrganisationChange('');
+                      }
+                    }}
+                    className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                    title="Clear selection"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </span>
+                )}
+                {isOrgDropdownOpen ? (
+                  <ChevronUp className="w-4 h-4 text-emerald-600" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-slate-400" />
+                )}
+              </div>
+            </button>
+
+            {/* Dropdown Popover Menu with Live Search Filter */}
+            {isOrgDropdownOpen && (
+              <div className="absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden animate-in fade-in-50 zoom-in-95 duration-150">
+                {/* Search input header */}
+                <div className="p-2.5 border-b border-slate-100 bg-slate-50/70">
+                  <div className="relative">
+                    <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      ref={orgSearchInputRef}
+                      type="text"
+                      value={orgSearchQuery}
+                      onChange={(e) => setOrgSearchQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Escape') {
+                          setIsOrgDropdownOpen(false);
+                        }
+                      }}
+                      placeholder={t.searchOrganisationsPlaceholder}
+                      className="w-full pl-9 pr-8 py-2 rounded-lg border border-slate-200 bg-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400 text-slate-800"
+                    />
+                    {orgSearchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOrgSearchQuery('');
+                          orgSearchInputRef.current?.focus();
+                        }}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-slate-400 hover:text-slate-600 rounded"
+                        title="Clear search"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Filtered Organisations List */}
+                <div className="max-h-60 overflow-y-auto p-1.5 space-y-0.5">
+                  {filteredOrganisations.length > 0 ? (
+                    filteredOrganisations.map((org) => {
+                      const isSelected = organisationOption === org;
+                      return (
+                        <button
+                          key={org}
+                          type="button"
+                          onClick={() => handleSelectOrganisation(org)}
+                          className={`w-full px-3 py-2 text-left rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-between ${
+                            isSelected
+                              ? 'bg-emerald-50 text-emerald-900 font-bold'
+                              : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+                          }`}
+                        >
+                          <span className="truncate">{org}</span>
+                          {isSelected && <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />}
+                        </button>
+                      );
+                    })
+                  ) : (
+                    <div className="py-6 px-3 text-center">
+                      <p className="text-xs text-slate-500 font-medium">
+                        {t.noOrganisationsFound}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* "Others" Option permanently pinned at bottom */}
+                  <div className="pt-1 mt-1 border-t border-slate-100">
+                    <button
+                      type="button"
+                      onClick={handleSelectOther}
+                      className={`w-full px-3 py-2 text-left rounded-lg text-xs sm:text-sm font-semibold transition-colors flex items-center justify-between ${
+                        organisationOption === 'other'
+                          ? 'bg-emerald-50 text-emerald-900 font-bold'
+                          : 'text-emerald-700 hover:bg-emerald-50/60'
+                      }`}
+                    >
+                      <span className="flex items-center gap-2 truncate">
+                        <span>{t.organisationOtherOption}</span>
+                        <span className="text-[11px] font-normal text-slate-400">(specify manually)</span>
+                      </span>
+                      {organisationOption === 'other' && (
+                        <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* If "Others" is selected, display custom organisation input field */}
+          {organisationOption === 'other' && (
+            <div className="mt-4 pt-4 border-t border-slate-100 animate-in fade-in duration-200">
+              <label htmlFor="custom-organisation-input" className="block text-xs font-semibold text-slate-700 mb-1">
+                {t.organisationOtherPlaceholder} <span className="text-rose-500 font-bold">*</span>
+              </label>
+              <input
+                id="custom-organisation-input"
+                type="text"
+                value={customOrganisation}
+                onChange={(e) => handleCustomOrganisationChange(e.target.value)}
+                placeholder={t.organisationPlaceholder}
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 placeholder:text-slate-400 text-sm sm:text-base transition-colors"
+                autoFocus
+                aria-required="true"
+              />
+            </div>
+          )}
+
           {errors.organisation && (
             <p id="organisation-error" className="mt-2 text-xs font-semibold text-rose-600 flex items-center gap-1.5">
               <AlertCircle className="w-3.5 h-3.5" />

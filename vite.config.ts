@@ -16,7 +16,7 @@ function formApiPlugin(env: Record<string, string>): Plugin {
           req.on('end', async () => {
             try {
               const payload = JSON.parse(body || '{}');
-              const { name, email, job_title, join, comments, locale, recaptchaToken } = payload;
+              const { name, organisation, job_title, join, locale, recaptchaToken } = payload;
 
               // 1. Basic field validation
               if (!name || !organisation || !job_title || !join) {

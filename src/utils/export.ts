@@ -25,7 +25,7 @@ export function exportToCSV(submissions: Submission[], lang: Language): void {
     `"${(sub.email || '').replace(/"/g, '""')}"`,
     `"${sub.job_title.replace(/"/g, '""')}"`,
     `"${sub.join.join(', ')}"`,
-    sub.has_guest ? (sub.guest_count || 0) : 0,
+    (Number(sub.guest_count) || 0),
     sub.locale.toUpperCase(),
   ]);
 
@@ -57,7 +57,7 @@ export function exportToExcel(submissions: Submission[], lang: Language): void {
     [t.colEmail]: sub.email || '-',
     [t.colJobTitle]: sub.job_title,
     [t.colJoin]: sub.join.join(', '),
-    [t.colGuest]: sub.has_guest ? (sub.guest_count || 0) : 0,
+    [t.colGuest]: (Number(sub.guest_count) || 0),
     [t.colLanguage]: sub.locale.toUpperCase(),
   }));
 

@@ -11,6 +11,10 @@ export interface Translations {
   namePlaceholder: string;
   organisationLabel: string;
   organisationPlaceholder: string;
+  organisationSelectPlaceholder: string;
+  organisationOtherOption: string;
+  organisationOtherPlaceholder: string;
+  valOrganisationOtherRequired: string;
   emailLabel: string;
   emailPlaceholder: string;
   jobTitleLabel: string;
@@ -114,6 +118,17 @@ export interface Translations {
   sampleBadge: string;
   removeSampleData: string;
   devNotice: string;
+  tabSubmissions: string;
+  tabOrganisations: string;
+  manageOrganisations: string;
+  addOrganisationTitle: string;
+  addOrganisationPlaceholder: string;
+  addOrganisationButton: string;
+  resetDemoOrganisations: string;
+  organisationsCount: (n: number) => string;
+  noOrganisationsFound: string;
+  deleteOrganisationConfirm: string;
+  searchOrganisationsPlaceholder: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -124,10 +139,14 @@ export const translations: Record<Language, Translations> = {
     nationalDayBadge: "National Day Celebration",
     requiredHint: "Indicates required question",
     requiredAsterisk: "*",
-    nameLabel: "Name",
+    nameLabel: "Full Name",
     namePlaceholder: "Your answer",
     organisationLabel: "Organisation Name",
     organisationPlaceholder: "Your answer",
+    organisationSelectPlaceholder: "Select your organisation...",
+    organisationOtherOption: "Others",
+    organisationOtherPlaceholder: "Please specify your organisation name",
+    valOrganisationOtherRequired: "Please enter your organisation name",
     emailLabel: "Email",
     emailPlaceholder: "Your email",
     jobTitleLabel: "Job Title",
@@ -200,12 +219,12 @@ export const translations: Record<Language, Translations> = {
     attendingCount: "Attending (YES)",
     notAttendingCount: "Declined (No)",
     avgRating: "Average Rating",
-    searchPlaceholder: "Search by name, email, or job title...",
+    searchPlaceholder: "Search by name, organisation, or job title...",
     filterAll: "All Responses",
     filterJoin: "Attendance Status",
     filterLanguage: "Interface Language",
     colDate: "Submitted At",
-    colName: "Name",
+    colName: "Full Name",
     colOrganisation: "Organisation",
     colEmail: "Email",
     colJobTitle: "Job Title",
@@ -231,6 +250,17 @@ export const translations: Record<Language, Translations> = {
     sampleBadge: "Sample",
     removeSampleData: "Remove Sample Data",
     devNotice: "Dev Mode: Local Storage Active",
+    tabSubmissions: "Submissions",
+    tabOrganisations: "Organisations",
+    manageOrganisations: "Manage Organisations",
+    addOrganisationTitle: "Add New Organisation",
+    addOrganisationPlaceholder: "Enter organisation name...",
+    addOrganisationButton: "Add Organisation",
+    resetDemoOrganisations: "Reset to 20 Demo Organisations",
+    organisationsCount: (n) => `${n} Organisation${n === 1 ? '' : 's'}`,
+    noOrganisationsFound: "No organisations found matching your search.",
+    deleteOrganisationConfirm: "Are you sure you want to delete this organisation from the dropdown?",
+    searchOrganisationsPlaceholder: "Search organisations...",
   },
   ru: {
     // Faithful Russian translation of source form
@@ -239,10 +269,14 @@ export const translations: Record<Language, Translations> = {
     nationalDayBadge: "Празднование Национального дня",
     requiredHint: "Обязательные для заполнения поля",
     requiredAsterisk: "*",
-    nameLabel: "Имя",
+    nameLabel: "Полное имя",
     namePlaceholder: "Мой ответ",
     organisationLabel: "Название организации",
     organisationPlaceholder: "Мой ответ",
+    organisationSelectPlaceholder: "Выберите вашу организацию...",
+    organisationOtherOption: "Другие",
+    organisationOtherPlaceholder: "Укажите название вашей организации",
+    valOrganisationOtherRequired: "Пожалуйста, введите название вашей организации",
     emailLabel: "Электронная почта",
     emailPlaceholder: "example@domain.com",
     jobTitleLabel: "Должность",
@@ -315,12 +349,12 @@ export const translations: Record<Language, Translations> = {
     attendingCount: "Присутствуют (Да)",
     notAttendingCount: "Отклонили (Нет)",
     avgRating: "Средний рейтинг",
-    searchPlaceholder: "Поиск по имени, email или должности...",
+    searchPlaceholder: "Поиск по имени, организации или должности...",
     filterAll: "Все ответы",
     filterJoin: "Статус участия",
     filterLanguage: "Язык интерфейса",
     colDate: "Дата отправки",
-    colName: "Имя",
+    colName: "Полное имя",
     colOrganisation: "Организация",
     colEmail: "Email",
     colJobTitle: "Должность",
@@ -346,5 +380,16 @@ export const translations: Record<Language, Translations> = {
     sampleBadge: "Тестовый",
     removeSampleData: "Удалить тестовые данные",
     devNotice: "Режим Dev: локальное хранилище",
+    tabSubmissions: "Ответы",
+    tabOrganisations: "Организации",
+    manageOrganisations: "Управление организациями",
+    addOrganisationTitle: "Добавить новую организацию",
+    addOrganisationPlaceholder: "Введите название организации...",
+    addOrganisationButton: "Добавить организацию",
+    resetDemoOrganisations: "Сбросить до 20 демо-организаций",
+    organisationsCount: (n) => `${n} ${n === 1 ? 'организация' : n < 5 ? 'организации' : 'организаций'}`,
+    noOrganisationsFound: "Организации не найдены.",
+    deleteOrganisationConfirm: "Вы уверены, что хотите удалить эту организацию из списка?",
+    searchOrganisationsPlaceholder: "Поиск организаций...",
   }
 };
