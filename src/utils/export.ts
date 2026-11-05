@@ -9,6 +9,7 @@ export function exportToCSV(submissions: Submission[], lang: Language): void {
     t.submissionId,
     t.submittedAt,
     t.colName,
+    t.colOrganisation,
     t.colEmail,
     t.colJobTitle,
     t.colJoin,
@@ -20,6 +21,7 @@ export function exportToCSV(submissions: Submission[], lang: Language): void {
     sub.id,
     new Date(sub.created_at).toLocaleString(lang === 'ru' ? 'ru-RU' : 'en-US'),
     `"${sub.name.replace(/"/g, '""')}"`,
+    `"${(sub.organisation || '').replace(/"/g, '""')}"`,
     `"${(sub.email || '').replace(/"/g, '""')}"`,
     `"${sub.job_title.replace(/"/g, '""')}"`,
     `"${sub.join.join(', ')}"`,
@@ -51,6 +53,7 @@ export function exportToExcel(submissions: Submission[], lang: Language): void {
     [t.submissionId]: sub.id,
     [t.submittedAt]: new Date(sub.created_at).toLocaleString(lang === 'ru' ? 'ru-RU' : 'en-US'),
     [t.colName]: sub.name,
+    [t.colOrganisation]: sub.organisation || '-',
     [t.colEmail]: sub.email || '-',
     [t.colJobTitle]: sub.job_title,
     [t.colJoin]: sub.join.join(', '),
@@ -65,6 +68,7 @@ export function exportToExcel(submissions: Submission[], lang: Language): void {
     { wch: 38 }, // ID
     { wch: 22 }, // Date
     { wch: 24 }, // Name
+    { wch: 30 }, // Organisation
     { wch: 28 }, // Email
     { wch: 35 }, // Job Title
     { wch: 14 }, // Join

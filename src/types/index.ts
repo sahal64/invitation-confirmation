@@ -5,6 +5,7 @@ export interface Submission {
   created_at: string;
   name: string;
   email?: string;
+  organisation?: string;
   job_title: string;
   join: string[]; // ['YES'], ['No']
   has_guest?: boolean;
@@ -16,6 +17,7 @@ export interface Submission {
 
 export interface FormValues {
   name: string;
+  organisation: string;
   job_title: string;
   join: string[];
   has_guest: boolean;
@@ -24,6 +26,7 @@ export interface FormValues {
 
 export interface FormErrors {
   name?: string;
+  organisation?: string;
   job_title?: string;
   join?: string;
   has_guest?: string;
@@ -36,7 +39,7 @@ export interface FilterState {
   search: string;
   joinFilter: 'ALL' | 'YES' | 'No';
   localeFilter: 'ALL' | 'en' | 'ru';
-  sortBy: 'created_at' | 'name' | 'job_title' | 'guest_count';
+  sortBy: 'created_at' | 'name' | 'organisation' | 'job_title' | 'guest_count';
   sortOrder: 'asc' | 'desc';
   page: number;
   pageSize: number;

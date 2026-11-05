@@ -9,6 +9,8 @@ export interface Translations {
   requiredAsterisk: string;
   nameLabel: string;
   namePlaceholder: string;
+  organisationLabel: string;
+  organisationPlaceholder: string;
   emailLabel: string;
   emailPlaceholder: string;
   jobTitleLabel: string;
@@ -48,6 +50,7 @@ export interface Translations {
   
   // Validation Errors
   valNameRequired: string;
+  valOrganisationRequired: string;
   valEmailRequired: string;
   valEmailInvalid: string;
   valJobTitleRequired: string;
@@ -86,6 +89,7 @@ export interface Translations {
   filterLanguage: string;
   colDate: string;
   colName: string;
+  colOrganisation: string;
   colEmail: string;
   colJobTitle: string;
   colJoin: string;
@@ -122,6 +126,8 @@ export const translations: Record<Language, Translations> = {
     requiredAsterisk: "*",
     nameLabel: "Name",
     namePlaceholder: "Your answer",
+    organisationLabel: "Organisation Name",
+    organisationPlaceholder: "Your answer",
     emailLabel: "Email",
     emailPlaceholder: "Your email",
     jobTitleLabel: "Job Title",
@@ -161,6 +167,7 @@ export const translations: Record<Language, Translations> = {
 
     // Validation
     valNameRequired: "This is a required question",
+    valOrganisationRequired: "This is a required question",
     valEmailRequired: "This is a required question",
     valEmailInvalid: "Must be a valid email address",
     valJobTitleRequired: "This is a required question",
@@ -199,6 +206,7 @@ export const translations: Record<Language, Translations> = {
     filterLanguage: "Interface Language",
     colDate: "Submitted At",
     colName: "Name",
+    colOrganisation: "Organisation",
     colEmail: "Email",
     colJobTitle: "Job Title",
     colJoin: "Attending",
@@ -233,6 +241,8 @@ export const translations: Record<Language, Translations> = {
     requiredAsterisk: "*",
     nameLabel: "Имя",
     namePlaceholder: "Мой ответ",
+    organisationLabel: "Название организации",
+    organisationPlaceholder: "Мой ответ",
     emailLabel: "Электронная почта",
     emailPlaceholder: "example@domain.com",
     jobTitleLabel: "Должность",
@@ -272,6 +282,7 @@ export const translations: Record<Language, Translations> = {
 
     // Validation
     valNameRequired: "Это обязательный вопрос",
+    valOrganisationRequired: "Это обязательный вопрос",
     valEmailRequired: "Это обязательный вопрос",
     valEmailInvalid: "Укажите действительный адрес электронной почты",
     valJobTitleRequired: "Это обязательный вопрос",
@@ -310,6 +321,7 @@ export const translations: Record<Language, Translations> = {
     filterLanguage: "Язык интерфейса",
     colDate: "Дата отправки",
     colName: "Имя",
+    colOrganisation: "Организация",
     colEmail: "Email",
     colJobTitle: "Должность",
     colJoin: "Присутствие",

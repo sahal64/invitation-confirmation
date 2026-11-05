@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS public.invitation_submissions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL,
     name TEXT NOT NULL,
+    organisation TEXT DEFAULT '',
     email TEXT DEFAULT '',
     job_title TEXT NOT NULL,
     "join" TEXT[] NOT NULL,
@@ -25,6 +26,10 @@ ALTER TABLE public.invitation_submissions ALTER COLUMN email SET DEFAULT '';
 ALTER TABLE public.invitation_submissions 
 ADD COLUMN IF NOT EXISTS has_guest BOOLEAN DEFAULT false,
 ADD COLUMN IF NOT EXISTS guest_count INTEGER DEFAULT 0;
+
+-- 3) Organisation column:
+ALTER TABLE public.invitation_submissions 
+ADD COLUMN IF NOT EXISTS organisation TEXT DEFAULT '';
 
 -- 2. Indexes for search and sorting performance
 CREATE INDEX IF NOT EXISTS idx_invitation_created_at ON public.invitation_submissions (created_at DESC);

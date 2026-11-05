@@ -30,6 +30,7 @@ import {
   Calendar,
   Briefcase,
   Mail,
+  Building2,
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -135,6 +136,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
       const matchesSearch =
         !filters.search ||
         sub.name.toLowerCase().includes(searchLower) ||
+        (sub.organisation || '').toLowerCase().includes(searchLower) ||
         (sub.email || '').toLowerCase().includes(searchLower) ||
         sub.job_title.toLowerCase().includes(searchLower);
 
@@ -163,6 +165,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
         comparison = new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       } else if (filters.sortBy === 'name') {
         comparison = a.name.localeCompare(b.name);
+      } else if (filters.sortBy === 'organisation') {
+        comparison = (a.organisation || '').localeCompare(b.organisation || '');
       } else if (filters.sortBy === 'job_title') {
         comparison = a.job_title.localeCompare(b.job_title);
       } else if (filters.sortBy === 'guest_count') {
@@ -192,7 +196,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
   }, [submissions]);
 
   // Handle Sort Toggle
-  const toggleSort = (field: 'created_at' | 'name' | 'job_title' | 'guest_count') => {
+  const toggleSort = (field: 'created_at' | 'name' | 'organisation' | 'job_title' | 'guest_count') => {
     setFilters((prev) => ({
       ...prev,
       sortBy: field,
@@ -557,6 +561,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                         <span className="break-all">{sub.email}</span>
                       </div>
                     )}
+                    {sub.organisation && (
+                      <div className="flex items-center gap-1.5 text-xs text-slate-700 font-medium mt-1">
+                        <Building2 className="w-3 h-3 text-slate-400 flex-shrink-0" />
+                        <span className="line-clamp-1">{sub.organisation}</span>
+                      </div>
+                    )}
                     <div className="flex items-center gap-1.5 text-xs text-slate-600 mt-1">
                       <Briefcase className="w-3 h-3 text-slate-400 flex-shrink-0" />
                       <span className="line-clamp-2">{sub.job_title}</span>
@@ -619,6 +629,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                   </div>
                 </th>
                 <th
+                  onClick={() => toggleSort('organisation')}
+                  className="py-3 px-4 cursor-pointer hover:text-slate-800 transition-colors min-w-[160px]"
+                >
+                  <div className="flex items-center gap-1">
+                    <span>{t.colOrganisation}</span>
+                    <ArrowUpDown className="w-3 h-3 text-slate-400" />
+                  </div>
+                </th>
+                <th
                   onClick={() => toggleSort('job_title')}
                   className="py-3 px-4 cursor-pointer hover:text-slate-800 transition-colors min-w-[160px]"
                 >
@@ -644,13 +663,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
             <tbody className="divide-y divide-slate-100 text-slate-800">
               {loadingData ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-slate-400">
+                  <td colSpan={8} className="py-12 text-center text-slate-400">
                     Loading submissions...
                   </td>
                 </tr>
               ) : paginatedSubmissions.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-slate-400">
+                  <td colSpan={8} className="py-12 text-center text-slate-400">
                     {t.noSubmissionsFound}
                   </td>
                 </tr>
@@ -686,6 +705,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                             </span>
                           )}
                         </div>
+                      </td>
+                      <td className="py-3.5 px-4 text-slate-700 font-medium max-w-[180px] truncate" title={sub.organisation}>
+                        {sub.organisation || '-'}
                       </td>
                       <td className="py-3.5 px-4 text-slate-600 max-w-[200px] truncate" title={sub.job_title}>
                         {sub.job_title}

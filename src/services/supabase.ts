@@ -46,6 +46,7 @@ const DEFAULT_SAMPLE_SUBMISSIONS: Submission[] = import.meta.env.DEV
         created_at: new Date(Date.now() - 1000 * 60 * 35).toISOString(),
         name: 'Alexander Volkov',
         email: 'alex.volkov@heritage-intl.org',
+        organisation: 'Heritage International Mission',
         job_title: 'Senior Cultural Attache & Protocol Advisor',
         join: ['YES'],
         comments: 5,
@@ -57,6 +58,7 @@ const DEFAULT_SAMPLE_SUBMISSIONS: Submission[] = import.meta.env.DEV
         created_at: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
         name: 'Екатерина Смирнова',
         email: 'e.smirnova@consulting.ru',
+        organisation: 'Strategic Global Consulting LLC',
         job_title: 'Директор по стратегическим коммуникациям',
         join: ['YES'],
         comments: 4,
@@ -68,6 +70,7 @@ const DEFAULT_SAMPLE_SUBMISSIONS: Submission[] = import.meta.env.DEV
         created_at: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(),
         name: 'Sarah Jenkins',
         email: 'sjenkins@globaldiplomacy.com',
+        organisation: 'Global Diplomacy Institute',
         job_title: 'Head of Delegation & International Relations',
         join: ['No'],
         comments: 3,
@@ -152,6 +155,7 @@ export async function submitResponse(
       const payload: any = {
         name: values.name.trim(),
         email: '',
+        organisation: values.organisation.trim(),
         job_title: values.job_title.trim(),
         join: values.join,
         locale: locale,
@@ -163,17 +167,23 @@ export async function submitResponse(
         .from('invitation_submissions')
         .insert([payload]);
 
-      // If email has not-null constraint in legacy DB schema, provide empty string fallback
-      if (error && (error.code === '23502' || error.message?.includes('email'))) {
-        payload.email = '';
-        const retryEmail = await supabase.from('invitation_submissions').insert([payload]);
-        error = retryEmail.error;
-      }
-
-      // Graceful fallback if columns has_guest or guest_count are not added in SQL yet
-      if (error && error.message && (error.message.includes('has_guest') || error.message.includes('guest_count'))) {
-        delete payload.has_guest;
-        delete payload.guest_count;
+      // Graceful fallback retry if any newly added columns do not exist in SQL schema yet
+      while (error && error.message) {
+        let changed = false;
+        if (error.message.includes('organisation')) {
+          delete payload.organisation;
+          changed = true;
+        }
+        if (error.message.includes('has_guest') || error.message.includes('guest_count')) {
+          delete payload.has_guest;
+          delete payload.guest_count;
+          changed = true;
+        }
+        if (error.code === '23502' || error.message.includes('email')) {
+          payload.email = '';
+          changed = true;
+        }
+        if (!changed) break;
         const retry = await supabase.from('invitation_submissions').insert([payload]);
         error = retry.error;
       }
@@ -197,6 +207,7 @@ export async function submitResponse(
       id: crypto.randomUUID ? crypto.randomUUID() : `local-${Date.now()}`,
       created_at: new Date().toISOString(),
       name: values.name.trim(),
+      organisation: values.organisation.trim(),
       job_title: values.job_title.trim(),
       join: values.join,
       has_guest: Boolean(values.has_guest),

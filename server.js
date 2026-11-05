@@ -34,9 +34,9 @@ const server = http.createServer(async (req, res) => {
     req.on('end', async () => {
       try {
         const payload = JSON.parse(body || '{}');
-        const { name, job_title, join, locale, recaptchaToken } = payload;
+        const { name, organisation, job_title, join, locale, recaptchaToken } = payload;
 
-        if (!name || !job_title || !join) {
+        if (!name || !organisation || !job_title || !join) {
           res.writeHead(400, { 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Required fields are missing' }));
         }
@@ -85,6 +85,7 @@ const server = http.createServer(async (req, res) => {
           const payloadData = {
             name: String(name || '').trim(),
             email: '',
+            organisation: String(organisation || '').trim(),
             job_title: String(job_title || '').trim(),
             join: Array.isArray(join) ? join : [join],
             has_guest: Boolean(payload.has_guest),
@@ -98,18 +99,23 @@ const server = http.createServer(async (req, res) => {
             .select('id')
             .single();
 
-          if (insertResult.error && (insertResult.error.code === '23502' || insertResult.error.message?.includes('email'))) {
-            payloadData.email = '';
-            insertResult = await supabase
-              .from('invitation_submissions')
-              .insert([payloadData])
-              .select('id')
-              .single();
-          }
-
-          if (insertResult.error && insertResult.error.message && (insertResult.error.message.includes('has_guest') || insertResult.error.message.includes('guest_count'))) {
-            delete payloadData.has_guest;
-            delete payloadData.guest_count;
+          // Graceful fallback retry if any newly added columns do not exist in SQL schema yet
+          while (insertResult.error && insertResult.error.message) {
+            let changed = false;
+            if (insertResult.error.message.includes('organisation')) {
+              delete payloadData.organisation;
+              changed = true;
+            }
+            if (insertResult.error.message.includes('has_guest') || insertResult.error.message.includes('guest_count')) {
+              delete payloadData.has_guest;
+              delete payloadData.guest_count;
+              changed = true;
+            }
+            if (insertResult.error.code === '23502' || insertResult.error.message.includes('email')) {
+              payloadData.email = '';
+              changed = true;
+            }
+            if (!changed) break;
             insertResult = await supabase
               .from('invitation_submissions')
               .insert([payloadData])

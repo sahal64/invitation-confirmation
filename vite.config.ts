@@ -19,7 +19,7 @@ function formApiPlugin(env: Record<string, string>): Plugin {
               const { name, email, job_title, join, comments, locale, recaptchaToken } = payload;
 
               // 1. Basic field validation
-              if (!name || !job_title || !join) {
+              if (!name || !organisation || !job_title || !join) {
                 res.statusCode = 400;
                 res.setHeader('Content-Type', 'application/json');
                 res.end(
@@ -91,6 +91,7 @@ function formApiPlugin(env: Record<string, string>): Plugin {
                 const payloadData: any = {
                   name: String(name || '').trim(),
                   email: '',
+                  organisation: String(organisation || '').trim(),
                   job_title: String(job_title || '').trim(),
                   join: Array.isArray(join) ? join : [join],
                   has_guest: Boolean(payload.has_guest),
@@ -104,18 +105,23 @@ function formApiPlugin(env: Record<string, string>): Plugin {
                   .select('id')
                   .single();
 
-                if (insertResult.error && (insertResult.error.code === '23502' || insertResult.error.message?.includes('email'))) {
-                  payloadData.email = '';
-                  insertResult = await sb
-                    .from('invitation_submissions')
-                    .insert([payloadData])
-                    .select('id')
-                    .single();
-                }
-
-                if (insertResult.error && insertResult.error.message && (insertResult.error.message.includes('has_guest') || insertResult.error.message.includes('guest_count'))) {
-                  delete payloadData.has_guest;
-                  delete payloadData.guest_count;
+                // Graceful fallback retry if any newly added columns do not exist in SQL schema yet
+                while (insertResult.error && insertResult.error.message) {
+                  let changed = false;
+                  if (insertResult.error.message.includes('organisation')) {
+                    delete payloadData.organisation;
+                    changed = true;
+                  }
+                  if (insertResult.error.message.includes('has_guest') || insertResult.error.message.includes('guest_count')) {
+                    delete payloadData.has_guest;
+                    delete payloadData.guest_count;
+                    changed = true;
+                  }
+                  if (insertResult.error.code === '23502' || insertResult.error.message.includes('email')) {
+                    payloadData.email = '';
+                    changed = true;
+                  }
+                  if (!changed) break;
                   insertResult = await sb
                     .from('invitation_submissions')
                     .insert([payloadData])

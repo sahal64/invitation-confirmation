@@ -96,6 +96,13 @@ export const PrintRecordModal: React.FC<PrintRecordModalProps> = ({
               <div className="text-base font-bold text-slate-900 mt-0.5">{submission.name}</div>
             </div>
 
+            {submission.organisation && (
+              <div className="border-b border-slate-100 pb-3">
+                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t.organisationLabel}</div>
+                <div className="text-base font-bold text-slate-800 mt-0.5">{submission.organisation}</div>
+              </div>
+            )}
+
             {submission.email && (
               <div className="border-b border-slate-100 pb-3">
                 <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t.emailLabel}</div>
