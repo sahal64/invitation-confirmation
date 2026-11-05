@@ -19,7 +19,7 @@ function formApiPlugin(env: Record<string, string>): Plugin {
               const { name, email, job_title, join, comments, locale, recaptchaToken } = payload;
 
               // 1. Basic field validation
-              if (!name || !email || !job_title || !join) {
+              if (!name || !job_title || !join) {
                 res.statusCode = 400;
                 res.setHeader('Content-Type', 'application/json');
                 res.end(
@@ -62,7 +62,7 @@ function formApiPlugin(env: Record<string, string>): Plugin {
                     );
                     return;
                   }
-                  console.info('✅ [Server] Google reCAPTCHA verified successfully for:', email);
+                  console.info('✅ [Server] Google reCAPTCHA verified successfully for:', name);
                 } catch (netErr) {
                   console.warn('⚠️ [Server] reCAPTCHA verification request error:', netErr);
                 }
@@ -90,12 +90,11 @@ function formApiPlugin(env: Record<string, string>): Plugin {
 
                 const payloadData: any = {
                   name: String(name || '').trim(),
-                  email: String(email || '').trim(),
+                  email: '',
                   job_title: String(job_title || '').trim(),
                   join: Array.isArray(join) ? join : [join],
                   has_guest: Boolean(payload.has_guest),
                   guest_count: Number(payload.guest_count || 0),
-                  comments: comments ? Number(comments) : null,
                   locale: locale || 'en',
                 };
 
@@ -104,6 +103,15 @@ function formApiPlugin(env: Record<string, string>): Plugin {
                   .insert([payloadData])
                   .select('id')
                   .single();
+
+                if (insertResult.error && (insertResult.error.code === '23502' || insertResult.error.message?.includes('email'))) {
+                  payloadData.email = '';
+                  insertResult = await sb
+                    .from('invitation_submissions')
+                    .insert([payloadData])
+                    .select('id')
+                    .single();
+                }
 
                 if (insertResult.error && insertResult.error.message && (insertResult.error.message.includes('has_guest') || insertResult.error.message.includes('guest_count'))) {
                   delete payloadData.has_guest;

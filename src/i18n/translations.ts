@@ -23,6 +23,11 @@ export interface Translations {
   guestCountLabel: string;
   guestCountPlaceholder: string;
   guestCountOption: (n: number) => string;
+  guestCountCustomOption: string;
+  customGuestCountLabel: string;
+  customGuestCountPlaceholder: string;
+  valCustomGuestCountRequired: string;
+  valCustomGuestCountMin: string;
   ratingLabel: string;
   ratingHint: string;
   starsCount: (n: number) => string;
@@ -131,6 +136,11 @@ export const translations: Record<Language, Translations> = {
     guestCountLabel: "How many guests will be attending with you?",
     guestCountPlaceholder: "Select number of guests...",
     guestCountOption: (n) => `${n} Guest${n > 1 ? 's' : ''}`,
+    guestCountCustomOption: "Custom (More than 5)",
+    customGuestCountLabel: "Enter exact number of accompanying guests",
+    customGuestCountPlaceholder: "e.g. 6, 7, 10...",
+    valCustomGuestCountRequired: "Please enter the number of accompanying guests",
+    valCustomGuestCountMin: "The number of accompanying guests must be greater than 5",
     ratingLabel: "Rating",
     ratingHint: "Rate on a scale from 1 to 5 stars",
     starsCount: (n) => `${n} star${n === 1 ? '' : 's'}`,
@@ -237,6 +247,11 @@ export const translations: Record<Language, Translations> = {
     guestCountLabel: "Сколько гостей будет с вами?",
     guestCountPlaceholder: "Выберите количество гостей...",
     guestCountOption: (n) => `${n} ${n === 1 ? 'гость' : n < 5 ? 'гостя' : 'гостей'}`,
+    guestCountCustomOption: "Свой вариант (более 5)",
+    customGuestCountLabel: "Укажите точное количество сопровождающих гостей",
+    customGuestCountPlaceholder: "например: 6, 7, 10...",
+    valCustomGuestCountRequired: "Пожалуйста, укажите количество сопровождающих гостей",
+    valCustomGuestCountMin: "Количество сопровождающих гостей должно быть больше 5",
     ratingLabel: "Оценка",
     ratingHint: "Оценка по шкале от 1 до 5 звёзд",
     starsCount: (n) => `${n} звёзд`,

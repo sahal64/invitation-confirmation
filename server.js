@@ -34,9 +34,9 @@ const server = http.createServer(async (req, res) => {
     req.on('end', async () => {
       try {
         const payload = JSON.parse(body || '{}');
-        const { name, email, job_title, join, comments, locale, recaptchaToken } = payload;
+        const { name, job_title, join, locale, recaptchaToken } = payload;
 
-        if (!name || !email || !job_title || !join) {
+        if (!name || !job_title || !join) {
           res.writeHead(400, { 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Required fields are missing' }));
         }
@@ -84,12 +84,11 @@ const server = http.createServer(async (req, res) => {
 
           const payloadData = {
             name: String(name || '').trim(),
-            email: String(email || '').trim(),
+            email: '',
             job_title: String(job_title || '').trim(),
             join: Array.isArray(join) ? join : [join],
             has_guest: Boolean(payload.has_guest),
             guest_count: Number(payload.guest_count || 0),
-            comments: comments ? Number(comments) : null,
             locale: locale || 'en',
           };
 
@@ -98,6 +97,15 @@ const server = http.createServer(async (req, res) => {
             .insert([payloadData])
             .select('id')
             .single();
+
+          if (insertResult.error && (insertResult.error.code === '23502' || insertResult.error.message?.includes('email'))) {
+            payloadData.email = '';
+            insertResult = await supabase
+              .from('invitation_submissions')
+              .insert([payloadData])
+              .select('id')
+              .single();
+          }
 
           if (insertResult.error && insertResult.error.message && (insertResult.error.message.includes('has_guest') || insertResult.error.message.includes('guest_count'))) {
             delete payloadData.has_guest;

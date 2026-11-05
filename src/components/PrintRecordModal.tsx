@@ -1,7 +1,7 @@
 import React from 'react';
 import { Submission, Language } from '../types';
 import { translations } from '../i18n/translations';
-import { Printer, X, Star, Calendar, CheckCircle2, XCircle } from 'lucide-react';
+import { Printer, X, Calendar, CheckCircle2, XCircle } from 'lucide-react';
 
 interface PrintRecordModalProps {
   submission: Submission | null;
@@ -96,10 +96,12 @@ export const PrintRecordModal: React.FC<PrintRecordModalProps> = ({
               <div className="text-base font-bold text-slate-900 mt-0.5">{submission.name}</div>
             </div>
 
-            <div className="border-b border-slate-100 pb-3">
-              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t.emailLabel}</div>
-              <div className="text-sm font-semibold text-emerald-700 mt-0.5 font-mono">{submission.email}</div>
-            </div>
+            {submission.email && (
+              <div className="border-b border-slate-100 pb-3">
+                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t.emailLabel}</div>
+                <div className="text-sm font-semibold text-emerald-700 mt-0.5 font-mono">{submission.email}</div>
+              </div>
+            )}
 
             <div className="border-b border-slate-100 pb-3">
               <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t.jobTitleLabel}</div>
@@ -136,35 +138,6 @@ export const PrintRecordModal: React.FC<PrintRecordModalProps> = ({
                 </div>
               </div>
             )}
-
-            <div className="pb-3">
-              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t.ratingLabel}</div>
-              <div className="mt-1">
-                {submission.comments !== null ? (
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center text-amber-500">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                          key={star}
-                          className={`w-4 h-4 ${
-                            star <= (submission.comments || 0)
-                              ? 'fill-amber-400 text-amber-500'
-                              : 'text-slate-200'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-xs font-bold text-slate-700">
-                      ({submission.comments} / 5)
-                    </span>
-                  </div>
-                ) : (
-                  <span className="text-xs italic text-slate-400">
-                    {currentLang === 'ru' ? 'Оценка не указана' : 'No rating provided'}
-                  </span>
-                )}
-              </div>
-            </div>
           </div>
 
           {/* Footer note */}

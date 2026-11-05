@@ -3,7 +3,7 @@ import { FormValues, FormErrors, Language } from '../types';
 import { translations } from '../i18n/translations';
 import { submitResponse } from '../services/supabase';
 import { RecaptchaWidget, RecaptchaWidgetRef } from './RecaptchaWidget';
-import { CheckCircle2, AlertCircle, Star, Sparkles, Send, ChevronDown, Users, RotateCcw } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Sparkles, Send, ChevronDown, Users, RotateCcw } from 'lucide-react';
 
 interface PublicFormProps {
   currentLang: Language;
@@ -11,12 +11,10 @@ interface PublicFormProps {
 
 const INITIAL_VALUES: FormValues = {
   name: '',
-  email: '',
   job_title: '',
   join: [],
   has_guest: false,
   guest_count: 0,
-  comments: null,
 };
 
 export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
@@ -26,7 +24,10 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [hoveredStar, setHoveredStar] = useState<number | null>(null);
+
+  // Accompany Guest selection state: '', '1', '2', '3', '4', '5', 'custom'
+  const [guestOption, setGuestOption] = useState<string>('');
+  const [customGuestCount, setCustomGuestCount] = useState<string>('');
 
   // Google reCAPTCHA state
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
@@ -40,15 +41,6 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
       newErrors.name = t.valNameRequired;
     }
 
-    if (!values.email.trim()) {
-      newErrors.email = t.valEmailRequired;
-    } else {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(values.email.trim())) {
-        newErrors.email = t.valEmailInvalid;
-      }
-    }
-
     if (!values.job_title.trim()) {
       newErrors.job_title = t.valJobTitleRequired;
     }
@@ -58,10 +50,22 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
       newErrors.join = t.valJoinRequired;
     }
 
-    // If attending, validate guest count if bringing guest
+    // If attending and bringing guests, validate guest count
     if (values.join.includes('YES') && values.has_guest) {
-      if (!values.guest_count || values.guest_count < 1) {
+      if (!guestOption) {
         newErrors.guest_count = t.valGuestCountRequired;
+      } else if (guestOption === 'custom') {
+        const trimmed = customGuestCount.trim();
+        const parsed = parseInt(trimmed, 10);
+        if (!trimmed || isNaN(parsed)) {
+          newErrors.guest_count = t.valCustomGuestCountRequired;
+        } else if (parsed <= 5) {
+          newErrors.guest_count = t.valCustomGuestCountMin;
+        }
+      } else {
+        if (!values.guest_count || values.guest_count < 1) {
+          newErrors.guest_count = t.valGuestCountRequired;
+        }
       }
     }
 
@@ -88,6 +92,8 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
         has_guest: false,
         guest_count: 0,
       }));
+      setGuestOption('');
+      setCustomGuestCount('');
     } else {
       setValues((prev) => ({
         ...prev,
@@ -95,6 +101,8 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
         has_guest: false,
         guest_count: 0,
       }));
+      setGuestOption('');
+      setCustomGuestCount('');
     }
 
     if (errors.join) {
@@ -104,11 +112,29 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
 
   // Handles "Will you be accompanied by a guest?"
   const handleHasGuestSelect = (hasGuest: boolean) => {
-    setValues((prev) => ({
-      ...prev,
-      has_guest: hasGuest,
-      guest_count: hasGuest ? (prev.guest_count > 0 ? prev.guest_count : 1) : 0,
-    }));
+    if (hasGuest) {
+      const nextOption = guestOption || '1';
+      let nextCount = Number(nextOption);
+      if (nextOption === 'custom') {
+        const parsed = parseInt(customGuestCount.trim(), 10);
+        nextCount = !isNaN(parsed) && parsed > 5 ? parsed : 0;
+      }
+
+      setValues((prev) => ({
+        ...prev,
+        has_guest: true,
+        guest_count: nextCount,
+      }));
+      setGuestOption(nextOption);
+    } else {
+      setValues((prev) => ({
+        ...prev,
+        has_guest: false,
+        guest_count: 0,
+      }));
+      setGuestOption('');
+      setCustomGuestCount('');
+    }
 
     if (errors.has_guest || errors.guest_count) {
       setErrors((prev) => ({ ...prev, has_guest: undefined, guest_count: undefined }));
@@ -116,14 +142,42 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
   };
 
   // Handles number of guests dropdown
-  const handleGuestCountChange = (count: number) => {
-    setValues((prev) => ({
-      ...prev,
-      guest_count: count,
-    }));
+  const handleGuestDropdownChange = (selected: string) => {
+    setGuestOption(selected);
+
+    if (selected === 'custom') {
+      const parsed = parseInt(customGuestCount.trim(), 10);
+      if (!isNaN(parsed) && parsed > 5) {
+        setValues((prev) => ({ ...prev, guest_count: parsed }));
+      } else {
+        setValues((prev) => ({ ...prev, guest_count: 0 }));
+      }
+    } else {
+      // When an existing option (1-5) is selected, hide custom input and clear its value
+      setCustomGuestCount('');
+      const count = Number(selected);
+      setValues((prev) => ({
+        ...prev,
+        guest_count: count,
+      }));
+    }
 
     if (errors.guest_count) {
       setErrors((prev) => ({ ...prev, guest_count: undefined }));
+    }
+  };
+
+  // Handles custom number of guests input
+  const handleCustomGuestCountChange = (val: string) => {
+    setCustomGuestCount(val);
+    const parsed = parseInt(val.trim(), 10);
+    if (!isNaN(parsed) && parsed > 5) {
+      setValues((prev) => ({ ...prev, guest_count: parsed }));
+      if (errors.guest_count) {
+        setErrors((prev) => ({ ...prev, guest_count: undefined }));
+      }
+    } else {
+      setValues((prev) => ({ ...prev, guest_count: 0 }));
     }
   };
 
@@ -144,6 +198,8 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
       if (res.success) {
         setIsSubmitted(true);
         setValues(INITIAL_VALUES);
+        setGuestOption('');
+        setCustomGuestCount('');
         setRecaptchaToken(null);
         recaptchaRef.current?.reset();
         setErrors({});
@@ -164,6 +220,8 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
   const handleClear = () => {
     if (window.confirm(t.clearConfirm)) {
       setValues(INITIAL_VALUES);
+      setGuestOption('');
+      setCustomGuestCount('');
       setErrors({});
       setRecaptchaToken(null);
       recaptchaRef.current?.reset();
@@ -281,40 +339,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
           )}
         </div>
 
-        {/* Question 2: Email */}
-        <div
-          className={`bg-white rounded-xl shadow-sm border p-6 transition-all duration-200 ${
-            errors.email ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200 hover:border-slate-300'
-          }`}
-        >
-          <label htmlFor="email-input" className="block text-base font-semibold text-slate-900 mb-1">
-            {t.emailLabel} <span className="text-rose-500 font-bold">*</span>
-          </label>
-          <div className="mt-3">
-            <input
-              id="email-input"
-              type="email"
-              value={values.email}
-              onChange={(e) => {
-                setValues({ ...values, email: e.target.value });
-                if (errors.email) setErrors({ ...errors, email: undefined });
-              }}
-              placeholder={t.emailPlaceholder}
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 placeholder:text-slate-400 text-sm sm:text-base transition-colors"
-              aria-required="true"
-              aria-invalid={Boolean(errors.email)}
-              aria-describedby={errors.email ? 'email-error' : undefined}
-            />
-          </div>
-          {errors.email && (
-            <p id="email-error" className="mt-2 text-xs font-semibold text-rose-600 flex items-center gap-1.5">
-              <AlertCircle className="w-3.5 h-3.5" />
-              <span>{errors.email}</span>
-            </p>
-          )}
-        </div>
-
-        {/* Question 3: Job Title */}
+        {/* Question 2: Job Title */}
         <div
           className={`bg-white rounded-xl shadow-sm border p-6 transition-all duration-200 ${
             errors.job_title ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200 hover:border-slate-300'
@@ -347,7 +372,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
           )}
         </div>
 
-        {/* Question 4: Attendance Confirmation Dropdown */}
+        {/* Question 3: Attendance Confirmation Dropdown */}
         <div
           className={`bg-white rounded-xl shadow-sm border p-6 transition-all duration-200 ${
             errors.join ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200 hover:border-slate-300'
@@ -383,7 +408,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
           )}
         </div>
 
-        {/* Question 4b: Accompanying Guest Question (Only appears if attending YES) */}
+        {/* Question 3b: Accompanying Guest Question (Only appears if attending YES) */}
         {values.join.includes('YES') && (
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 transition-all duration-200">
             <div className="flex items-center gap-2 mb-3">
@@ -418,7 +443,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
               </button>
             </div>
 
-            {/* Question 4c: Number of Guests Dropdown (Only appears if bringing guest) */}
+            {/* Question 3c: Number of Guests Dropdown (Only appears if bringing guest) */}
             {values.has_guest && (
               <div className="mt-5 pt-4 border-t border-slate-100">
                 <label htmlFor="guest-count-select" className="block text-sm font-semibold text-slate-800 mb-2">
@@ -427,23 +452,50 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
                 <div className="relative max-w-xs">
                   <select
                     id="guest-count-select"
-                    value={values.guest_count || ''}
-                    onChange={(e) => handleGuestCountChange(Number(e.target.value))}
+                    value={guestOption}
+                    onChange={(e) => handleGuestDropdownChange(e.target.value)}
                     className="w-full px-4 py-2.5 pr-10 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 text-sm appearance-none bg-white font-medium cursor-pointer"
                   >
                     <option value="" disabled>
                       {t.guestCountPlaceholder}
                     </option>
                     {[1, 2, 3, 4, 5].map((num) => (
-                      <option key={num} value={num}>
+                      <option key={num} value={String(num)}>
                         {t.guestCountOption(num)}
                       </option>
                     ))}
+                    <option value="custom">{t.guestCountCustomOption}</option>
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
                     <ChevronDown className="w-4 h-4" />
                   </div>
                 </div>
+
+                {/* Custom Number Input when 'Custom' is selected */}
+                {guestOption === 'custom' && (
+                  <div className="mt-3">
+                    <label htmlFor="custom-guest-count-input" className="block text-xs font-semibold text-slate-700 mb-1.5">
+                      {t.customGuestCountLabel} <span className="text-rose-500 font-bold">*</span>
+                    </label>
+                    <input
+                      id="custom-guest-count-input"
+                      type="number"
+                      min="6"
+                      step="1"
+                      value={customGuestCount}
+                      onChange={(e) => handleCustomGuestCountChange(e.target.value)}
+                      placeholder={t.customGuestCountPlaceholder}
+                      className={`w-full max-w-xs px-4 py-2.5 rounded-xl border ${
+                        errors.guest_count
+                          ? 'border-rose-400 ring-2 ring-rose-100'
+                          : 'border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500'
+                      } text-slate-900 text-sm font-medium transition-colors`}
+                      aria-required="true"
+                      aria-invalid={Boolean(errors.guest_count)}
+                    />
+                  </div>
+                )}
+
                 {errors.guest_count && (
                   <p className="mt-2 text-xs font-semibold text-rose-600 flex items-center gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5" />
@@ -454,63 +506,6 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
             )}
           </div>
         )}
-
-        {/* Question 5: Rating (1 to 5 Stars) */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 hover:border-slate-300 p-6 transition-all duration-200">
-          <div className="flex items-center justify-between mb-1">
-            <span className="block text-base font-semibold text-slate-900">
-              {t.ratingLabel}
-            </span>
-            <span className="text-xs font-medium text-slate-400">
-              {currentLang === 'ru' ? 'Необязательно' : 'Optional'}
-            </span>
-          </div>
-          <p className="text-xs text-slate-500 mb-4">{t.ratingHint}</p>
-
-          <div className="flex items-center gap-2 sm:gap-4 py-2">
-            {[1, 2, 3, 4, 5].map((star) => {
-              const isActive = (hoveredStar !== null ? hoveredStar >= star : values.comments !== null && values.comments >= star);
-              return (
-                <button
-                  type="button"
-                  key={star}
-                  onClick={() => {
-                    // Toggle if already selected
-                    if (values.comments === star) {
-                      setValues({ ...values, comments: null });
-                    } else {
-                      setValues({ ...values, comments: star });
-                    }
-                  }}
-                  onMouseEnter={() => setHoveredStar(star)}
-                  onMouseLeave={() => setHoveredStar(null)}
-                  className="flex flex-col items-center gap-1.5 p-2 rounded-xl transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  aria-label={t.starsCount(star)}
-                >
-                  <Star
-                    className={`w-7 h-7 sm:w-8 sm:h-8 transition-colors ${
-                      isActive
-                        ? 'fill-amber-400 text-amber-500 drop-shadow-sm'
-                        : 'text-slate-300 hover:text-slate-400'
-                    }`}
-                  />
-                  <span className={`text-xs font-semibold ${isActive ? 'text-amber-700' : 'text-slate-500'}`}>
-                    {star}
-                  </span>
-                </button>
-              );
-            })}
-            {values.comments !== null && (
-              <button
-                type="button"
-                onClick={() => setValues({ ...values, comments: null })}
-                className="ml-auto text-xs font-medium text-slate-400 hover:text-slate-600 underline"
-              >
-                {currentLang === 'ru' ? 'Сбросить' : 'Clear'}
-              </button>
-            )}
-          </div>
-        </div>
 
         {/* Google reCAPTCHA v2 Security Challenge */}
         <RecaptchaWidget

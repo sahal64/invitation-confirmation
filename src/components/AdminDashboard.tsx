@@ -20,7 +20,6 @@ import {
   Users,
   CheckCircle,
   XCircle,
-  Star,
   ChevronLeft,
   ChevronRight,
   Lock,
@@ -136,7 +135,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
       const matchesSearch =
         !filters.search ||
         sub.name.toLowerCase().includes(searchLower) ||
-        sub.email.toLowerCase().includes(searchLower) ||
+        (sub.email || '').toLowerCase().includes(searchLower) ||
         sub.job_title.toLowerCase().includes(searchLower);
 
       // Join Filter
@@ -164,10 +163,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
         comparison = new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       } else if (filters.sortBy === 'name') {
         comparison = a.name.localeCompare(b.name);
-      } else if (filters.sortBy === 'email') {
-        comparison = a.email.localeCompare(b.email);
-      } else if (filters.sortBy === 'comments') {
-        comparison = (a.comments || 0) - (b.comments || 0);
+      } else if (filters.sortBy === 'job_title') {
+        comparison = a.job_title.localeCompare(b.job_title);
+      } else if (filters.sortBy === 'guest_count') {
+        comparison = (a.guest_count || 0) - (b.guest_count || 0);
       }
       return filters.sortOrder === 'desc' ? comparison : -comparison;
     });
@@ -188,14 +187,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
     const totalGuests = submissions
       .filter((s) => s.join.includes('YES') && s.has_guest)
       .reduce((sum, s) => sum + (s.guest_count || 0), 0);
-    const ratings = submissions.filter((s) => s.comments !== null).map((s) => s.comments as number);
-    const avgRating = ratings.length > 0 ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1) : '-';
 
-    return { total, attending, declined, totalGuests, avgRating };
+    return { total, attending, declined, totalGuests };
   }, [submissions]);
 
   // Handle Sort Toggle
-  const toggleSort = (field: 'created_at' | 'name' | 'email' | 'comments') => {
+  const toggleSort = (field: 'created_at' | 'name' | 'job_title' | 'guest_count') => {
     setFilters((prev) => ({
       ...prev,
       sortBy: field,
@@ -368,7 +365,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
       )}
 
       {/* Analytics Summary Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
             <span>{t.totalSubmissions}</span>
@@ -401,17 +398,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
           </div>
           <div className="text-2xl sm:text-3xl font-extrabold text-slate-700 mt-2">
             {stats.declined}
-          </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-          <div className="flex items-center justify-between text-amber-600 text-xs font-semibold">
-            <span>{t.avgRating}</span>
-            <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-extrabold text-amber-700 mt-2 flex items-baseline gap-1">
-            <span>{stats.avgRating}</span>
-            <span className="text-xs font-normal text-slate-400">/ 5.0</span>
           </div>
         </div>
       </div>
@@ -565,26 +551,28 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-1.5 text-xs text-emerald-800 font-mono mt-0.5">
-                      <Mail className="w-3 h-3 text-emerald-600 flex-shrink-0" />
-                      <span className="break-all">{sub.email}</span>
-                    </div>
+                    {sub.email && (
+                      <div className="flex items-center gap-1.5 text-xs text-emerald-800 font-mono mt-0.5">
+                        <Mail className="w-3 h-3 text-emerald-600 flex-shrink-0" />
+                        <span className="break-all">{sub.email}</span>
+                      </div>
+                    )}
                     <div className="flex items-center gap-1.5 text-xs text-slate-600 mt-1">
                       <Briefcase className="w-3 h-3 text-slate-400 flex-shrink-0" />
                       <span className="line-clamp-2">{sub.job_title}</span>
                     </div>
                   </div>
 
-                  {/* Rating & Actions */}
+                  {/* Guests & Actions */}
                   <div className="flex items-center justify-between pt-1 border-t border-slate-100 text-xs">
                     <div className="flex items-center gap-2">
-                      {sub.comments !== null ? (
-                        <div className="flex items-center gap-1 text-amber-500">
-                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
-                          <span className="font-bold text-slate-700">{sub.comments}/5</span>
-                        </div>
+                      {sub.has_guest && (sub.guest_count || 0) > 0 ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                          <Users className="w-3 h-3 text-blue-500" />
+                          <span>+{sub.guest_count} guests</span>
+                        </span>
                       ) : (
-                        <span className="text-slate-400 text-[11px]">No rating</span>
+                        <span className="text-slate-400 text-[11px]">No guests</span>
                       )}
                       <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-100 text-slate-600">
                         {sub.locale}
@@ -631,23 +619,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                   </div>
                 </th>
                 <th
-                  onClick={() => toggleSort('email')}
-                  className="py-3 px-4 cursor-pointer hover:text-slate-800 transition-colors min-w-[180px]"
+                  onClick={() => toggleSort('job_title')}
+                  className="py-3 px-4 cursor-pointer hover:text-slate-800 transition-colors min-w-[160px]"
                 >
                   <div className="flex items-center gap-1">
-                    <span>{t.colEmail}</span>
+                    <span>{t.colJobTitle}</span>
                     <ArrowUpDown className="w-3 h-3 text-slate-400" />
                   </div>
                 </th>
-                <th className="py-3 px-4 min-w-[160px]">{t.colJobTitle}</th>
                 <th className="py-3 px-4 min-w-[100px]">{t.colJoin}</th>
-                <th className="py-3 px-4 min-w-[90px]">{t.colGuest}</th>
                 <th
-                  onClick={() => toggleSort('comments')}
-                  className="py-3 px-4 cursor-pointer hover:text-slate-800 transition-colors min-w-[110px]"
+                  onClick={() => toggleSort('guest_count')}
+                  className="py-3 px-4 cursor-pointer hover:text-slate-800 transition-colors min-w-[90px]"
                 >
                   <div className="flex items-center gap-1">
-                    <span>{t.colRating}</span>
+                    <span>{t.colGuest}</span>
                     <ArrowUpDown className="w-3 h-3 text-slate-400" />
                   </div>
                 </th>
@@ -658,13 +644,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
             <tbody className="divide-y divide-slate-100 text-slate-800">
               {loadingData ? (
                 <tr>
-                  <td colSpan={9} className="py-12 text-center text-slate-400">
+                  <td colSpan={7} className="py-12 text-center text-slate-400">
                     Loading submissions...
                   </td>
                 </tr>
               ) : paginatedSubmissions.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="py-12 text-center text-slate-400">
+                  <td colSpan={7} className="py-12 text-center text-slate-400">
                     {t.noSubmissionsFound}
                   </td>
                 </tr>
@@ -701,9 +687,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                           )}
                         </div>
                       </td>
-                      <td className="py-3.5 px-4 font-mono text-xs text-emerald-800 whitespace-nowrap">
-                        {sub.email}
-                      </td>
                       <td className="py-3.5 px-4 text-slate-600 max-w-[200px] truncate" title={sub.job_title}>
                         {sub.job_title}
                       </td>
@@ -726,16 +709,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                             <Users className="w-3 h-3 text-blue-500" />
                             <span>+{sub.guest_count}</span>
                           </span>
-                        ) : (
-                          <span className="text-slate-300">-</span>
-                        )}
-                      </td>
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        {sub.comments !== null ? (
-                          <div className="flex items-center gap-1 text-amber-500">
-                            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
-                            <span className="text-xs font-bold text-slate-700">{sub.comments}</span>
-                          </div>
                         ) : (
                           <span className="text-slate-300">-</span>
                         )}

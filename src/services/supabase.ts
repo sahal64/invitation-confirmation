@@ -151,10 +151,9 @@ export async function submitResponse(
     try {
       const payload: any = {
         name: values.name.trim(),
-        email: values.email.trim(),
+        email: '',
         job_title: values.job_title.trim(),
         join: values.join,
-        comments: values.comments,
         locale: locale,
         has_guest: Boolean(values.has_guest),
         guest_count: Number(values.guest_count || 0),
@@ -163,6 +162,13 @@ export async function submitResponse(
       let { error } = await supabase
         .from('invitation_submissions')
         .insert([payload]);
+
+      // If email has not-null constraint in legacy DB schema, provide empty string fallback
+      if (error && (error.code === '23502' || error.message?.includes('email'))) {
+        payload.email = '';
+        const retryEmail = await supabase.from('invitation_submissions').insert([payload]);
+        error = retryEmail.error;
+      }
 
       // Graceful fallback if columns has_guest or guest_count are not added in SQL yet
       if (error && error.message && (error.message.includes('has_guest') || error.message.includes('guest_count'))) {
@@ -191,12 +197,10 @@ export async function submitResponse(
       id: crypto.randomUUID ? crypto.randomUUID() : `local-${Date.now()}`,
       created_at: new Date().toISOString(),
       name: values.name.trim(),
-      email: values.email.trim(),
       job_title: values.job_title.trim(),
       join: values.join,
       has_guest: Boolean(values.has_guest),
       guest_count: Number(values.guest_count || 0),
-      comments: values.comments,
       locale: locale,
       is_sample: false,
     };

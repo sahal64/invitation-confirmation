@@ -13,7 +13,6 @@ export function exportToCSV(submissions: Submission[], lang: Language): void {
     t.colJobTitle,
     t.colJoin,
     t.colGuest,
-    t.colRating,
     t.colLanguage,
   ];
 
@@ -21,11 +20,10 @@ export function exportToCSV(submissions: Submission[], lang: Language): void {
     sub.id,
     new Date(sub.created_at).toLocaleString(lang === 'ru' ? 'ru-RU' : 'en-US'),
     `"${sub.name.replace(/"/g, '""')}"`,
-    `"${sub.email.replace(/"/g, '""')}"`,
+    `"${(sub.email || '').replace(/"/g, '""')}"`,
     `"${sub.job_title.replace(/"/g, '""')}"`,
     `"${sub.join.join(', ')}"`,
-    sub.has_guest ? (sub.guest_count || 1) : 0,
-    sub.comments !== null ? sub.comments.toString() : '',
+    sub.has_guest ? (sub.guest_count || 0) : 0,
     sub.locale.toUpperCase(),
   ]);
 
@@ -53,11 +51,10 @@ export function exportToExcel(submissions: Submission[], lang: Language): void {
     [t.submissionId]: sub.id,
     [t.submittedAt]: new Date(sub.created_at).toLocaleString(lang === 'ru' ? 'ru-RU' : 'en-US'),
     [t.colName]: sub.name,
-    [t.colEmail]: sub.email,
+    [t.colEmail]: sub.email || '-',
     [t.colJobTitle]: sub.job_title,
     [t.colJoin]: sub.join.join(', '),
-    [t.colGuest]: sub.has_guest ? (sub.guest_count || 1) : 0,
-    [t.colRating]: sub.comments !== null ? sub.comments : '-',
+    [t.colGuest]: sub.has_guest ? (sub.guest_count || 0) : 0,
     [t.colLanguage]: sub.locale.toUpperCase(),
   }));
 
@@ -72,7 +69,6 @@ export function exportToExcel(submissions: Submission[], lang: Language): void {
     { wch: 35 }, // Job Title
     { wch: 14 }, // Join
     { wch: 12 }, // Guests
-    { wch: 18 }, // Rating
     { wch: 12 }, // Language
   ];
 

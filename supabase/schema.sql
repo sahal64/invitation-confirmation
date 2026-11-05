@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS public.invitation_submissions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL,
     name TEXT NOT NULL,
-    email TEXT NOT NULL,
+    email TEXT DEFAULT '',
     job_title TEXT NOT NULL,
     "join" TEXT[] NOT NULL,
     has_guest BOOLEAN DEFAULT false NOT NULL,
@@ -16,7 +16,12 @@ CREATE TABLE IF NOT EXISTS public.invitation_submissions (
     locale TEXT DEFAULT 'en' NOT NULL
 );
 
--- Migration for existing tables:
+-- Migrations for existing tables:
+-- 1) Allow submissions without email address:
+ALTER TABLE public.invitation_submissions ALTER COLUMN email DROP NOT NULL;
+ALTER TABLE public.invitation_submissions ALTER COLUMN email SET DEFAULT '';
+
+-- 2) Accompanying guest columns:
 ALTER TABLE public.invitation_submissions 
 ADD COLUMN IF NOT EXISTS has_guest BOOLEAN DEFAULT false,
 ADD COLUMN IF NOT EXISTS guest_count INTEGER DEFAULT 0;
