@@ -27,6 +27,67 @@ const MIME_TYPES = {
 };
 
 const server = http.createServer(async (req, res) => {
+  // 0. Dynamic QR Code Redirect Endpoint: /qr/:qrId
+  const qrMatch = req.url && req.url.match(/^\/qr\/([^/?#]+)/i);
+  if (qrMatch && req.method === 'GET') {
+    const qrId = qrMatch[1].trim().toLowerCase();
+
+    // Disable caching for dynamic redirects
+    res.setHeader(
+      'Cache-Control',
+      'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0'
+    );
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+
+    const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || '';
+    const supabaseKey =
+      process.env.SUPABASE_SECRET_KEY ||
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.VITE_SUPABASE_ANON_KEY ||
+      process.env.SUPABASE_PUBLISHABLE_KEY ||
+      '';
+
+    if (supabaseUrl && supabaseKey && !supabaseUrl.includes('your-project')) {
+      try {
+        const { createClient } = await import('@supabase/supabase-js');
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        const { data } = await supabase
+          .from('qr_codes')
+          .select('id, qr_id, destination_url, is_active')
+          .eq('qr_id', qrId)
+          .maybeSingle();
+
+        if (data) {
+          if (!data.is_active) {
+            res.writeHead(302, { Location: `/?qr_status=inactive&slug=${encodeURIComponent(qrId)}` });
+            return res.end();
+          }
+
+          if (
+            data.destination_url &&
+            (data.destination_url.startsWith('http://') || data.destination_url.startsWith('https://'))
+          ) {
+            // HTTP 302 Temporary Redirect to the latest destination URL
+            res.writeHead(302, { Location: data.destination_url });
+            return res.end();
+          }
+        }
+      } catch (err) {
+        console.error('server.js QR lookup error:', err);
+      }
+    }
+
+    if (qrId === 'national-day-2026') {
+      res.writeHead(302, { Location: '/' });
+      return res.end();
+    }
+
+    res.writeHead(302, { Location: `/?qr_status=not_found&slug=${encodeURIComponent(qrId)}` });
+    return res.end();
+  }
+
   // 1. API: /api/submit-form endpoint
   if (req.url === '/api/submit-form' && req.method === 'POST') {
     let body = '';
