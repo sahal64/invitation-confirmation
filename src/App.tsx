@@ -73,13 +73,7 @@ export const App: React.FC = () => {
       {view === 'form' ? (
         /* Full-page National Day 2026 Background (Public Form Page Only) */
         <div
-          className="fixed inset-0 pointer-events-none select-none z-0"
-          style={{
-            backgroundImage: "url('/national-day-bg.jpg')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-          }}
+          className="fixed inset-0 pointer-events-none select-none z-0 form-page-bg"
           aria-hidden="true"
         />
       ) : (

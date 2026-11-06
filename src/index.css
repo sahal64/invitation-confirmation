@@ -8,6 +8,22 @@
   }
 }
 
+/* Responsive National Day Background for Public Form Page */
+.form-page-bg {
+  background-image: url('/national-day-bg.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* Mobile portrait: horizontally position so the light lavender region, S-curves, and dark mauve-purple are balanced */
+  background-position: 22% center;
+}
+
+/* Landscape orientation or tablet/desktop (min-width: 768px): center the background */
+@media (min-width: 768px), (orientation: landscape) {
+  .form-page-bg {
+    background-position: center center;
+  }
+}
+
 @media print {
   body {
     background: white !important;
