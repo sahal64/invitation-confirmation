@@ -468,7 +468,9 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
         {/* Question 2: Organisation Name Searchable Dropdown with "Others" custom input */}
         <div
           ref={orgDropdownRef}
-          className={`bg-white/95 backdrop-blur-sm rounded-xl shadow-xs border p-6 transition-all duration-200 ${
+          className={`bg-white/95 backdrop-blur-sm rounded-xl shadow-xs border p-6 transition-all duration-200 relative ${
+            isOrgDropdownOpen ? 'z-20' : 'z-auto'
+          } ${
             errors.organisation ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200/90 hover:border-[#BAA2BA]/60'
           }`}
         >
@@ -477,7 +479,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
           </label>
 
           {/* Searchable Select Trigger Button */}
-          <div className="mt-3 relative">
+          <div className={`mt-3 relative ${isOrgDropdownOpen ? 'z-30' : 'z-auto'}`}>
             <button
               type="button"
               onClick={toggleOrgDropdown}
