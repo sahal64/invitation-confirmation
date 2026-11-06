@@ -133,8 +133,8 @@ export interface Translations {
 
 export const translations: Record<Language, Translations> = {
   en: {
-    // Exact wording from source form
-    formTitle: "invitation confirmation -National day",
+    // Authoritative event title with proper capitalization
+    formTitle: "Invitation Confirmation – National Day",
     formDescription: "Date 25-11-2026  Time :6 PM to 10 PM",
     nationalDayBadge: "National Day Celebration",
     requiredHint: "Indicates required question",
@@ -206,7 +206,7 @@ export const translations: Record<Language, Translations> = {
 
     // Admin
     adminTitle: "Responses & Attendance Management",
-    adminSubtitle: "Secure overview and administrative records for the National Day invitation form.",
+    adminSubtitle: "Secure overview and administrative records for the National Day Invitation Confirmation form.",
     adminLoginTitle: "Admin Portal Sign In",
     adminLoginSubtitle: "Enter your credentials to access confidential event submissions.",
     adminEmailLabel: "Admin Email",

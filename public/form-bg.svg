@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+  <defs>
+    <!-- Background Linear Gradient for Slate-Lilac -->
+    <linearGradient id="slateLilac" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D3D5DF" />
+      <stop offset="60%" stop-color="#C7CAD6" />
+      <stop offset="100%" stop-color="#BCBFCC" />
+    </linearGradient>
+
+    <!-- Mauve Brand Gradient -->
+    <linearGradient id="mauveBrand" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#B89DB9" />
+      <stop offset="45%" stop-color="#BAA2BA" />
+      <stop offset="100%" stop-color="#AA8DAA" />
+    </linearGradient>
+
+    <!-- Subtle Ambient Shading for Wave Edge -->
+    <linearGradient id="waveGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#9E7C9E" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#BAA2BA" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Fine Paper Grain Texture -->
+    <filter id="paperGrain" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" result="noise" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0.15   0 0 0 0 0.15   0 0 0 0 0.15  0 0 0 0.04 0" />
+      <feBlend mode="multiply" in="SourceGraphic" result="blend" />
+    </filter>
+  </defs>
+
+  <!-- Base Slate-Lilac Layer -->
+  <rect width="100%" height="100%" fill="url(#slateLilac)" />
+
+  <!-- Soft Secondary Background Glows -->
+  <circle cx="200" cy="200" r="350" fill="#E2E4EC" opacity="0.4" />
+  <circle cx="1200" cy="700" r="400" fill="#A485A5" opacity="0.3" />
+
+  <!-- Primary Organic Mauve Wave from Eid Al Etihad Brand Guideline -->
+  <path
+    d="M 520,0
+       C 370,110 375,250 435,330
+       C 520,440 560,510 420,650
+       C 260,780 110,850 0,900
+       L 1440,900
+       L 1440,0
+       Z"
+    fill="url(#mauveBrand)"
+  />
+
+  <!-- Organic Wave Ambient Edge Accent -->
+  <path
+    d="M 520,0
+       C 370,110 375,250 435,330
+       C 520,440 560,510 420,650
+       C 260,780 110,850 0,900
+       L 0,900
+       L 1440,900
+       L 1440,0
+       Z"
+    fill="none"
+    stroke="#A583A5"
+    stroke-width="1.5"
+    opacity="0.25"
+  />
+
+  <!-- Subtle Grain Texture Overlay -->
+  <rect width="100%" height="100%" filter="url(#paperGrain)" opacity="0.6" pointer-events="none" />
+</svg>
+

@@ -358,12 +358,12 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
   if (isSubmitted) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-12">
-        <div className="bg-white rounded-2xl shadow-xl shadow-emerald-950/5 border border-slate-200/80 overflow-hidden">
+        <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl shadow-[#5C3B5E]/5 border border-white/80 sm:border-[#BAA2BA]/30 overflow-hidden">
           {/* Header decorative accent stripe */}
-          <div className="h-3 bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500" />
+          <div className="h-3.5 bg-gradient-to-r from-[#7D5A7E] via-[#9E7B9E] to-[#BAA2BA]" />
           
           <div className="p-8 sm:p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center ring-8 ring-emerald-50">
+            <div className="w-16 h-16 mx-auto mb-6 bg-[#BAA2BA]/20 text-[#754F76] rounded-full flex items-center justify-center ring-8 ring-[#BAA2BA]/15">
               <CheckCircle2 className="w-10 h-10" />
             </div>
 
@@ -375,7 +375,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
               <span>{t.formDescription}</span>
             </div>
 
-            <p className="text-lg text-emerald-800 font-medium mb-8 bg-emerald-50 py-3 px-6 rounded-xl border border-emerald-200/60 inline-block">
+            <p className="text-base sm:text-lg text-[#5C3B5E] font-semibold mb-8 bg-[#BAA2BA]/15 py-3 px-6 rounded-xl border border-[#BAA2BA]/30 inline-block">
               {t.confirmationMessage}
             </p>
 
@@ -383,7 +383,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
               <button
                 type="button"
                 onClick={() => setIsSubmitted(false)}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#8C6B8D] to-[#754F76] hover:from-[#7D5C7E] hover:to-[#684369] text-white font-semibold text-sm transition-all shadow-md shadow-[#8C6B8D]/20 hover:shadow-lg hover:-translate-y-0.5"
               >
                 <RotateCcw className="w-4 h-4" />
                 <span>{t.submitAnotherButton}</span>
@@ -400,13 +400,13 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
     <div className="max-w-2xl mx-auto px-4 py-8 sm:py-12">
       <form onSubmit={handleSubmit} noValidate className="space-y-6">
         {/* Main Card: Event Header & Details */}
-        <div className="bg-white rounded-2xl shadow-xl shadow-emerald-950/5 border border-slate-200/80 overflow-hidden relative">
+        <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl shadow-[#5C3B5E]/5 border border-white/80 sm:border-[#BAA2BA]/25 overflow-hidden relative">
           {/* Top Decorative Banner */}
-          <div className="h-3.5 bg-gradient-to-r from-emerald-700 via-emerald-600 to-green-500" />
+          <div className="h-3.5 bg-gradient-to-r from-[#7D5A7E] via-[#9E7B9E] to-[#BAA2BA]" />
           
           <div className="p-6 sm:p-8">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-700 mb-2">
-              <Sparkles className="w-4 h-4" />
+            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#7A577B] mb-3 px-2.5 py-1 rounded-full bg-[#BAA2BA]/15 border border-[#BAA2BA]/30">
+              <Sparkles className="w-3.5 h-3.5 text-[#8C6B8D]" />
               <span>{t.nationalDayBadge}</span>
             </div>
 
@@ -414,7 +414,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
               {t.formTitle}
             </h1>
 
-            <div className="flex items-center gap-2 text-slate-600 font-medium text-sm sm:text-base mb-6 bg-slate-50 px-3.5 py-2 rounded-lg border border-slate-200/70">
+            <div className="flex items-center gap-2 text-slate-600 font-medium text-sm sm:text-base mb-6 bg-slate-50/90 px-3.5 py-2 rounded-lg border border-slate-200/70">
               <span className="font-semibold text-slate-800">{t.formDescription}</span>
             </div>
 
@@ -434,8 +434,8 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
 
         {/* Question 1: Full Name */}
         <div
-          className={`bg-white rounded-xl shadow-sm border p-6 transition-all duration-200 ${
-            errors.name ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200 hover:border-slate-300'
+          className={`bg-white/95 backdrop-blur-sm rounded-xl shadow-xs border p-6 transition-all duration-200 ${
+            errors.name ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200/90 hover:border-[#BAA2BA]/60'
           }`}
         >
           <label htmlFor="name-input" className="block text-base font-semibold text-slate-900 mb-1">
@@ -451,7 +451,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
                 if (errors.name) setErrors({ ...errors, name: undefined });
               }}
               placeholder={t.namePlaceholder}
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 placeholder:text-slate-400 text-sm sm:text-base transition-colors"
+              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D] text-slate-900 placeholder:text-slate-400 text-sm sm:text-base transition-colors"
               aria-required="true"
               aria-invalid={Boolean(errors.name)}
               aria-describedby={errors.name ? 'name-error' : undefined}
@@ -468,8 +468,8 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
         {/* Question 2: Organisation Name Searchable Dropdown with "Others" custom input */}
         <div
           ref={orgDropdownRef}
-          className={`bg-white rounded-xl shadow-sm border p-6 transition-all duration-200 ${
-            errors.organisation ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200 hover:border-slate-300'
+          className={`bg-white/95 backdrop-blur-sm rounded-xl shadow-xs border p-6 transition-all duration-200 ${
+            errors.organisation ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200/90 hover:border-[#BAA2BA]/60'
           }`}
         >
           <label className="block text-base font-semibold text-slate-900 mb-1">
@@ -485,14 +485,14 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
               aria-expanded={isOrgDropdownOpen}
               className={`w-full px-4 py-2.5 rounded-lg border text-left flex items-center justify-between transition-colors bg-white ${
                 isOrgDropdownOpen
-                  ? 'border-emerald-500 ring-2 ring-emerald-500/20'
+                  ? 'border-[#8C6B8D] ring-2 ring-[#9E7B9E]/25'
                   : 'border-slate-300 hover:border-slate-400'
               }`}
             >
               <div className="flex items-center gap-2.5 min-w-0 pr-2">
                 <Building2
                   className={`w-4 h-4 flex-shrink-0 ${
-                    organisationOption ? 'text-emerald-600' : 'text-slate-400'
+                    organisationOption ? 'text-[#8C6B8D]' : 'text-slate-400'
                   }`}
                 />
                 <span
@@ -528,7 +528,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
                   </span>
                 )}
                 {isOrgDropdownOpen ? (
-                  <ChevronUp className="w-4 h-4 text-emerald-600" />
+                  <ChevronUp className="w-4 h-4 text-[#8C6B8D]" />
                 ) : (
                   <ChevronDown className="w-4 h-4 text-slate-400" />
                 )}
@@ -553,7 +553,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
                         }
                       }}
                       placeholder={t.searchOrganisationsPlaceholder}
-                      className="w-full pl-9 pr-8 py-2 rounded-lg border border-slate-200 bg-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400 text-slate-800"
+                      className="w-full pl-9 pr-8 py-2 rounded-lg border border-slate-200 bg-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D] placeholder:text-slate-400 text-slate-800"
                     />
                     {orgSearchQuery && (
                       <button
@@ -583,12 +583,12 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
                           onClick={() => handleSelectOrganisation(org)}
                           className={`w-full px-3 py-2 text-left rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-between ${
                             isSelected
-                              ? 'bg-emerald-50 text-emerald-900 font-bold'
-                              : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+                              ? 'bg-[#BAA2BA]/20 text-[#5C3B5E] font-bold'
+                              : 'text-slate-700 hover:bg-[#BAA2BA]/10 hover:text-slate-900'
                           }`}
                         >
                           <span className="truncate">{org}</span>
-                          {isSelected && <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />}
+                          {isSelected && <Check className="w-4 h-4 text-[#8C6B8D] flex-shrink-0" />}
                         </button>
                       );
                     })
@@ -607,8 +607,8 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
                       onClick={handleSelectOther}
                       className={`w-full px-3 py-2 text-left rounded-lg text-xs sm:text-sm font-semibold transition-colors flex items-center justify-between ${
                         organisationOption === 'other'
-                          ? 'bg-emerald-50 text-emerald-900 font-bold'
-                          : 'text-emerald-700 hover:bg-emerald-50/60'
+                          ? 'bg-[#BAA2BA]/20 text-[#5C3B5E] font-bold'
+                          : 'text-[#7A577B] hover:bg-[#BAA2BA]/15'
                       }`}
                     >
                       <span className="flex items-center gap-2 truncate">
@@ -616,7 +616,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
                         <span className="text-[11px] font-normal text-slate-400">(specify manually)</span>
                       </span>
                       {organisationOption === 'other' && (
-                        <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                        <Check className="w-4 h-4 text-[#8C6B8D] flex-shrink-0" />
                       )}
                     </button>
                   </div>
@@ -637,7 +637,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
                 value={customOrganisation}
                 onChange={(e) => handleCustomOrganisationChange(e.target.value)}
                 placeholder={t.organisationPlaceholder}
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 placeholder:text-slate-400 text-sm sm:text-base transition-colors"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D] text-slate-900 placeholder:text-slate-400 text-sm sm:text-base transition-colors"
                 autoFocus
                 aria-required="true"
               />
@@ -654,8 +654,8 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
 
         {/* Question 3: Job Title */}
         <div
-          className={`bg-white rounded-xl shadow-sm border p-6 transition-all duration-200 ${
-            errors.job_title ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200 hover:border-slate-300'
+          className={`bg-white/95 backdrop-blur-sm rounded-xl shadow-xs border p-6 transition-all duration-200 ${
+            errors.job_title ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200/90 hover:border-[#BAA2BA]/60'
           }`}
         >
           <label htmlFor="job-title-input" className="block text-base font-semibold text-slate-900 mb-1">
@@ -671,7 +671,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
                 if (errors.job_title) setErrors({ ...errors, job_title: undefined });
               }}
               placeholder={t.jobTitlePlaceholder}
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 placeholder:text-slate-400 text-sm sm:text-base transition-colors resize-y"
+              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D] text-slate-900 placeholder:text-slate-400 text-sm sm:text-base transition-colors resize-y"
               aria-required="true"
               aria-invalid={Boolean(errors.job_title)}
               aria-describedby={errors.job_title ? 'job-title-error' : undefined}
@@ -687,8 +687,8 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
 
         {/* Question 3: Attendance Confirmation Dropdown */}
         <div
-          className={`bg-white rounded-xl shadow-sm border p-6 transition-all duration-200 ${
-            errors.join ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200 hover:border-slate-300'
+          className={`bg-white/95 backdrop-blur-sm rounded-xl shadow-xs border p-6 transition-all duration-200 ${
+            errors.join ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200/90 hover:border-[#BAA2BA]/60'
           }`}
         >
           <label htmlFor="join-attendance-select" className="block text-base font-semibold text-slate-900 mb-3">
@@ -699,7 +699,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
               id="join-attendance-select"
               value={values.join[0] || ''}
               onChange={(e) => handleJoinChange(e.target.value)}
-              className="w-full px-4 py-3 pr-10 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 text-sm sm:text-base appearance-none bg-white font-medium transition-colors cursor-pointer"
+              className="w-full px-4 py-3 pr-10 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D] text-slate-900 text-sm sm:text-base appearance-none bg-white font-medium transition-colors cursor-pointer"
               aria-required="true"
               aria-invalid={Boolean(errors.join)}
             >
@@ -723,9 +723,9 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
 
         {/* Question 3b: Accompanying Guest Question (Only appears if attending YES) */}
         {values.join.includes('YES') && (
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 transition-all duration-200">
+          <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-xs border border-slate-200/90 p-6 transition-all duration-200">
             <div className="flex items-center gap-2 mb-3">
-              <Users className="w-5 h-5 text-emerald-600" />
+              <Users className="w-5 h-5 text-[#8C6B8D]" />
               <label className="text-base font-semibold text-slate-900">
                 {t.hasGuestLabel}
               </label>
@@ -737,7 +737,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
                 onClick={() => handleHasGuestSelect(false)}
                 className={`py-2.5 px-4 rounded-xl border font-semibold text-sm transition-all ${
                   !values.has_guest
-                    ? 'bg-emerald-50 border-emerald-500 text-emerald-800 ring-2 ring-emerald-100'
+                    ? 'bg-[#BAA2BA]/20 border-[#8C6B8D] text-[#5C3B5E] ring-2 ring-[#BAA2BA]/25 font-bold'
                     : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
                 }`}
               >
@@ -748,7 +748,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
                 onClick={() => handleHasGuestSelect(true)}
                 className={`py-2.5 px-4 rounded-xl border font-semibold text-sm transition-all ${
                   values.has_guest
-                    ? 'bg-emerald-50 border-emerald-500 text-emerald-800 ring-2 ring-emerald-100'
+                    ? 'bg-[#BAA2BA]/20 border-[#8C6B8D] text-[#5C3B5E] ring-2 ring-[#BAA2BA]/25 font-bold'
                     : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
                 }`}
               >
@@ -767,7 +767,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
                     id="guest-count-select"
                     value={guestOption}
                     onChange={(e) => handleGuestDropdownChange(e.target.value)}
-                    className="w-full px-4 py-2.5 pr-10 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 text-sm appearance-none bg-white font-medium cursor-pointer"
+                    className="w-full px-4 py-2.5 pr-10 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D] text-slate-900 text-sm appearance-none bg-white font-medium cursor-pointer"
                   >
                     <option value="" disabled>
                       {t.guestCountPlaceholder}
@@ -801,7 +801,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
                       className={`w-full max-w-xs px-4 py-2.5 rounded-xl border ${
                         errors.guest_count
                           ? 'border-rose-400 ring-2 ring-rose-100'
-                          : 'border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500'
+                          : 'border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D]'
                       } text-slate-900 text-sm font-medium transition-colors`}
                       aria-required="true"
                       aria-invalid={Boolean(errors.guest_count)}
@@ -851,7 +851,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
             className={`inline-flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm text-white transition-all ${
               isSubmitting || !recaptchaToken
                 ? 'bg-slate-300 cursor-not-allowed text-slate-500 shadow-none'
-                : 'bg-emerald-600 hover:bg-emerald-700 active:scale-95 shadow-lg shadow-emerald-700/20'
+                : 'bg-gradient-to-r from-[#8C6B8D] to-[#754F76] hover:from-[#7D5C7E] hover:to-[#684369] active:scale-95 shadow-lg shadow-[#8C6B8D]/25'
             }`}
           >
             {isSubmitting ? (

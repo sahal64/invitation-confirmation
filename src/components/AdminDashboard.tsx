@@ -836,7 +836,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                   {stats.declined}
                 </div>
                 <div className="text-[10px] sm:text-[11px] text-slate-400 font-medium mt-0.5 truncate">
-                  Declined invitations
+                  Declined Invitations
                 </div>
               </div>
             </div>
