@@ -34,6 +34,23 @@ export interface Translations {
   customGuestCountPlaceholder: string;
   valCustomGuestCountRequired: string;
   valCustomGuestCountMin: string;
+  valCustomGuestCountMax: string;
+
+  // Accompanying Guests Dynamic Section
+  guestsDetailsHeader: string;
+  guestsDetailsSubtitle: string;
+  guestSectionTitle: (n: number) => string;
+  guestNameLabel: (n: number) => string;
+  guestNamePlaceholder: string;
+  guestOrgLabel: (n: number) => string;
+  guestOrgPlaceholder: string;
+  guestJobTitleLabel: (n: number) => string;
+  guestJobTitlePlaceholder: string;
+  valGuestNameRequired: string;
+  valGuestOrgRequired: string;
+  valGuestJobTitleRequired: string;
+  accompanyingGuestsTitle: string;
+
   ratingLabel: string;
   ratingHint: string;
   starsCount: (n: number) => string;
@@ -134,7 +151,7 @@ export interface Translations {
 export const translations: Record<Language, Translations> = {
   en: {
     // Authoritative event title with proper capitalization
-    formTitle: "Invitation Confirmation – National Day",
+    formTitle: "Invitation Confirmation (RSVP) – UAE's 55th National Day",
     formDescription: "Date 25-11-2026  Time :6 PM to 10 PM",
     nationalDayBadge: "National Day Celebration",
     requiredHint: "Indicates required question",
@@ -166,6 +183,23 @@ export const translations: Record<Language, Translations> = {
     customGuestCountPlaceholder: "e.g. 6, 7, 10...",
     valCustomGuestCountRequired: "Please enter the number of accompanying guests",
     valCustomGuestCountMin: "The number of accompanying guests must be greater than 5",
+    valCustomGuestCountMax: "Maximum 50 accompanying guests allowed at once",
+
+    // Accompanying Guests Dynamic Section
+    guestsDetailsHeader: "Accompanying Guests Details",
+    guestsDetailsSubtitle: "Please provide the details for each person attending with you.",
+    guestSectionTitle: (n) => `Accompanying Guest ${n}`,
+    guestNameLabel: (n) => `Guest ${n}: Full Name`,
+    guestNamePlaceholder: "Full name of guest",
+    guestOrgLabel: (n) => `Guest ${n}: Organisation`,
+    guestOrgPlaceholder: "Organisation of guest",
+    guestJobTitleLabel: (n) => `Guest ${n}: Job Title`,
+    guestJobTitlePlaceholder: "Job title of guest",
+    valGuestNameRequired: "Guest's full name is required",
+    valGuestOrgRequired: "Guest's organisation is required",
+    valGuestJobTitleRequired: "Guest's job title is required",
+    accompanyingGuestsTitle: "Accompanying Guests",
+
     ratingLabel: "Rating",
     ratingHint: "Rate on a scale from 1 to 5 stars",
     starsCount: (n) => `${n} star${n === 1 ? '' : 's'}`,
@@ -206,7 +240,7 @@ export const translations: Record<Language, Translations> = {
 
     // Admin
     adminTitle: "Responses & Attendance Management",
-    adminSubtitle: "Secure overview and administrative records for the National Day Invitation Confirmation form.",
+    adminSubtitle: "Secure overview and administrative records for the Invitation Confirmation (RSVP) – UAE's 55th National Day form.",
     adminLoginTitle: "Admin Portal Sign In",
     adminLoginSubtitle: "Enter your credentials to access confidential event submissions.",
     adminEmailLabel: "Admin Email",
@@ -264,7 +298,7 @@ export const translations: Record<Language, Translations> = {
   },
   ru: {
     // Faithful Russian translation of source form
-    formTitle: "Подтверждение приглашения — Национальный день",
+    formTitle: "Подтверждение приглашения (RSVP) — 55-й Национальный день ОАЭ",
     formDescription: "Дата: 25.11.2026  Время: с 18:00 до 22:00",
     nationalDayBadge: "Празднование Национального дня",
     requiredHint: "Обязательные для заполнения поля",
@@ -296,6 +330,23 @@ export const translations: Record<Language, Translations> = {
     customGuestCountPlaceholder: "например: 6, 7, 10...",
     valCustomGuestCountRequired: "Пожалуйста, укажите количество сопровождающих гостей",
     valCustomGuestCountMin: "Количество сопровождающих гостей должно быть больше 5",
+    valCustomGuestCountMax: "Максимально допускается 50 сопровождающих гостей",
+
+    // Accompanying Guests Dynamic Section
+    guestsDetailsHeader: "Сведения о сопровождающих гостях",
+    guestsDetailsSubtitle: "Пожалуйста, укажите данные каждого гостя, который придет с вами.",
+    guestSectionTitle: (n) => `Сопровождающий гость ${n}`,
+    guestNameLabel: (n) => `Гость ${n}: Полное имя`,
+    guestNamePlaceholder: "Полное имя гостя",
+    guestOrgLabel: (n) => `Гость ${n}: Организация`,
+    guestOrgPlaceholder: "Организация гостя",
+    guestJobTitleLabel: (n) => `Гость ${n}: Должность`,
+    guestJobTitlePlaceholder: "Должность гостя",
+    valGuestNameRequired: "Укажите полное имя гостя",
+    valGuestOrgRequired: "Укажите организацию гостя",
+    valGuestJobTitleRequired: "Укажите должность гостя",
+    accompanyingGuestsTitle: "Сопровождающие гости",
+
     ratingLabel: "Оценка",
     ratingHint: "Оценка по шкале от 1 до 5 звёзд",
     starsCount: (n) => `${n} звёзд`,
@@ -336,7 +387,7 @@ export const translations: Record<Language, Translations> = {
 
     // Admin
     adminTitle: "Управление ответами и посещаемостью",
-    adminSubtitle: "Защищенный обзор и реестр ответов на приглашение ко Дню нации.",
+    adminSubtitle: "Защищенный обзор и реестр ответов на форму «Подтверждение приглашения (RSVP) — 55-й Национальный день ОАЭ».",
     adminLoginTitle: "Вход в панель администратора",
     adminLoginSubtitle: "Введите учетные данные для доступа к конфиденциальным ответам.",
     adminEmailLabel: "Email администратора",

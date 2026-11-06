@@ -31,6 +31,10 @@ ADD COLUMN IF NOT EXISTS guest_count INTEGER DEFAULT 0;
 ALTER TABLE public.invitation_submissions 
 ADD COLUMN IF NOT EXISTS organisation TEXT DEFAULT '';
 
+-- 4) Dynamic Accompanying Guests details (JSONB array containing name, organisation, job_title):
+ALTER TABLE public.invitation_submissions 
+ADD COLUMN IF NOT EXISTS guests JSONB DEFAULT '[]'::jsonb;
+
 -- 2. Indexes for search and sorting performance
 CREATE INDEX IF NOT EXISTS idx_invitation_created_at ON public.invitation_submissions (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_invitation_email ON public.invitation_submissions (email);

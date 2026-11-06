@@ -57,6 +57,13 @@ export default async function handler(req, res) {
         join: Array.isArray(join) ? join : [join],
         has_guest: Boolean(req.body?.has_guest),
         guest_count: Number(req.body?.guest_count || 0),
+        guests: Array.isArray(req.body?.guests)
+          ? req.body.guests.map((g) => ({
+              name: String(g.name || '').trim(),
+              organisation: String(g.organisation || '').trim(),
+              job_title: String(g.job_title || '').trim(),
+            }))
+          : [],
         locale: locale || 'en',
       };
 
@@ -69,6 +76,10 @@ export default async function handler(req, res) {
       // Graceful fallback retry if any newly added columns do not exist in SQL schema yet
       while (insertResult.error && insertResult.error.message) {
         let changed = false;
+        if (insertResult.error.message.includes('guests')) {
+          delete payloadData.guests;
+          changed = true;
+        }
         if (insertResult.error.message.includes('organisation')) {
           delete payloadData.organisation;
           changed = true;

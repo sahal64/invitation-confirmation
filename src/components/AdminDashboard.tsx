@@ -251,7 +251,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
         (sub.organisation || '').toLowerCase().includes(searchLower) ||
         (sub.email || '').toLowerCase().includes(searchLower) ||
         sub.job_title.toLowerCase().includes(searchLower) ||
-        String(sub.guest_count || '').includes(searchLower);
+        String(sub.guest_count || '').includes(searchLower) ||
+        (sub.guests || []).some(
+          (g) =>
+            g.name.toLowerCase().includes(searchLower) ||
+            (g.organisation || '').toLowerCase().includes(searchLower) ||
+            g.job_title.toLowerCase().includes(searchLower)
+        );
 
       // Join Filter
       let matchesJoin = true;
@@ -302,8 +308,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
     const attending = submissions.filter((s) => s.join.includes('YES')).length;
     const declined = submissions.filter((s) => s.join.includes('No')).length;
     const totalGuests = submissions
-      .filter((s) => s.join.includes('YES') && (s.has_guest || (s.guest_count || 0) > 0))
-      .reduce((sum, s) => sum + (Number(s.guest_count) || 0), 0);
+      .filter((s) => s.join.includes('YES') && (s.has_guest || (s.guest_count || 0) > 0 || (s.guests && s.guests.length > 0)))
+      .reduce((sum, s) => sum + Math.max(Number(s.guest_count) || 0, s.guests?.length || 0), 0);
 
     return { total, attending, declined, totalGuests };
   }, [submissions]);

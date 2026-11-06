@@ -1,7 +1,20 @@
 import React from 'react';
 import { Submission, Language } from '../types';
 import { translations } from '../i18n/translations';
-import { Printer, X, Calendar, CheckCircle2, XCircle, Building2, Briefcase, Users, Mail, Clock, Hash, Globe2 } from 'lucide-react';
+import {
+  Printer,
+  X,
+  Calendar,
+  CheckCircle2,
+  XCircle,
+  Building2,
+  Briefcase,
+  Users,
+  Mail,
+  Clock,
+  Hash,
+  Globe2,
+} from 'lucide-react';
 
 interface PrintRecordModalProps {
   submission: Submission | null;
@@ -22,10 +35,13 @@ export const PrintRecordModal: React.FC<PrintRecordModalProps> = ({
   };
 
   const isAttending = submission.join.includes('YES');
+  const guestCount = isAttending ? Number(submission.guest_count) || 0 : 0;
+  const guestsList = Array.isArray(submission.guests) ? submission.guests : [];
+  const hasGuestRecords = guestsList.length > 0;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-4 animate-in fade-in duration-150">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden border border-slate-200/80 animate-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-4 animate-in fade-in duration-150 print:static print:p-0 print:bg-white print:overflow-visible">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden border border-slate-200/80 animate-in zoom-in-95 duration-150 print:shadow-none print:border-none print:max-w-full print:max-h-none print:overflow-visible">
         {/* Header - Screen only */}
         <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-100 bg-slate-50/80 no-print flex-shrink-0">
           <div className="flex items-center gap-2 min-w-0">
@@ -54,7 +70,7 @@ export const PrintRecordModal: React.FC<PrintRecordModalProps> = ({
         </div>
 
         {/* Printable Content Card */}
-        <div id="printable-record" className="p-4 sm:p-8 bg-white overflow-y-auto flex-1">
+        <div id="printable-record" className="p-4 sm:p-8 bg-white overflow-y-auto flex-1 print:p-0 print:overflow-visible">
           {/* Top Event Letterhead */}
           <div className="border-b-2 border-emerald-600 pb-4 sm:pb-5 mb-4 sm:mb-6 flex flex-col xs:flex-row items-start justify-between gap-3 sm:gap-4">
             <div>
@@ -96,16 +112,16 @@ export const PrintRecordModal: React.FC<PrintRecordModalProps> = ({
             </div>
           </div>
 
-          {/* Response Fields Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          {/* Primary Attendee Details Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
             {/* Full Name */}
-            <div className="bg-slate-50/50 p-3 sm:p-3.5 rounded-xl border border-slate-100">
+            <div className="bg-slate-50/60 p-3 sm:p-3.5 rounded-xl border border-slate-100">
               <div className="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{t.nameLabel}</div>
               <div className="text-sm sm:text-base font-bold text-slate-900 mt-1 break-words">{submission.name}</div>
             </div>
 
             {/* Organisation */}
-            <div className="bg-slate-50/50 p-3 sm:p-3.5 rounded-xl border border-slate-100">
+            <div className="bg-slate-50/60 p-3 sm:p-3.5 rounded-xl border border-slate-100">
               <div className="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                 <Building2 className="w-3.5 h-3.5 text-slate-400" />
                 <span>{t.organisationLabel}</span>
@@ -114,7 +130,7 @@ export const PrintRecordModal: React.FC<PrintRecordModalProps> = ({
             </div>
 
             {/* Job Title */}
-            <div className="bg-slate-50/50 p-3 sm:p-3.5 rounded-xl border border-slate-100 sm:col-span-2">
+            <div className="bg-slate-50/60 p-3 sm:p-3.5 rounded-xl border border-slate-100 sm:col-span-2">
               <div className="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                 <Briefcase className="w-3.5 h-3.5 text-slate-400" />
                 <span>{t.jobTitleLabel}</span>
@@ -123,7 +139,7 @@ export const PrintRecordModal: React.FC<PrintRecordModalProps> = ({
             </div>
 
             {/* Attendance Status */}
-            <div className="bg-slate-50/50 p-3 sm:p-3.5 rounded-xl border border-slate-100">
+            <div className="bg-slate-50/60 p-3 sm:p-3.5 rounded-xl border border-slate-100">
               <div className="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">{t.joinLabel}</div>
               {isAttending ? (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
@@ -139,7 +155,7 @@ export const PrintRecordModal: React.FC<PrintRecordModalProps> = ({
             </div>
 
             {/* Guest Count */}
-            <div className="bg-slate-50/50 p-3 sm:p-3.5 rounded-xl border border-slate-100">
+            <div className="bg-slate-50/60 p-3 sm:p-3.5 rounded-xl border border-slate-100">
               <div className="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5 mb-1.5">
                 <Users className="w-3.5 h-3.5 text-slate-400" />
                 <span>{t.colGuest}</span>
@@ -147,20 +163,107 @@ export const PrintRecordModal: React.FC<PrintRecordModalProps> = ({
               <div className="text-xs sm:text-sm font-semibold text-slate-800">
                 {!isAttending
                   ? '-'
-                  : (Number(submission.guest_count) || 0) > 0
-                  ? `Yes (${submission.guest_count} ${submission.guest_count === 1 ? 'Guest' : 'Guests'})`
+                  : guestCount > 0
+                  ? `Yes (${guestCount} ${guestCount === 1 ? 'Guest' : 'Guests'})`
                   : 'No additional guests'}
               </div>
             </div>
 
             {/* Optional Email if exists */}
             {submission.email && (
-              <div className="bg-slate-50/50 p-3 sm:p-3.5 rounded-xl border border-slate-100 sm:col-span-2">
+              <div className="bg-slate-50/60 p-3 sm:p-3.5 rounded-xl border border-slate-100 sm:col-span-2">
                 <div className="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                   <Mail className="w-3.5 h-3.5 text-slate-400" />
                   <span>{t.emailLabel}</span>
                 </div>
                 <div className="text-xs font-mono text-emerald-800 mt-1 break-all">{submission.email}</div>
+              </div>
+            )}
+          </div>
+
+          {/* Section: Accompanying Guests */}
+          <div className="pt-4 border-t border-slate-200">
+            <div className="flex items-center justify-between gap-2 mb-3">
+              <div className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-[#8C6B8D]/15 flex items-center justify-center text-[#8C6B8D]">
+                  <Users className="w-3.5 h-3.5" />
+                </div>
+                <span>Accompanying Guests</span>
+              </div>
+              {hasGuestRecords && (
+                <span className="text-[11px] font-semibold text-[#8C6B8D] bg-[#8C6B8D]/10 px-2 py-0.5 rounded-full">
+                  {guestsList.length} {guestsList.length === 1 ? 'Guest' : 'Guests'}
+                </span>
+              )}
+            </div>
+
+            {/* List of guest cards */}
+            {hasGuestRecords ? (
+              <div className="space-y-3">
+                {guestsList.map((g, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3.5 sm:p-4 bg-slate-50/90 rounded-xl border border-slate-200/90 shadow-2xs space-y-2.5 print:bg-white print:border-slate-300 print:break-inside-avoid"
+                  >
+                    <div className="flex items-center justify-between gap-2 border-b border-slate-200/70 pb-2">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800">
+                        <span className="w-5 h-5 rounded-full bg-gradient-to-br from-[#8C6B8D] to-[#6E4B6F] text-white text-[10px] font-bold flex items-center justify-center shadow-xs flex-shrink-0">
+                          {idx + 1}
+                        </span>
+                        <span>Guest {idx + 1}</span>
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                      {/* Full Name */}
+                      <div className="bg-white/80 p-2.5 rounded-lg border border-slate-100">
+                        <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+                          Full Name
+                        </span>
+                        <span className="font-bold text-slate-900 text-xs sm:text-sm mt-0.5 block break-words">
+                          {g.name || '-'}
+                        </span>
+                      </div>
+
+                      {/* Organisation */}
+                      <div className="bg-white/80 p-2.5 rounded-lg border border-slate-100">
+                        <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+                          Organisation
+                        </span>
+                        <span className="font-semibold text-slate-800 text-xs mt-0.5 block break-words">
+                          {g.organisation || '-'}
+                        </span>
+                      </div>
+
+                      {/* Job Title */}
+                      <div className="bg-white/80 p-2.5 rounded-lg border border-slate-100">
+                        <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+                          Job Title
+                        </span>
+                        <span className="font-medium text-slate-700 text-xs mt-0.5 block break-words">
+                          {g.job_title || '-'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : guestCount > 0 ? (
+              /* Legacy record with guest_count > 0 but no individual guest details */
+              <div className="p-4 rounded-xl bg-slate-50 border border-dashed border-slate-200 text-center">
+                <p className="text-xs font-semibold text-slate-700">
+                  Guest count: <span className="text-emerald-700 font-bold">{guestCount}</span>
+                </p>
+                <p className="text-[11px] text-slate-400 mt-1">
+                  Individual guest details were not recorded for earlier submissions.
+                </p>
+              </div>
+            ) : (
+              /* No accompanying guests (0 guests or declined) */
+              <div className="p-4 rounded-xl bg-slate-50/70 border border-slate-200/80 text-center">
+                <p className="text-xs font-medium text-slate-500">
+                  No accompanying guests
+                </p>
               </div>
             )}
           </div>
@@ -197,5 +300,3 @@ export const PrintRecordModal: React.FC<PrintRecordModalProps> = ({
     </div>
   );
 };
-
-

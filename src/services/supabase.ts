@@ -51,6 +51,18 @@ const DEFAULT_SAMPLE_SUBMISSIONS: Submission[] = import.meta.env.DEV
         join: ['YES'],
         has_guest: true,
         guest_count: 2,
+        guests: [
+          {
+            name: 'Dmitry Ivanov',
+            organisation: 'Heritage International Mission',
+            job_title: 'Protocol Attaché',
+          },
+          {
+            name: 'Elena Rostova',
+            organisation: 'Heritage International Mission',
+            job_title: 'Cultural Relations Officer',
+          },
+        ],
         comments: 5,
         locale: 'en',
         is_sample: true,
@@ -65,6 +77,13 @@ const DEFAULT_SAMPLE_SUBMISSIONS: Submission[] = import.meta.env.DEV
         join: ['YES'],
         has_guest: true,
         guest_count: 1,
+        guests: [
+          {
+            name: 'Михаил Сидоров',
+            organisation: 'Strategic Global Consulting LLC',
+            job_title: 'Главный специалист по связям с общественностью',
+          },
+        ],
         comments: 4,
         locale: 'ru',
         is_sample: true,
@@ -79,7 +98,64 @@ const DEFAULT_SAMPLE_SUBMISSIONS: Submission[] = import.meta.env.DEV
         join: ['No'],
         has_guest: false,
         guest_count: 0,
+        guests: [],
         comments: 3,
+        locale: 'en',
+        is_sample: true,
+      },
+      {
+        id: 'sample-004-al-maktoum',
+        created_at: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(),
+        name: 'Tariq Al Hashemi',
+        email: 'tariq.alhashemi@adnec.ae',
+        organisation: 'ADNEC Group & Strategic Affairs',
+        job_title: 'Executive Director of Government Partnerships',
+        join: ['YES'],
+        has_guest: true,
+        guest_count: 5,
+        guests: [
+          {
+            name: 'Khalid Al Marzouqi',
+            organisation: 'ADNEC Group & Strategic Affairs',
+            job_title: 'Senior Protocol Officer',
+          },
+          {
+            name: 'Fatima Al Suwaidi',
+            organisation: 'Ministry of Economy',
+            job_title: 'Director of Bilateral Trade Relations',
+          },
+          {
+            name: 'Rashid Al Nuaimi',
+            organisation: 'Emirates Diplomatic Academy',
+            job_title: 'Head of Regional Initiatives',
+          },
+          {
+            name: 'Maryam Al Shamsi',
+            organisation: 'ADNEC Group & Strategic Affairs',
+            job_title: 'Communications & Media Lead',
+          },
+          {
+            name: 'Sultan Al Zaabi',
+            organisation: 'Executive Council Affairs',
+            job_title: 'Advisor on Strategic Projects',
+          },
+        ],
+        comments: 5,
+        locale: 'en',
+        is_sample: true,
+      },
+      {
+        id: 'sample-005-legacy',
+        created_at: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+        name: 'David Reynolds',
+        email: 'dreynolds@eurochamber.org',
+        organisation: 'European Chamber of Commerce',
+        job_title: 'Director of Trade & Investment Affairs',
+        join: ['YES'],
+        has_guest: true,
+        guest_count: 1,
+        // Legacy record without accompanying guests array
+        comments: 4,
         locale: 'en',
         is_sample: true,
       },
@@ -151,6 +227,13 @@ export async function submitResponse(
         join: values.join,
         has_guest: Boolean(values.has_guest),
         guest_count: Number(values.guest_count || 0),
+        guests: Array.isArray(values.guests)
+          ? values.guests.map((g) => ({
+              name: g.name.trim(),
+              organisation: g.organisation.trim(),
+              job_title: g.job_title.trim(),
+            }))
+          : [],
         locale: locale,
         is_sample: false,
       };
@@ -185,6 +268,13 @@ export async function submitResponse(
         locale: locale,
         has_guest: Boolean(values.has_guest),
         guest_count: Number(values.guest_count || 0),
+        guests: Array.isArray(values.guests)
+          ? values.guests.map((g) => ({
+              name: g.name.trim(),
+              organisation: g.organisation.trim(),
+              job_title: g.job_title.trim(),
+            }))
+          : [],
       };
 
       let { error } = await supabase
@@ -194,6 +284,10 @@ export async function submitResponse(
       // Graceful fallback retry if any newly added columns do not exist in SQL schema yet
       while (error && error.message) {
         let changed = false;
+        if (error.message.includes('guests')) {
+          delete payload.guests;
+          changed = true;
+        }
         if (error.message.includes('organisation')) {
           delete payload.organisation;
           changed = true;
@@ -227,6 +321,13 @@ export async function submitResponse(
         join: values.join,
         has_guest: Boolean(values.has_guest),
         guest_count: Number(values.guest_count || 0),
+        guests: Array.isArray(values.guests)
+          ? values.guests.map((g) => ({
+              name: g.name.trim(),
+              organisation: g.organisation.trim(),
+              job_title: g.job_title.trim(),
+            }))
+          : [],
         locale: locale,
         is_sample: false,
       };
@@ -252,6 +353,13 @@ export async function submitResponse(
       join: values.join,
       has_guest: Boolean(values.has_guest),
       guest_count: Number(values.guest_count || 0),
+      guests: Array.isArray(values.guests)
+        ? values.guests.map((g) => ({
+            name: g.name.trim(),
+            organisation: g.organisation.trim(),
+            job_title: g.job_title.trim(),
+          }))
+        : [],
       locale: locale,
       is_sample: false,
     };
@@ -294,6 +402,14 @@ export async function fetchSubmissions(): Promise<{ data: Submission[]; error?: 
       // (ensures local dev preview displays full data even if Supabase SQL migration has not yet run)
       const enriched: Submission[] = ((data as any[]) || []).map((remote) => {
         const local = localById.get(remote.id) || localList.find((s) => s.name === remote.name);
+        let parsedGuests = remote.guests;
+        if (typeof parsedGuests === 'string') {
+          try {
+            parsedGuests = JSON.parse(parsedGuests);
+          } catch {
+            parsedGuests = undefined;
+          }
+        }
         return {
           ...remote,
           organisation: remote.organisation || local?.organisation || '',
@@ -305,6 +421,11 @@ export async function fetchSubmissions(): Promise<{ data: Submission[]; error?: 
             remote.guest_count !== undefined && remote.guest_count !== null
               ? Number(remote.guest_count)
               : Number(local?.guest_count || 0),
+          guests: Array.isArray(parsedGuests)
+            ? parsedGuests
+            : Array.isArray(local?.guests)
+            ? local.guests
+            : undefined,
         };
       });
 

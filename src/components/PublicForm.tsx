@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { FormValues, FormErrors, Language } from '../types';
+import { FormValues, FormErrors, Language, GuestDetails } from '../types';
 import { translations } from '../i18n/translations';
 import { submitResponse } from '../services/supabase';
 import { getOrganisations } from '../services/organisations';
@@ -17,6 +17,8 @@ import {
   X,
   Check,
   Building2,
+  User,
+  Briefcase,
 } from 'lucide-react';
 
 interface PublicFormProps {
@@ -30,7 +32,25 @@ const INITIAL_VALUES: FormValues = {
   join: [],
   has_guest: false,
   guest_count: 0,
+  guests: [],
 };
+
+function syncGuestsArray(currentGuests: GuestDetails[] = [], targetCount: number): GuestDetails[] {
+  if (targetCount <= 0) return [];
+  const result: GuestDetails[] = [];
+  for (let i = 0; i < targetCount; i++) {
+    if (currentGuests[i]) {
+      result.push({
+        name: currentGuests[i].name || '',
+        organisation: currentGuests[i].organisation || '',
+        job_title: currentGuests[i].job_title || '',
+      });
+    } else {
+      result.push({ name: '', organisation: '', job_title: '' });
+    }
+  }
+  return result;
+}
 
 export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
   const t = translations[currentLang];
@@ -145,7 +165,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
       newErrors.join = t.valJoinRequired;
     }
 
-    // If attending and bringing guests, validate guest count
+    // If attending and bringing guests, validate guest count and each guest's details
     if (values.join.includes('YES') && values.has_guest) {
       if (!guestOption) {
         newErrors.guest_count = t.valGuestCountRequired;
@@ -156,10 +176,41 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
           newErrors.guest_count = t.valCustomGuestCountRequired;
         } else if (parsed <= 5) {
           newErrors.guest_count = t.valCustomGuestCountMin;
+        } else if (parsed > 50) {
+          newErrors.guest_count = t.valCustomGuestCountMax;
         }
       } else {
         if (!values.guest_count || values.guest_count < 1) {
           newErrors.guest_count = t.valGuestCountRequired;
+        }
+      }
+
+      // Validate all mandatory fields for every accompanying guest
+      if (values.guest_count > 0 && Array.isArray(values.guests)) {
+        const guestErrorsList: Array<{ name?: string; organisation?: string; job_title?: string }> = [];
+        let hasAnyGuestError = false;
+
+        for (let i = 0; i < values.guest_count; i++) {
+          const g = values.guests[i] || { name: '', organisation: '', job_title: '' };
+          const errObj: { name?: string; organisation?: string; job_title?: string } = {};
+
+          if (!g.name || !g.name.trim()) {
+            errObj.name = t.valGuestNameRequired;
+            hasAnyGuestError = true;
+          }
+          if (!g.organisation || !g.organisation.trim()) {
+            errObj.organisation = t.valGuestOrgRequired;
+            hasAnyGuestError = true;
+          }
+          if (!g.job_title || !g.job_title.trim()) {
+            errObj.job_title = t.valGuestJobTitleRequired;
+            hasAnyGuestError = true;
+          }
+          guestErrorsList[i] = errObj;
+        }
+
+        if (hasAnyGuestError) {
+          newErrors.guests = guestErrorsList;
         }
       }
     }
@@ -209,6 +260,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
         join: ['No'],
         has_guest: false,
         guest_count: 0,
+        guests: [],
       }));
       setGuestOption('');
       setCustomGuestCount('');
@@ -218,6 +270,7 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
         join: [],
         has_guest: false,
         guest_count: 0,
+        guests: [],
       }));
       setGuestOption('');
       setCustomGuestCount('');
@@ -235,13 +288,14 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
       let nextCount = Number(nextOption);
       if (nextOption === 'custom') {
         const parsed = parseInt(customGuestCount.trim(), 10);
-        nextCount = !isNaN(parsed) && parsed > 5 ? parsed : 0;
+        nextCount = !isNaN(parsed) && parsed > 5 && parsed <= 50 ? parsed : 0;
       }
 
       setValues((prev) => ({
         ...prev,
         has_guest: true,
         guest_count: nextCount,
+        guests: syncGuestsArray(prev.guests, nextCount),
       }));
       setGuestOption(nextOption);
     } else {
@@ -249,13 +303,14 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
         ...prev,
         has_guest: false,
         guest_count: 0,
+        guests: [],
       }));
       setGuestOption('');
       setCustomGuestCount('');
     }
 
-    if (errors.has_guest || errors.guest_count) {
-      setErrors((prev) => ({ ...prev, has_guest: undefined, guest_count: undefined }));
+    if (errors.has_guest || errors.guest_count || errors.guests) {
+      setErrors((prev) => ({ ...prev, has_guest: undefined, guest_count: undefined, guests: undefined }));
     }
   };
 
@@ -265,10 +320,18 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
 
     if (selected === 'custom') {
       const parsed = parseInt(customGuestCount.trim(), 10);
-      if (!isNaN(parsed) && parsed > 5) {
-        setValues((prev) => ({ ...prev, guest_count: parsed }));
+      if (!isNaN(parsed) && parsed > 5 && parsed <= 50) {
+        setValues((prev) => ({
+          ...prev,
+          guest_count: parsed,
+          guests: syncGuestsArray(prev.guests, parsed),
+        }));
       } else {
-        setValues((prev) => ({ ...prev, guest_count: 0 }));
+        setValues((prev) => ({
+          ...prev,
+          guest_count: 0,
+          guests: [],
+        }));
       }
     } else {
       // When an existing option (1-5) is selected, hide custom input and clear its value
@@ -277,11 +340,12 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
       setValues((prev) => ({
         ...prev,
         guest_count: count,
+        guests: syncGuestsArray(prev.guests, count),
       }));
     }
 
-    if (errors.guest_count) {
-      setErrors((prev) => ({ ...prev, guest_count: undefined }));
+    if (errors.guest_count || errors.guests) {
+      setErrors((prev) => ({ ...prev, guest_count: undefined, guests: undefined }));
     }
   };
 
@@ -289,13 +353,56 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
   const handleCustomGuestCountChange = (val: string) => {
     setCustomGuestCount(val);
     const parsed = parseInt(val.trim(), 10);
-    if (!isNaN(parsed) && parsed > 5) {
-      setValues((prev) => ({ ...prev, guest_count: parsed }));
-      if (errors.guest_count) {
-        setErrors((prev) => ({ ...prev, guest_count: undefined }));
+    if (!isNaN(parsed) && parsed > 5 && parsed <= 50) {
+      setValues((prev) => ({
+        ...prev,
+        guest_count: parsed,
+        guests: syncGuestsArray(prev.guests, parsed),
+      }));
+      if (errors.guest_count || errors.guests) {
+        setErrors((prev) => ({ ...prev, guest_count: undefined, guests: undefined }));
       }
     } else {
-      setValues((prev) => ({ ...prev, guest_count: 0 }));
+      setValues((prev) => ({
+        ...prev,
+        guest_count: 0,
+        guests: [],
+      }));
+    }
+  };
+
+  // Handles individual guest field changes
+  const handleGuestFieldChange = (index: number, field: keyof GuestDetails, val: string) => {
+    setValues((prev) => {
+      const updated = [...(prev.guests || [])];
+      while (updated.length <= index) {
+        updated.push({ name: '', organisation: '', job_title: '' });
+      }
+      updated[index] = {
+        ...updated[index],
+        [field]: val,
+      };
+      return {
+        ...prev,
+        guests: updated,
+      };
+    });
+
+    if (errors.guests && errors.guests[index] && errors.guests[index][field]) {
+      setErrors((prev) => {
+        if (!prev.guests) return prev;
+        const nextGuestsErrors = [...prev.guests];
+        if (nextGuestsErrors[index]) {
+          nextGuestsErrors[index] = {
+            ...nextGuestsErrors[index],
+            [field]: undefined,
+          };
+        }
+        return {
+          ...prev,
+          guests: nextGuestsErrors,
+        };
+      });
     }
   };
 
@@ -816,6 +923,140 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
                     <AlertCircle className="w-3.5 h-3.5" />
                     <span>{errors.guest_count}</span>
                   </p>
+                )}
+
+                {/* Dynamically Generated Guest Sections */}
+                {values.guest_count > 0 && values.guests && values.guests.length > 0 && (
+                  <div className="mt-6 pt-5 border-t border-slate-200/90 space-y-4 animate-in fade-in duration-200">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-[#8C6B8D]" />
+                        <h4 className="text-sm font-bold text-slate-900 tracking-tight">
+                          {t.guestsDetailsHeader} ({values.guests.length})
+                        </h4>
+                      </div>
+                      <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#BAA2BA]/20 text-[#684769] border border-[#BAA2BA]/30">
+                        All fields required
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500">
+                      {t.guestsDetailsSubtitle}
+                    </p>
+
+                    <div className="space-y-4 pt-1">
+                      {values.guests.map((guest, idx) => {
+                        const guestError = errors.guests?.[idx];
+                        return (
+                          <div
+                            key={idx}
+                            className="p-4 sm:p-5 rounded-xl border border-slate-200/90 bg-slate-50/70 hover:bg-slate-50 transition-all space-y-3.5 shadow-xs"
+                          >
+                            {/* Guest Header Badge */}
+                            <div className="flex items-center justify-between pb-2.5 border-b border-slate-200/70">
+                              <div className="flex items-center gap-2">
+                                <span className="w-5 h-5 rounded-full bg-gradient-to-br from-[#8C6B8D] to-[#754F76] text-white text-[11px] font-bold flex items-center justify-center shadow-xs">
+                                  {idx + 1}
+                                </span>
+                                <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+                                  {t.guestSectionTitle(idx + 1)}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Guest Field 1: Full Name */}
+                            <div>
+                              <label htmlFor={`guest-${idx}-name`} className="block text-xs font-semibold text-slate-700 mb-1">
+                                {t.guestNameLabel(idx + 1)} <span className="text-rose-500 font-bold">*</span>
+                              </label>
+                              <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                  <User className="w-4 h-4" />
+                                </div>
+                                <input
+                                  id={`guest-${idx}-name`}
+                                  type="text"
+                                  value={guest.name}
+                                  onChange={(e) => handleGuestFieldChange(idx, 'name', e.target.value)}
+                                  placeholder={t.guestNamePlaceholder}
+                                  className={`w-full pl-9 pr-3.5 py-2.5 rounded-lg border ${
+                                    guestError?.name
+                                      ? 'border-rose-400 ring-2 ring-rose-100'
+                                      : 'border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D]'
+                                  } text-slate-900 placeholder:text-slate-400 text-xs sm:text-sm bg-white transition-colors`}
+                                />
+                              </div>
+                              {guestError?.name && (
+                                <p className="mt-1 text-xs font-semibold text-rose-600 flex items-center gap-1">
+                                  <AlertCircle className="w-3 h-3 flex-shrink-0" />
+                                  <span>{guestError.name}</span>
+                                </p>
+                              )}
+                            </div>
+
+                            {/* Guest Field 2: Organisation */}
+                            <div>
+                              <label htmlFor={`guest-${idx}-org`} className="block text-xs font-semibold text-slate-700 mb-1">
+                                {t.guestOrgLabel(idx + 1)} <span className="text-rose-500 font-bold">*</span>
+                              </label>
+                              <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                  <Building2 className="w-4 h-4" />
+                                </div>
+                                <input
+                                  id={`guest-${idx}-org`}
+                                  type="text"
+                                  value={guest.organisation}
+                                  onChange={(e) => handleGuestFieldChange(idx, 'organisation', e.target.value)}
+                                  placeholder={t.guestOrgPlaceholder}
+                                  className={`w-full pl-9 pr-3.5 py-2.5 rounded-lg border ${
+                                    guestError?.organisation
+                                      ? 'border-rose-400 ring-2 ring-rose-100'
+                                      : 'border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D]'
+                                  } text-slate-900 placeholder:text-slate-400 text-xs sm:text-sm bg-white transition-colors`}
+                                />
+                              </div>
+                              {guestError?.organisation && (
+                                <p className="mt-1 text-xs font-semibold text-rose-600 flex items-center gap-1">
+                                  <AlertCircle className="w-3 h-3 flex-shrink-0" />
+                                  <span>{guestError.organisation}</span>
+                                </p>
+                              )}
+                            </div>
+
+                            {/* Guest Field 3: Job Title */}
+                            <div>
+                              <label htmlFor={`guest-${idx}-job`} className="block text-xs font-semibold text-slate-700 mb-1">
+                                {t.guestJobTitleLabel(idx + 1)} <span className="text-rose-500 font-bold">*</span>
+                              </label>
+                              <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                  <Briefcase className="w-4 h-4" />
+                                </div>
+                                <input
+                                  id={`guest-${idx}-job`}
+                                  type="text"
+                                  value={guest.job_title}
+                                  onChange={(e) => handleGuestFieldChange(idx, 'job_title', e.target.value)}
+                                  placeholder={t.guestJobTitlePlaceholder}
+                                  className={`w-full pl-9 pr-3.5 py-2.5 rounded-lg border ${
+                                    guestError?.job_title
+                                      ? 'border-rose-400 ring-2 ring-rose-100'
+                                      : 'border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D]'
+                                  } text-slate-900 placeholder:text-slate-400 text-xs sm:text-sm bg-white transition-colors`}
+                                />
+                              </div>
+                              {guestError?.job_title && (
+                                <p className="mt-1 text-xs font-semibold text-rose-600 flex items-center gap-1">
+                                  <AlertCircle className="w-3 h-3 flex-shrink-0" />
+                                  <span>{guestError.job_title}</span>
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
                 )}
               </div>
             )}

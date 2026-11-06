@@ -90,6 +90,13 @@ const server = http.createServer(async (req, res) => {
             join: Array.isArray(join) ? join : [join],
             has_guest: Boolean(payload.has_guest),
             guest_count: Number(payload.guest_count || 0),
+            guests: Array.isArray(payload.guests)
+              ? payload.guests.map((g) => ({
+                  name: String(g.name || '').trim(),
+                  organisation: String(g.organisation || '').trim(),
+                  job_title: String(g.job_title || '').trim(),
+                }))
+              : [],
             locale: locale || 'en',
           };
 
@@ -102,6 +109,10 @@ const server = http.createServer(async (req, res) => {
           // Graceful fallback retry if any newly added columns do not exist in SQL schema yet
           while (insertResult.error && insertResult.error.message) {
             let changed = false;
+            if (insertResult.error.message.includes('guests')) {
+              delete payloadData.guests;
+              changed = true;
+            }
             if (insertResult.error.message.includes('organisation')) {
               delete payloadData.organisation;
               changed = true;

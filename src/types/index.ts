@@ -1,5 +1,11 @@
 export type Language = 'en' | 'ru';
 
+export interface GuestDetails {
+  name: string;
+  organisation: string;
+  job_title: string;
+}
+
 export interface Submission {
   id: string;
   created_at: string;
@@ -10,6 +16,7 @@ export interface Submission {
   join: string[]; // ['YES'], ['No']
   has_guest?: boolean;
   guest_count?: number;
+  guests?: GuestDetails[];
   comments?: number | null;
   locale: Language;
   is_sample?: boolean;
@@ -22,6 +29,7 @@ export interface FormValues {
   join: string[];
   has_guest: boolean;
   guest_count: number;
+  guests?: GuestDetails[];
 }
 
 export interface FormErrors {
@@ -31,6 +39,11 @@ export interface FormErrors {
   join?: string;
   has_guest?: string;
   guest_count?: string;
+  guests?: Array<{
+    name?: string;
+    organisation?: string;
+    job_title?: string;
+  }>;
   recaptcha?: string;
   general?: string;
 }
