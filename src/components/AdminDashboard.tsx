@@ -11,7 +11,6 @@ import {
 } from '../services/supabase';
 import { exportToCSV, exportToExcel } from '../utils/export';
 import { PrintRecordModal } from './PrintRecordModal';
-import { QRCodeManager } from './QRCodeManager';
 import {
   getOrganisations,
   addOrganisation,
@@ -48,7 +47,6 @@ import {
   UserCheck,
   Sparkles,
   Pencil,
-  QrCode,
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -73,8 +71,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
   const [dataError, setDataError] = useState('');
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
 
-  // Active Tab: Submissions, Organisations, or QR Code Management
-  const [activeTab, setActiveTab] = useState<'submissions' | 'organisations' | 'qr_codes'>('submissions');
+  // Active Tab: Submissions or Dynamic Organisation Management
+  const [activeTab, setActiveTab] = useState<'submissions' | 'organisations'>('submissions');
 
   // Organisations Management State
   const [organisations, setOrganisations] = useState<string[]>(() => getOrganisations());
@@ -464,11 +462,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
       </div>
 
       {/* Navigation Tabs Switcher */}
-      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2.5 border-b border-slate-200 pb-3">
-        <div className="flex flex-wrap sm:inline-flex p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80 w-full sm:w-auto gap-1">
+      <div className="flex flex-col xs:flex-row items-stretch xs:items-center justify-between gap-2.5 border-b border-slate-200 pb-3">
+        <div className="grid grid-cols-2 xs:inline-flex p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80 w-full xs:w-auto">
           <button
             onClick={() => setActiveTab('submissions')}
-            className={`inline-flex items-center justify-center xs:justify-start gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex-1 sm:flex-initial ${
+            className={`inline-flex items-center justify-center xs:justify-start gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
               activeTab === 'submissions'
                 ? 'bg-white text-emerald-800 shadow-sm border border-slate-200/60'
                 : 'text-slate-600 hover:text-slate-900'
@@ -489,7 +487,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
 
           <button
             onClick={() => setActiveTab('organisations')}
-            className={`inline-flex items-center justify-center xs:justify-start gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex-1 sm:flex-initial ${
+            className={`inline-flex items-center justify-center xs:justify-start gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
               activeTab === 'organisations'
                 ? 'bg-white text-emerald-800 shadow-sm border border-slate-200/60'
                 : 'text-slate-600 hover:text-slate-900'
@@ -507,18 +505,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
               {organisations.length}
             </span>
           </button>
-
-          <button
-            onClick={() => setActiveTab('qr_codes')}
-            className={`inline-flex items-center justify-center xs:justify-start gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex-1 sm:flex-initial ${
-              activeTab === 'qr_codes'
-                ? 'bg-white text-emerald-800 shadow-sm border border-slate-200/60'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <QrCode className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-            <span className="truncate">QR Code Management</span>
-          </button>
         </div>
 
         <button
@@ -532,12 +518,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
         </button>
       </div>
 
-      {activeTab === 'qr_codes' ? (
-        /* ========================================================================= */
-        /* DYNAMIC QR CODE MANAGEMENT VIEW                                          */
-        /* ========================================================================= */
-        <QRCodeManager currentLang={currentLang} />
-      ) : activeTab === 'organisations' ? (
+      {activeTab === 'organisations' ? (
         /* ========================================================================= */
         /* DYNAMIC ORGANISATIONS MANAGEMENT VIEW                                    */
         /* ========================================================================= */

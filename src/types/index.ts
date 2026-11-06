@@ -57,13 +57,3 @@ export interface FilterState {
   page: number;
   pageSize: number;
 }
-
-export interface QRCodeRecord {
-  id: string;
-  qr_id: string;
-  title: string;
-  destination_url: string;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-}

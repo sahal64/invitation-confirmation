@@ -60,25 +60,6 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Dynamic QR Redirect Notice state (when visitor scans an inactive or unknown QR code)
-  const [qrNotice, setQrNotice] = useState<string | null>(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const status = params.get('qr_status');
-      const slug = params.get('slug');
-      if (status === 'inactive') {
-        return `The scanned QR code (${slug ? `/qr/${slug}` : 'QR code'}) is currently inactive. You have been directed to the official RSVP form.`;
-      }
-      if (status === 'not_found') {
-        return `The scanned QR code was not found. You have been directed to the official RSVP form.`;
-      }
-      if (status === 'invalid_destination') {
-        return `The QR code destination is being updated. You have been directed to the official RSVP form.`;
-      }
-    }
-    return null;
-  });
-
   // Dynamic Organisations list
   const [organisationsList, setOrganisationsList] = useState<string[]>(() => getOrganisations());
 
@@ -524,27 +505,6 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
   // PUBLIC FORM VIEW
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 sm:py-12">
-      {/* Notice for visitors scanning an inactive or unknown QR code */}
-      {qrNotice && (
-        <div className="mb-6 bg-amber-50/95 backdrop-blur-md border border-amber-200/90 text-amber-950 rounded-2xl p-4 shadow-sm flex items-start justify-between gap-3 animate-in fade-in">
-          <div className="flex items-start gap-2.5">
-            <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-            <div className="text-xs sm:text-sm font-medium">
-              <span className="font-bold block text-amber-900 mb-0.5">QR Notice</span>
-              <span>{qrNotice}</span>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={() => setQrNotice(null)}
-            className="p-1 rounded-lg hover:bg-amber-100 text-amber-700 transition-colors flex-shrink-0"
-            aria-label="Dismiss notice"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      )}
-
       <form onSubmit={handleSubmit} noValidate className="space-y-6">
         {/* Main Card: Event Header & Details */}
         <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl shadow-[#5C3B5E]/5 border border-white/80 sm:border-[#BAA2BA]/25 overflow-hidden relative">
