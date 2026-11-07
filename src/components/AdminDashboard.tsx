@@ -7,6 +7,7 @@ import {
   getAdminSession,
   fetchSubmissions,
   clearSampleSubmissions,
+  deleteSubmission,
 } from '../services/supabase';
 import { exportToCSV, exportToExcel } from '../utils/export';
 import { PrintRecordModal } from './PrintRecordModal';
@@ -224,6 +225,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
       clearSampleSubmissions();
       loadData();
     }
+  };
+
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDeleteSubmission = async (sub: Submission) => {
+    const confirmMsg = `Are you sure you want to delete the submission for "${sub.name}"? This action cannot be undone.`;
+    if (!window.confirm(confirmMsg)) return;
+
+    setDeletingId(sub.id);
+    const res = await deleteSubmission(sub.id);
+    if (res.success) {
+      setSubmissions((prev) => prev.filter((s) => s.id !== sub.id));
+    } else {
+      alert(`Failed to delete submission: ${res.error || 'Unknown error'}`);
+    }
+    setDeletingId(null);
   };
 
   // Has sample data?
@@ -945,13 +962,23 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                           )}
                         </div>
 
-                        <button
-                          onClick={() => setSelectedSubmission(sub)}
-                          className="inline-flex items-center gap-1 font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg text-xs transition-colors shadow-xs"
-                        >
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>{t.viewDetails}</span>
-                        </button>
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => setSelectedSubmission(sub)}
+                            className="inline-flex items-center gap-1 font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg text-xs transition-colors shadow-xs"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>{t.viewDetails}</span>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteSubmission(sub)}
+                            disabled={deletingId === sub.id}
+                            className="inline-flex items-center justify-center p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-slate-200 transition-colors disabled:opacity-50"
+                            title="Delete submission"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   );
@@ -1152,13 +1179,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
 
                           {/* Action Button */}
                           <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                            <button
-                              onClick={() => setSelectedSubmission(sub)}
-                              className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-300 transition-colors shadow-xs"
-                            >
-                              <Eye className="w-3.5 h-3.5" />
-                              <span>{t.viewDetails}</span>
-                            </button>
+                            <div className="inline-flex items-center justify-end gap-1.5">
+                              <button
+                                onClick={() => setSelectedSubmission(sub)}
+                                className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-300 transition-colors shadow-xs"
+                                title="View Details"
+                              >
+                                <Eye className="w-3.5 h-3.5" />
+                                <span>{t.viewDetails}</span>
+                              </button>
+                              <button
+                                onClick={() => handleDeleteSubmission(sub)}
+                                disabled={deletingId === sub.id}
+                                className="inline-flex items-center justify-center p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors disabled:opacity-50"
+                                title="Delete submission"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       );

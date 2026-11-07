@@ -444,6 +444,10 @@ export async function fetchSubmissions(): Promise<{ data: Submission[]; error?: 
 }
 
 export async function deleteSubmission(id: string): Promise<{ success: boolean; error?: string }> {
+  // Always clean local storage cache as well
+  const list = getLocalSubmissions().filter((s) => s.id !== id);
+  saveLocalSubmissions(list);
+
   if (isSupabaseConfigured() && supabase) {
     try {
       const { error } = await supabase
@@ -460,9 +464,6 @@ export async function deleteSubmission(id: string): Promise<{ success: boolean; 
     }
   }
 
-  // Development fallback
-  const list = getLocalSubmissions().filter((s) => s.id !== id);
-  saveLocalSubmissions(list);
   return { success: true };
 }
 
