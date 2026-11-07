@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   AlertCircle,
   Sparkles,
-  Send,
   ChevronDown,
   ChevronUp,
   Users,
@@ -16,9 +15,6 @@ import {
   Search,
   X,
   Check,
-  Building2,
-  User,
-  Briefcase,
 } from 'lucide-react';
 
 interface PublicFormProps {
@@ -464,33 +460,50 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
   // SUCCESS CONFIRMATION SCREEN
   if (isSubmitted) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-12">
-        <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl shadow-[#5C3B5E]/5 border border-white/80 sm:border-[#BAA2BA]/30 overflow-hidden">
-          {/* Header decorative accent stripe */}
-          <div className="h-3.5 bg-gradient-to-r from-[#7D5A7E] via-[#9E7B9E] to-[#BAA2BA]" />
-          
-          <div className="p-8 sm:p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-6 bg-[#BAA2BA]/20 text-[#754F76] rounded-full flex items-center justify-center ring-8 ring-[#BAA2BA]/15">
+      <div className="max-w-[600px] mx-auto px-4 py-12">
+        <div 
+          className="relative rounded-[32px] border border-white/85 shadow-[0_44px_70px_-26px_rgba(140,70,15,0.4)] backdrop-blur-[22px] overflow-hidden"
+          style={{ background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 236, 205, 0.5))' }}
+        >
+          {/* Glare Layer 1 */}
+          <div 
+            className="pointer-events-none absolute inset-0 z-0"
+            style={{
+              background: 'linear-gradient(112deg, rgba(255, 255, 255, 0.55) 0% 30%, rgba(255, 255, 255, 0) 30% 100%)',
+            }}
+          />
+          {/* Glare Layer 2 (Highlight edge line) */}
+          <div 
+            className="pointer-events-none absolute inset-0 z-0"
+            style={{
+              background: 'linear-gradient(112deg, transparent 0% 33%, rgba(255, 255, 255, 0.22) 33% 36%, transparent 36% 100%)',
+            }}
+          />
+
+          <div className="relative z-10 p-8 sm:p-[44px] text-center">
+            <div className="w-16 h-16 mx-auto mb-6 bg-white/80 text-emerald-600 rounded-full flex items-center justify-center ring-8 ring-emerald-100/60 shadow-md">
               <CheckCircle2 className="w-10 h-10" />
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mb-3">
+            <h1 className="text-[26px] sm:text-[32px] font-extrabold text-[#3B1F0E] leading-tight mb-2">
               {t.formTitle}
             </h1>
 
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold mb-6">
-              <span>{t.formDescription}</span>
-            </div>
-
-            <p className="text-base sm:text-lg text-[#5C3B5E] font-semibold mb-8 bg-[#BAA2BA]/15 py-3 px-6 rounded-xl border border-[#BAA2BA]/30 inline-block">
-              {t.confirmationMessage}
+            <p className="text-[15px] text-[#6B4A33] font-medium mb-6">
+              {t.formDescription}
             </p>
+
+            <div>
+              <p className="text-base sm:text-lg text-emerald-900 font-semibold mb-8 bg-white/85 py-3.5 px-6 rounded-2xl border border-emerald-200/80 inline-block shadow-sm">
+                {t.confirmationMessage}
+              </p>
+            </div>
 
             <div>
               <button
                 type="button"
                 onClick={() => setIsSubmitted(false)}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#8C6B8D] to-[#754F76] hover:from-[#7D5C7E] hover:to-[#684369] text-white font-semibold text-sm transition-all shadow-md shadow-[#8C6B8D]/20 hover:shadow-lg hover:-translate-y-0.5"
+                className="h-14 rounded-2xl px-9 font-bold text-white transition-all bg-[linear-gradient(135deg,#D26E2A,#A8481B)] shadow-[0_12px_24px_-10px_rgba(120,60,10,0.5)] hover:brightness-110 active:scale-95 inline-flex items-center gap-2"
               >
                 <RotateCcw className="w-4 h-4" />
                 <span>{t.submitAnotherButton}</span>
@@ -502,629 +515,602 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
     );
   }
 
-  // PUBLIC FORM VIEW
+  // PUBLIC FORM VIEW - GLASS GLOSS REFERENCE DESIGN
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8 sm:py-12">
-      <form onSubmit={handleSubmit} noValidate className="space-y-6">
-        {/* Main Card: Event Header & Details */}
-        <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl shadow-[#5C3B5E]/5 border border-white/80 sm:border-[#BAA2BA]/25 overflow-hidden relative">
-          {/* Top Decorative Banner */}
-          <div className="h-3.5 bg-gradient-to-r from-[#7D5A7E] via-[#9E7B9E] to-[#BAA2BA]" />
-          
-          <div className="p-6 sm:p-8">
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#7A577B] mb-3 px-2.5 py-1 rounded-full bg-[#BAA2BA]/15 border border-[#BAA2BA]/30">
-              <Sparkles className="w-3.5 h-3.5 text-[#8C6B8D]" />
-              <span>{t.nationalDayBadge}</span>
-            </div>
-
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight mb-2">
-              {t.formTitle}
-            </h1>
-
-            <div className="flex items-center gap-2 text-slate-600 font-medium text-sm sm:text-base mb-6 bg-slate-50/90 px-3.5 py-2 rounded-lg border border-slate-200/70">
-              <span className="font-semibold text-slate-800">{t.formDescription}</span>
-            </div>
-
-            <div className="border-t border-slate-100 pt-4 flex items-center justify-between text-xs text-rose-600 font-medium">
-              <span>* {t.requiredHint}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* General Error Banner */}
-        {errors.general && (
-          <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 text-rose-700 text-sm flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-600" />
-            <span>{errors.general}</span>
-          </div>
-        )}
-
-        {/* Question 1: Full Name */}
-        <div
-          className={`bg-white/95 backdrop-blur-sm rounded-xl shadow-xs border p-6 transition-all duration-200 ${
-            errors.name ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200/90 hover:border-[#BAA2BA]/60'
-          }`}
+    <div className="max-w-[600px] mx-auto px-4 py-8 sm:py-12">
+      <form onSubmit={handleSubmit} noValidate>
+        {/* Glass Gloss Frosted Card */}
+        <div 
+          className="relative rounded-[32px] border border-white/85 shadow-[0_44px_70px_-26px_rgba(140,70,15,0.4)] backdrop-blur-[22px] overflow-hidden"
+          style={{ background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 236, 205, 0.5))' }}
         >
-          <label htmlFor="name-input" className="block text-base font-semibold text-slate-900 mb-1">
-            {t.nameLabel} <span className="text-rose-500 font-bold">*</span>
-          </label>
-          <div className="mt-3">
-            <input
-              id="name-input"
-              type="text"
-              value={values.name}
-              onChange={(e) => {
-                setValues({ ...values, name: e.target.value });
-                if (errors.name) setErrors({ ...errors, name: undefined });
-              }}
-              placeholder={t.namePlaceholder}
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D] text-slate-900 placeholder:text-slate-400 text-sm sm:text-base transition-colors"
-              aria-required="true"
-              aria-invalid={Boolean(errors.name)}
-              aria-describedby={errors.name ? 'name-error' : undefined}
-            />
-          </div>
-          {errors.name && (
-            <p id="name-error" className="mt-2 text-xs font-semibold text-rose-600 flex items-center gap-1.5">
-              <AlertCircle className="w-3.5 h-3.5" />
-              <span>{errors.name}</span>
-            </p>
-          )}
-        </div>
+          {/* Glare Layer 1 (Diagonal light sweep) */}
+          <div 
+            className="pointer-events-none absolute inset-0 z-0"
+            style={{
+              background: 'linear-gradient(112deg, rgba(255, 255, 255, 0.55) 0% 30%, rgba(255, 255, 255, 0) 30% 100%)',
+            }}
+          />
+          {/* Glare Layer 2 (Thin highlight line on glare edge) */}
+          <div 
+            className="pointer-events-none absolute inset-0 z-0"
+            style={{
+              background: 'linear-gradient(112deg, transparent 0% 33%, rgba(255, 255, 255, 0.22) 33% 36%, transparent 36% 100%)',
+            }}
+          />
 
-        {/* Question 2: Organisation Name Searchable Dropdown with "Others" custom input */}
-        <div
-          ref={orgDropdownRef}
-          className={`bg-white/95 backdrop-blur-sm rounded-xl shadow-xs border p-6 transition-all duration-200 relative ${
-            isOrgDropdownOpen ? 'z-20' : 'z-auto'
-          } ${
-            errors.organisation ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200/90 hover:border-[#BAA2BA]/60'
-          }`}
-        >
-          <label className="block text-base font-semibold text-slate-900 mb-1">
-            {t.organisationLabel} <span className="text-rose-500 font-bold">*</span>
-          </label>
-
-          {/* Searchable Select Trigger Button */}
-          <div className={`mt-3 relative ${isOrgDropdownOpen ? 'z-30' : 'z-auto'}`}>
-            <button
-              type="button"
-              onClick={toggleOrgDropdown}
-              aria-haspopup="listbox"
-              aria-expanded={isOrgDropdownOpen}
-              className={`w-full px-4 py-2.5 rounded-lg border text-left flex items-center justify-between transition-colors bg-white ${
-                isOrgDropdownOpen
-                  ? 'border-[#8C6B8D] ring-2 ring-[#9E7B9E]/25'
-                  : 'border-slate-300 hover:border-slate-400'
-              }`}
-            >
-              <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                <Building2
-                  className={`w-4 h-4 flex-shrink-0 ${
-                    organisationOption ? 'text-[#8C6B8D]' : 'text-slate-400'
-                  }`}
-                />
-                <span
-                  className={`text-sm sm:text-base truncate ${
-                    organisationOption ? 'text-slate-900 font-medium' : 'text-slate-400'
-                  }`}
-                >
-                  {organisationOption === 'other'
-                    ? t.organisationOtherOption
-                    : organisationOption || t.organisationSelectPlaceholder}
-                </span>
+          {/* Content Container sits above glare layers */}
+          <div className="relative z-10 p-6 sm:p-[44px] space-y-6">
+            {/* Header Area */}
+            <div>
+              {/* Pill badge */}
+              <div className="inline-flex items-center gap-1.5 text-[12px] font-bold tracking-[0.08em] uppercase text-[#9A4A1B] mb-2 px-3 py-1 rounded-full bg-white/75 border border-white/60 shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-[#9A4A1B]" />
+                <span>{t.nationalDayBadge}</span>
               </div>
 
-              <div className="flex items-center gap-1.5 flex-shrink-0">
-                {organisationOption && (
-                  <span
-                    role="button"
-                    tabIndex={0}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOrganisationChange('');
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.stopPropagation();
-                        handleOrganisationChange('');
-                      }
-                    }}
-                    className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-                    title="Clear selection"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </span>
-                )}
-                {isOrgDropdownOpen ? (
-                  <ChevronUp className="w-4 h-4 text-[#8C6B8D]" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-slate-400" />
-                )}
-              </div>
-            </button>
+              {/* Title */}
+              <h1 className="text-[26px] sm:text-[32px] font-extrabold text-[#3B1F0E] leading-tight mb-2">
+                {t.formTitle}
+              </h1>
 
-            {/* Dropdown Popover Menu with Live Search Filter */}
-            {isOrgDropdownOpen && (
-              <div className="absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden animate-in fade-in-50 zoom-in-95 duration-150">
-                {/* Search input header */}
-                <div className="p-2.5 border-b border-slate-100 bg-slate-50/70">
-                  <div className="relative">
-                    <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                    <input
-                      ref={orgSearchInputRef}
-                      type="text"
-                      value={orgSearchQuery}
-                      onChange={(e) => setOrgSearchQuery(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Escape') {
-                          setIsOrgDropdownOpen(false);
-                        }
-                      }}
-                      placeholder={t.searchOrganisationsPlaceholder}
-                      className="w-full pl-9 pr-8 py-2 rounded-lg border border-slate-200 bg-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D] placeholder:text-slate-400 text-slate-800"
-                    />
-                    {orgSearchQuery && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setOrgSearchQuery('');
-                          orgSearchInputRef.current?.focus();
-                        }}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-slate-400 hover:text-slate-600 rounded"
-                        title="Clear search"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    )}
-                  </div>
+              {/* Date line */}
+              <p className="text-[15px] text-[#6B4A33] font-medium">
+                {t.formDescription}
+              </p>
+
+              {/* General Error Banner */}
+              {errors.general && (
+                <div className="mt-4 bg-rose-50/90 border border-rose-200 rounded-xl p-4 text-rose-800 text-sm flex items-start gap-3 shadow-xs">
+                  <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-600" />
+                  <span>{errors.general}</span>
                 </div>
+              )}
+            </div>
 
-                {/* Filtered Organisations List */}
-                <div className="max-h-60 overflow-y-auto p-1.5 space-y-0.5">
-                  {filteredOrganisations.length > 0 ? (
-                    filteredOrganisations.map((org) => {
-                      const isSelected = organisationOption === org;
-                      return (
-                        <button
-                          key={org}
-                          type="button"
-                          onClick={() => handleSelectOrganisation(org)}
-                          className={`w-full px-3 py-2 text-left rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-between ${
-                            isSelected
-                              ? 'bg-[#BAA2BA]/20 text-[#5C3B5E] font-bold'
-                              : 'text-slate-700 hover:bg-[#BAA2BA]/10 hover:text-slate-900'
-                          }`}
-                        >
-                          <span className="truncate">{org}</span>
-                          {isSelected && <Check className="w-4 h-4 text-[#8C6B8D] flex-shrink-0" />}
-                        </button>
-                      );
-                    })
-                  ) : (
-                    <div className="py-6 px-3 text-center">
-                      <p className="text-xs text-slate-500 font-medium">
-                        {t.noOrganisationsFound}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* "Others" Option permanently pinned at bottom */}
-                  <div className="pt-1 mt-1 border-t border-slate-100">
-                    <button
-                      type="button"
-                      onClick={handleSelectOther}
-                      className={`w-full px-3 py-2 text-left rounded-lg text-xs sm:text-sm font-semibold transition-colors flex items-center justify-between ${
-                        organisationOption === 'other'
-                          ? 'bg-[#BAA2BA]/20 text-[#5C3B5E] font-bold'
-                          : 'text-[#7A577B] hover:bg-[#BAA2BA]/15'
-                      }`}
-                    >
-                      <span className="flex items-center gap-2 truncate">
-                        <span>{t.organisationOtherOption}</span>
-                        <span className="text-[11px] font-normal text-slate-400">(specify manually)</span>
-                      </span>
-                      {organisationOption === 'other' && (
-                        <Check className="w-4 h-4 text-[#8C6B8D] flex-shrink-0" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* If "Others" is selected, display custom organisation input field */}
-          {organisationOption === 'other' && (
-            <div className="mt-4 pt-4 border-t border-slate-100 animate-in fade-in duration-200">
-              <label htmlFor="custom-organisation-input" className="block text-xs font-semibold text-slate-700 mb-1">
-                {t.organisationOtherPlaceholder} <span className="text-rose-500 font-bold">*</span>
+            {/* Field 1: Full Name */}
+            <div>
+              <label htmlFor="name-input" className="block text-[14px] sm:text-[15px] font-semibold text-[#3B1F0E] mb-2">
+                {t.nameLabel} <span className="text-[#9A4A1B] font-bold">*</span>
               </label>
               <input
-                id="custom-organisation-input"
+                id="name-input"
                 type="text"
-                value={customOrganisation}
-                onChange={(e) => handleCustomOrganisationChange(e.target.value)}
-                placeholder={t.organisationPlaceholder}
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D] text-slate-900 placeholder:text-slate-400 text-sm sm:text-base transition-colors"
-                autoFocus
+                value={values.name}
+                onChange={(e) => {
+                  setValues({ ...values, name: e.target.value });
+                  if (errors.name) setErrors({ ...errors, name: undefined });
+                }}
+                placeholder={t.namePlaceholder}
+                className={`w-full h-[52px] rounded-[14px] bg-white/80 border ${
+                  errors.name
+                    ? 'border-rose-400 bg-white ring-4 ring-rose-200/50'
+                    : 'border-[#9A4A1B]/20 hover:border-[#9A4A1B]/40 focus:border-[#C8622A] focus:bg-white focus:ring-4 focus:ring-[#F4B968]/40'
+                } px-[18px] text-[15px] text-[#3B1F0E] placeholder:text-[#7A5A44]/60 transition-all outline-none shadow-xs`}
                 aria-required="true"
+                aria-invalid={Boolean(errors.name)}
+                aria-describedby={errors.name ? 'name-error' : undefined}
               />
+              {errors.name && (
+                <p id="name-error" className="mt-1.5 text-xs font-semibold text-rose-600 flex items-center gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  <span>{errors.name}</span>
+                </p>
+              )}
             </div>
-          )}
 
-          {errors.organisation && (
-            <p id="organisation-error" className="mt-2 text-xs font-semibold text-rose-600 flex items-center gap-1.5">
-              <AlertCircle className="w-3.5 h-3.5" />
-              <span>{errors.organisation}</span>
-            </p>
-          )}
-        </div>
-
-        {/* Question 3: Job Title */}
-        <div
-          className={`bg-white/95 backdrop-blur-sm rounded-xl shadow-xs border p-6 transition-all duration-200 ${
-            errors.job_title ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200/90 hover:border-[#BAA2BA]/60'
-          }`}
-        >
-          <label htmlFor="job-title-input" className="block text-base font-semibold text-slate-900 mb-1">
-            {t.jobTitleLabel} <span className="text-rose-500 font-bold">*</span>
-          </label>
-          <div className="mt-3">
-            <textarea
-              id="job-title-input"
-              rows={3}
-              value={values.job_title}
-              onChange={(e) => {
-                setValues({ ...values, job_title: e.target.value });
-                if (errors.job_title) setErrors({ ...errors, job_title: undefined });
-              }}
-              placeholder={t.jobTitlePlaceholder}
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D] text-slate-900 placeholder:text-slate-400 text-sm sm:text-base transition-colors resize-y"
-              aria-required="true"
-              aria-invalid={Boolean(errors.job_title)}
-              aria-describedby={errors.job_title ? 'job-title-error' : undefined}
-            />
-          </div>
-          {errors.job_title && (
-            <p id="job-title-error" className="mt-2 text-xs font-semibold text-rose-600 flex items-center gap-1.5">
-              <AlertCircle className="w-3.5 h-3.5" />
-              <span>{errors.job_title}</span>
-            </p>
-          )}
-        </div>
-
-        {/* Question 3: Attendance Confirmation Dropdown */}
-        <div
-          className={`bg-white/95 backdrop-blur-sm rounded-xl shadow-xs border p-6 transition-all duration-200 ${
-            errors.join ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200/90 hover:border-[#BAA2BA]/60'
-          }`}
-        >
-          <label htmlFor="join-attendance-select" className="block text-base font-semibold text-slate-900 mb-3">
-            {t.joinLabel} <span className="text-rose-500 font-bold">*</span>
-          </label>
-          <div className="relative">
-            <select
-              id="join-attendance-select"
-              value={values.join[0] || ''}
-              onChange={(e) => handleJoinChange(e.target.value)}
-              className="w-full px-4 py-3 pr-10 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D] text-slate-900 text-sm sm:text-base appearance-none bg-white font-medium transition-colors cursor-pointer"
-              aria-required="true"
-              aria-invalid={Boolean(errors.join)}
-            >
-              <option value="" disabled>
-                {t.joinSelectPlaceholder}
-              </option>
-              <option value="YES">{t.joinYes}</option>
-              <option value="No">{t.joinNo}</option>
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-slate-500">
-              <ChevronDown className="w-5 h-5" />
-            </div>
-          </div>
-          {errors.join && (
-            <p className="mt-2 text-xs font-semibold text-rose-600 flex items-center gap-1.5">
-              <AlertCircle className="w-3.5 h-3.5" />
-              <span>{errors.join}</span>
-            </p>
-          )}
-        </div>
-
-        {/* Question 3b: Accompanying Guest Question (Only appears if attending YES) */}
-        {values.join.includes('YES') && (
-          <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-xs border border-slate-200/90 p-6 transition-all duration-200">
-            <div className="flex items-center gap-2 mb-3">
-              <Users className="w-5 h-5 text-[#8C6B8D]" />
-              <label className="text-base font-semibold text-slate-900">
-                {t.hasGuestLabel}
+            {/* Field 2: Organisation Name */}
+            <div ref={orgDropdownRef} className="relative">
+              <label className="block text-[14px] sm:text-[15px] font-semibold text-[#3B1F0E] mb-2">
+                {t.organisationLabel} <span className="text-[#9A4A1B] font-bold">*</span>
               </label>
-            </div>
 
-            <div className="grid grid-cols-2 gap-3 max-w-xs">
-              <button
-                type="button"
-                onClick={() => handleHasGuestSelect(false)}
-                className={`py-2.5 px-4 rounded-xl border font-semibold text-sm transition-all ${
-                  !values.has_guest
-                    ? 'bg-[#BAA2BA]/20 border-[#8C6B8D] text-[#5C3B5E] ring-2 ring-[#BAA2BA]/25 font-bold'
-                    : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
-                }`}
-              >
-                {t.hasGuestNo}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleHasGuestSelect(true)}
-                className={`py-2.5 px-4 rounded-xl border font-semibold text-sm transition-all ${
-                  values.has_guest
-                    ? 'bg-[#BAA2BA]/20 border-[#8C6B8D] text-[#5C3B5E] ring-2 ring-[#BAA2BA]/25 font-bold'
-                    : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
-                }`}
-              >
-                {t.hasGuestYes}
-              </button>
-            </div>
-
-            {/* Question 3c: Number of Guests Dropdown (Only appears if bringing guest) */}
-            {values.has_guest && (
-              <div className="mt-5 pt-4 border-t border-slate-100">
-                <label htmlFor="guest-count-select" className="block text-sm font-semibold text-slate-800 mb-2">
-                  {t.guestCountLabel} <span className="text-rose-500 font-bold">*</span>
-                </label>
-                <div className="relative max-w-xs">
-                  <select
-                    id="guest-count-select"
-                    value={guestOption}
-                    onChange={(e) => handleGuestDropdownChange(e.target.value)}
-                    className="w-full px-4 py-2.5 pr-10 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D] text-slate-900 text-sm appearance-none bg-white font-medium cursor-pointer"
+              {/* Select Trigger */}
+              <div className={`relative ${isOrgDropdownOpen ? 'z-30' : 'z-auto'}`}>
+                <button
+                  type="button"
+                  onClick={toggleOrgDropdown}
+                  aria-haspopup="listbox"
+                  aria-expanded={isOrgDropdownOpen}
+                  className={`w-full h-[52px] rounded-[14px] bg-white/80 border ${
+                    errors.organisation
+                      ? 'border-rose-400 bg-white ring-4 ring-rose-200/50'
+                      : isOrgDropdownOpen
+                      ? 'border-[#C8622A] bg-white ring-4 ring-[#F4B968]/40'
+                      : 'border-[#9A4A1B]/20 hover:border-[#9A4A1B]/40'
+                  } px-[18px] text-[15px] text-left flex items-center justify-between transition-all outline-none shadow-xs`}
+                >
+                  <span
+                    className={`truncate pr-2 ${
+                      organisationOption ? 'text-[#3B1F0E] font-medium' : 'text-[#7A5A44]/60'
+                    }`}
                   >
-                    <option value="" disabled>
-                      {t.guestCountPlaceholder}
-                    </option>
-                    {[1, 2, 3, 4, 5].map((num) => (
-                      <option key={num} value={String(num)}>
-                        {t.guestCountOption(num)}
-                      </option>
-                    ))}
-                    <option value="custom">{t.guestCountCustomOption}</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
-                </div>
+                    {organisationOption === 'other'
+                      ? t.organisationOtherOption
+                      : organisationOption || t.organisationSelectPlaceholder}
+                  </span>
 
-                {/* Custom Number Input when 'Custom' is selected */}
-                {guestOption === 'custom' && (
-                  <div className="mt-3">
-                    <label htmlFor="custom-guest-count-input" className="block text-xs font-semibold text-slate-700 mb-1.5">
-                      {t.customGuestCountLabel} <span className="text-rose-500 font-bold">*</span>
-                    </label>
-                    <input
-                      id="custom-guest-count-input"
-                      type="number"
-                      min="6"
-                      step="1"
-                      value={customGuestCount}
-                      onChange={(e) => handleCustomGuestCountChange(e.target.value)}
-                      placeholder={t.customGuestCountPlaceholder}
-                      className={`w-full max-w-xs px-4 py-2.5 rounded-xl border ${
-                        errors.guest_count
-                          ? 'border-rose-400 ring-2 ring-rose-100'
-                          : 'border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D]'
-                      } text-slate-900 text-sm font-medium transition-colors`}
-                      aria-required="true"
-                      aria-invalid={Boolean(errors.guest_count)}
-                    />
-                  </div>
-                )}
-
-                {errors.guest_count && (
-                  <p className="mt-2 text-xs font-semibold text-rose-600 flex items-center gap-1.5">
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    <span>{errors.guest_count}</span>
-                  </p>
-                )}
-
-                {/* Dynamically Generated Guest Sections */}
-                {values.guest_count > 0 && values.guests && values.guests.length > 0 && (
-                  <div className="mt-6 pt-5 border-t border-slate-200/90 space-y-4 animate-in fade-in duration-200">
-                    <div className="flex items-center justify-between flex-wrap gap-2">
-                      <div className="flex items-center gap-2">
-                        <Users className="w-4 h-4 text-[#8C6B8D]" />
-                        <h4 className="text-sm font-bold text-slate-900 tracking-tight">
-                          {t.guestsDetailsHeader} ({values.guests.length})
-                        </h4>
-                      </div>
-                      <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#BAA2BA]/20 text-[#684769] border border-[#BAA2BA]/30">
-                        All fields required
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                    {organisationOption && (
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOrganisationChange('');
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.stopPropagation();
+                            handleOrganisationChange('');
+                          }
+                        }}
+                        className="p-1 rounded-md text-[#7A5A44] hover:text-[#3B1F0E] hover:bg-slate-100 transition-colors"
+                        title="Clear selection"
+                      >
+                        <X className="w-3.5 h-3.5" />
                       </span>
-                    </div>
-                    <p className="text-xs text-slate-500">
-                      {t.guestsDetailsSubtitle}
-                    </p>
+                    )}
+                    {isOrgDropdownOpen ? (
+                      <ChevronUp className="w-4 h-4 text-[#C8622A]" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-[#7A5A44]" />
+                    )}
+                  </div>
+                </button>
 
-                    <div className="space-y-4 pt-1">
-                      {values.guests.map((guest, idx) => {
-                        const guestError = errors.guests?.[idx];
-                        return (
-                          <div
-                            key={idx}
-                            className="p-4 sm:p-5 rounded-xl border border-slate-200/90 bg-slate-50/70 hover:bg-slate-50 transition-all space-y-3.5 shadow-xs"
+                {/* Dropdown Menu */}
+                {isOrgDropdownOpen && (
+                  <div className="absolute left-0 right-0 top-full mt-2 bg-white/95 backdrop-blur-xl border border-white/80 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in-50 zoom-in-95 duration-150">
+                    <div className="p-3 border-b border-slate-100 bg-amber-50/40">
+                      <div className="relative">
+                        <Search className="w-4 h-4 text-[#7A5A44] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        <input
+                          ref={orgSearchInputRef}
+                          type="text"
+                          value={orgSearchQuery}
+                          onChange={(e) => setOrgSearchQuery(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Escape') {
+                              setIsOrgDropdownOpen(false);
+                            }
+                          }}
+                          placeholder={t.searchOrganisationsPlaceholder}
+                          className="w-full h-11 pl-10 pr-9 rounded-xl border border-slate-200 bg-white text-sm text-[#3B1F0E] placeholder:text-[#7A5A44]/60 focus:outline-none focus:border-[#C8622A] focus:ring-2 focus:ring-[#F4B968]/40"
+                        />
+                        {orgSearchQuery && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setOrgSearchQuery('');
+                              orgSearchInputRef.current?.focus();
+                            }}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 text-[#7A5A44] hover:text-[#3B1F0E] rounded"
+                            title="Clear search"
                           >
-                            {/* Guest Header Badge */}
-                            <div className="flex items-center justify-between pb-2.5 border-b border-slate-200/70">
-                              <div className="flex items-center gap-2">
-                                <span className="w-5 h-5 rounded-full bg-gradient-to-br from-[#8C6B8D] to-[#754F76] text-white text-[11px] font-bold flex items-center justify-center shadow-xs">
-                                  {idx + 1}
-                                </span>
-                                <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">
-                                  {t.guestSectionTitle(idx + 1)}
-                                </span>
-                              </div>
-                            </div>
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
 
-                            {/* Guest Field 1: Full Name */}
-                            <div>
-                              <label htmlFor={`guest-${idx}-name`} className="block text-xs font-semibold text-slate-700 mb-1">
-                                {t.guestNameLabel(idx + 1)} <span className="text-rose-500 font-bold">*</span>
-                              </label>
-                              <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                                  <User className="w-4 h-4" />
-                                </div>
-                                <input
-                                  id={`guest-${idx}-name`}
-                                  type="text"
-                                  value={guest.name}
-                                  onChange={(e) => handleGuestFieldChange(idx, 'name', e.target.value)}
-                                  placeholder={t.guestNamePlaceholder}
-                                  className={`w-full pl-9 pr-3.5 py-2.5 rounded-lg border ${
-                                    guestError?.name
-                                      ? 'border-rose-400 ring-2 ring-rose-100'
-                                      : 'border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D]'
-                                  } text-slate-900 placeholder:text-slate-400 text-xs sm:text-sm bg-white transition-colors`}
-                                />
-                              </div>
-                              {guestError?.name && (
-                                <p className="mt-1 text-xs font-semibold text-rose-600 flex items-center gap-1">
-                                  <AlertCircle className="w-3 h-3 flex-shrink-0" />
-                                  <span>{guestError.name}</span>
-                                </p>
-                              )}
-                            </div>
+                    <div className="max-h-60 overflow-y-auto p-1.5 space-y-0.5">
+                      {filteredOrganisations.length > 0 ? (
+                        filteredOrganisations.map((org) => {
+                          const isSelected = organisationOption === org;
+                          return (
+                            <button
+                              key={org}
+                              type="button"
+                              onClick={() => handleSelectOrganisation(org)}
+                              className={`w-full px-3.5 py-2.5 text-left rounded-xl text-sm font-medium transition-colors flex items-center justify-between ${
+                                isSelected
+                                  ? 'bg-[#FCE8D3] text-[#9A4A1B] font-bold'
+                                  : 'text-[#3B1F0E] hover:bg-amber-500/10'
+                              }`}
+                            >
+                              <span className="truncate">{org}</span>
+                              {isSelected && <Check className="w-4 h-4 text-[#9A4A1B] flex-shrink-0" />}
+                            </button>
+                          );
+                        })
+                      ) : (
+                        <div className="py-6 px-3 text-center">
+                          <p className="text-xs text-[#7A5A44] font-medium">
+                            {t.noOrganisationsFound}
+                          </p>
+                        </div>
+                      )}
 
-                            {/* Guest Field 2: Organisation */}
-                            <div>
-                              <label htmlFor={`guest-${idx}-org`} className="block text-xs font-semibold text-slate-700 mb-1">
-                                {t.guestOrgLabel(idx + 1)} <span className="text-rose-500 font-bold">*</span>
-                              </label>
-                              <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                                  <Building2 className="w-4 h-4" />
-                                </div>
-                                <input
-                                  id={`guest-${idx}-org`}
-                                  type="text"
-                                  value={guest.organisation}
-                                  onChange={(e) => handleGuestFieldChange(idx, 'organisation', e.target.value)}
-                                  placeholder={t.guestOrgPlaceholder}
-                                  className={`w-full pl-9 pr-3.5 py-2.5 rounded-lg border ${
-                                    guestError?.organisation
-                                      ? 'border-rose-400 ring-2 ring-rose-100'
-                                      : 'border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D]'
-                                  } text-slate-900 placeholder:text-slate-400 text-xs sm:text-sm bg-white transition-colors`}
-                                />
-                              </div>
-                              {guestError?.organisation && (
-                                <p className="mt-1 text-xs font-semibold text-rose-600 flex items-center gap-1">
-                                  <AlertCircle className="w-3 h-3 flex-shrink-0" />
-                                  <span>{guestError.organisation}</span>
-                                </p>
-                              )}
-                            </div>
-
-                            {/* Guest Field 3: Job Title */}
-                            <div>
-                              <label htmlFor={`guest-${idx}-job`} className="block text-xs font-semibold text-slate-700 mb-1">
-                                {t.guestJobTitleLabel(idx + 1)} <span className="text-rose-500 font-bold">*</span>
-                              </label>
-                              <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                                  <Briefcase className="w-4 h-4" />
-                                </div>
-                                <input
-                                  id={`guest-${idx}-job`}
-                                  type="text"
-                                  value={guest.job_title}
-                                  onChange={(e) => handleGuestFieldChange(idx, 'job_title', e.target.value)}
-                                  placeholder={t.guestJobTitlePlaceholder}
-                                  className={`w-full pl-9 pr-3.5 py-2.5 rounded-lg border ${
-                                    guestError?.job_title
-                                      ? 'border-rose-400 ring-2 ring-rose-100'
-                                      : 'border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#9E7B9E]/35 focus:border-[#8C6B8D]'
-                                  } text-slate-900 placeholder:text-slate-400 text-xs sm:text-sm bg-white transition-colors`}
-                                />
-                              </div>
-                              {guestError?.job_title && (
-                                <p className="mt-1 text-xs font-semibold text-rose-600 flex items-center gap-1">
-                                  <AlertCircle className="w-3 h-3 flex-shrink-0" />
-                                  <span>{guestError.job_title}</span>
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
+                      <div className="pt-1 mt-1 border-t border-slate-100">
+                        <button
+                          type="button"
+                          onClick={handleSelectOther}
+                          className={`w-full px-3.5 py-2.5 text-left rounded-xl text-sm font-semibold transition-colors flex items-center justify-between ${
+                            organisationOption === 'other'
+                              ? 'bg-[#FCE8D3] text-[#9A4A1B] font-bold'
+                              : 'text-[#9A4A1B] hover:bg-amber-500/10'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2 truncate">
+                            <span>{t.organisationOtherOption}</span>
+                            <span className="text-[11px] font-normal text-slate-400">(specify manually)</span>
+                          </span>
+                          {organisationOption === 'other' && (
+                            <Check className="w-4 h-4 text-[#9A4A1B] flex-shrink-0" />
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
               </div>
+
+              {organisationOption === 'other' && (
+                <div className="mt-3 animate-in fade-in duration-200">
+                  <label htmlFor="custom-organisation-input" className="block text-xs font-semibold text-[#7A5A44] mb-1.5">
+                    {t.organisationOtherPlaceholder} <span className="text-[#9A4A1B] font-bold">*</span>
+                  </label>
+                  <input
+                    id="custom-organisation-input"
+                    type="text"
+                    value={customOrganisation}
+                    onChange={(e) => handleCustomOrganisationChange(e.target.value)}
+                    placeholder={t.organisationPlaceholder}
+                    className="w-full h-[52px] rounded-[14px] bg-white/80 border border-[#9A4A1B]/20 hover:border-[#9A4A1B]/40 focus:border-[#C8622A] focus:bg-white focus:ring-4 focus:ring-[#F4B968]/40 px-[18px] text-[15px] text-[#3B1F0E] placeholder:text-[#7A5A44]/60 transition-all outline-none shadow-xs"
+                    autoFocus
+                    aria-required="true"
+                  />
+                </div>
+              )}
+
+              {errors.organisation && (
+                <p id="organisation-error" className="mt-1.5 text-xs font-semibold text-rose-600 flex items-center gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  <span>{errors.organisation}</span>
+                </p>
+              )}
+            </div>
+
+            {/* Field 3: Job Title */}
+            <div>
+              <label htmlFor="job-title-input" className="block text-[14px] sm:text-[15px] font-semibold text-[#3B1F0E] mb-2">
+                {t.jobTitleLabel} <span className="text-[#9A4A1B] font-bold">*</span>
+              </label>
+              <textarea
+                id="job-title-input"
+                rows={2}
+                value={values.job_title}
+                onChange={(e) => {
+                  setValues({ ...values, job_title: e.target.value });
+                  if (errors.job_title) setErrors({ ...errors, job_title: undefined });
+                }}
+                placeholder={t.jobTitlePlaceholder}
+                className={`w-full py-3.5 rounded-[14px] bg-white/80 border ${
+                  errors.job_title
+                    ? 'border-rose-400 bg-white ring-4 ring-rose-200/50'
+                    : 'border-[#9A4A1B]/20 hover:border-[#9A4A1B]/40 focus:border-[#C8622A] focus:bg-white focus:ring-4 focus:ring-[#F4B968]/40'
+                } px-[18px] text-[15px] text-[#3B1F0E] placeholder:text-[#7A5A44]/60 transition-all outline-none shadow-xs resize-y`}
+                aria-required="true"
+                aria-invalid={Boolean(errors.job_title)}
+                aria-describedby={errors.job_title ? 'job-title-error' : undefined}
+              />
+              {errors.job_title && (
+                <p id="job-title-error" className="mt-1.5 text-xs font-semibold text-rose-600 flex items-center gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  <span>{errors.job_title}</span>
+                </p>
+              )}
+            </div>
+
+            {/* Field 4: Attendance Confirmation Dropdown */}
+            <div>
+              <label htmlFor="join-attendance-select" className="block text-[14px] sm:text-[15px] font-semibold text-[#3B1F0E] mb-2">
+                {t.joinLabel} <span className="text-[#9A4A1B] font-bold">*</span>
+              </label>
+              <div className="relative">
+                <select
+                  id="join-attendance-select"
+                  value={values.join[0] || ''}
+                  onChange={(e) => handleJoinChange(e.target.value)}
+                  className={`w-full h-[52px] rounded-[14px] bg-white/80 border ${
+                    errors.join
+                      ? 'border-rose-400 bg-white ring-4 ring-rose-200/50'
+                      : 'border-[#9A4A1B]/20 hover:border-[#9A4A1B]/40 focus:border-[#C8622A] focus:bg-white focus:ring-4 focus:ring-[#F4B968]/40'
+                  } px-[18px] pr-10 text-[15px] ${
+                    values.join[0] ? 'text-[#3B1F0E]' : 'text-[#7A5A44]/60'
+                  } appearance-none cursor-pointer transition-all outline-none shadow-xs font-medium`}
+                  aria-required="true"
+                  aria-invalid={Boolean(errors.join)}
+                >
+                  <option value="" disabled>
+                    {t.joinSelectPlaceholder}
+                  </option>
+                  <option value="YES">{t.joinYes}</option>
+                  <option value="No">{t.joinNo}</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-[#7A5A44]">
+                  <ChevronDown className="w-4 h-4" />
+                </div>
+              </div>
+              {errors.join && (
+                <p className="mt-1.5 text-xs font-semibold text-rose-600 flex items-center gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  <span>{errors.join}</span>
+                </p>
+              )}
+            </div>
+
+            {/* Field 5: Accompanying Guest Question (Only appears if attending YES) */}
+            {values.join.includes('YES') && (
+              <div className="rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 p-5 space-y-4 animate-in fade-in duration-200">
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4 text-[#9A4A1B]" />
+                  <label className="text-[14px] sm:text-[15px] font-semibold text-[#3B1F0E]">
+                    {t.hasGuestLabel}
+                  </label>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 max-w-xs">
+                  <button
+                    type="button"
+                    onClick={() => handleHasGuestSelect(false)}
+                    className={`h-11 rounded-xl font-bold text-sm transition-all ${
+                      !values.has_guest
+                        ? 'bg-[linear-gradient(135deg,#D26E2A,#A8481B)] text-white shadow-md shadow-amber-900/20'
+                        : 'bg-white/80 border border-[#9A4A1B]/20 text-[#3B1F0E] hover:bg-white'
+                    }`}
+                  >
+                    {t.hasGuestNo}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleHasGuestSelect(true)}
+                    className={`h-11 rounded-xl font-bold text-sm transition-all ${
+                      values.has_guest
+                        ? 'bg-[linear-gradient(135deg,#D26E2A,#A8481B)] text-white shadow-md shadow-amber-900/20'
+                        : 'bg-white/80 border border-[#9A4A1B]/20 text-[#3B1F0E] hover:bg-white'
+                    }`}
+                  >
+                    {t.hasGuestYes}
+                  </button>
+                </div>
+
+                {/* Guest Count Dropdown */}
+                {values.has_guest && (
+                  <div className="pt-4 border-t border-amber-900/10 space-y-3">
+                    <label htmlFor="guest-count-select" className="block text-sm font-semibold text-[#3B1F0E]">
+                      {t.guestCountLabel} <span className="text-[#9A4A1B] font-bold">*</span>
+                    </label>
+                    <div className="relative max-w-xs">
+                      <select
+                        id="guest-count-select"
+                        value={guestOption}
+                        onChange={(e) => handleGuestDropdownChange(e.target.value)}
+                        className="w-full h-11 rounded-xl bg-white/90 border border-[#9A4A1B]/20 px-4 pr-10 text-sm text-[#3B1F0E] appearance-none cursor-pointer outline-none focus:border-[#C8622A] focus:ring-2 focus:ring-[#F4B968]/40 font-medium"
+                      >
+                        <option value="" disabled>
+                          {t.guestCountPlaceholder}
+                        </option>
+                        {[1, 2, 3, 4, 5].map((num) => (
+                          <option key={num} value={String(num)}>
+                            {t.guestCountOption(num)}
+                          </option>
+                        ))}
+                        <option value="custom">{t.guestCountCustomOption}</option>
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-3.5 flex items-center text-[#7A5A44]">
+                        <ChevronDown className="w-4 h-4" />
+                      </div>
+                    </div>
+
+                    {/* Custom Number Input */}
+                    {guestOption === 'custom' && (
+                      <div className="mt-2">
+                        <label htmlFor="custom-guest-count-input" className="block text-xs font-semibold text-[#7A5A44] mb-1">
+                          {t.customGuestCountLabel} <span className="text-[#9A4A1B] font-bold">*</span>
+                        </label>
+                        <input
+                          id="custom-guest-count-input"
+                          type="number"
+                          min="6"
+                          step="1"
+                          value={customGuestCount}
+                          onChange={(e) => handleCustomGuestCountChange(e.target.value)}
+                          placeholder={t.customGuestCountPlaceholder}
+                          className={`w-full max-w-xs h-11 rounded-xl bg-white/90 border ${
+                            errors.guest_count
+                              ? 'border-rose-400 ring-2 ring-rose-200'
+                              : 'border-[#9A4A1B]/20 focus:border-[#C8622A] focus:ring-2 focus:ring-[#F4B968]/40'
+                          } px-4 text-sm text-[#3B1F0E] font-medium transition-all outline-none`}
+                          aria-required="true"
+                          aria-invalid={Boolean(errors.guest_count)}
+                        />
+                      </div>
+                    )}
+
+                    {errors.guest_count && (
+                      <p className="mt-1.5 text-xs font-semibold text-rose-600 flex items-center gap-1.5">
+                        <AlertCircle className="w-3.5 h-3.5" />
+                        <span>{errors.guest_count}</span>
+                      </p>
+                    )}
+
+                    {/* Dynamic Guest Cards */}
+                    {values.guest_count > 0 && values.guests && values.guests.length > 0 && (
+                      <div className="mt-5 pt-4 border-t border-amber-900/10 space-y-4 animate-in fade-in duration-200">
+                        <div className="flex items-center justify-between flex-wrap gap-2">
+                          <h4 className="text-sm font-bold text-[#3B1F0E] tracking-tight">
+                            {t.guestsDetailsHeader} ({values.guests.length})
+                          </h4>
+                          <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-white/75 text-[#9A4A1B] border border-white/60">
+                            All fields required
+                          </span>
+                        </div>
+
+                        <div className="space-y-4 pt-1">
+                          {values.guests.map((guest, idx) => {
+                            const guestError = errors.guests?.[idx];
+                            return (
+                              <div
+                                key={idx}
+                                className="p-4 sm:p-5 rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-xs space-y-3.5"
+                              >
+                                <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
+                                  <span className="w-5 h-5 rounded-full bg-[linear-gradient(135deg,#D26E2A,#A8481B)] text-white text-[11px] font-bold flex items-center justify-center shadow-xs">
+                                    {idx + 1}
+                                  </span>
+                                  <span className="text-xs font-bold text-[#3B1F0E] uppercase tracking-wide">
+                                    {t.guestSectionTitle(idx + 1)}
+                                  </span>
+                                </div>
+
+                                {/* Guest Name */}
+                                <div>
+                                  <label htmlFor={`guest-${idx}-name`} className="block text-xs font-semibold text-[#7A5A44] mb-1">
+                                    {t.guestNameLabel(idx + 1)} <span className="text-[#9A4A1B] font-bold">*</span>
+                                  </label>
+                                  <input
+                                    id={`guest-${idx}-name`}
+                                    type="text"
+                                    value={guest.name}
+                                    onChange={(e) => handleGuestFieldChange(idx, 'name', e.target.value)}
+                                    placeholder={t.guestNamePlaceholder}
+                                    className={`w-full h-11 px-3.5 rounded-xl bg-white/90 border ${
+                                      guestError?.name
+                                        ? 'border-rose-400 ring-2 ring-rose-200'
+                                        : 'border-[#9A4A1B]/20 focus:border-[#C8622A] focus:ring-2 focus:ring-[#F4B968]/40'
+                                    } text-sm text-[#3B1F0E] placeholder:text-[#7A5A44]/60 transition-all outline-none`}
+                                  />
+                                  {guestError?.name && (
+                                    <p className="mt-1 text-xs font-semibold text-rose-600 flex items-center gap-1">
+                                      <AlertCircle className="w-3 h-3 flex-shrink-0" />
+                                      <span>{guestError.name}</span>
+                                    </p>
+                                  )}
+                                </div>
+
+                                {/* Guest Organisation */}
+                                <div>
+                                  <label htmlFor={`guest-${idx}-org`} className="block text-xs font-semibold text-[#7A5A44] mb-1">
+                                    {t.guestOrgLabel(idx + 1)} <span className="text-[#9A4A1B] font-bold">*</span>
+                                  </label>
+                                  <input
+                                    id={`guest-${idx}-org`}
+                                    type="text"
+                                    value={guest.organisation}
+                                    onChange={(e) => handleGuestFieldChange(idx, 'organisation', e.target.value)}
+                                    placeholder={t.guestOrgPlaceholder}
+                                    className={`w-full h-11 px-3.5 rounded-xl bg-white/90 border ${
+                                      guestError?.organisation
+                                        ? 'border-rose-400 ring-2 ring-rose-200'
+                                        : 'border-[#9A4A1B]/20 focus:border-[#C8622A] focus:ring-2 focus:ring-[#F4B968]/40'
+                                    } text-sm text-[#3B1F0E] placeholder:text-[#7A5A44]/60 transition-all outline-none`}
+                                  />
+                                  {guestError?.organisation && (
+                                    <p className="mt-1 text-xs font-semibold text-rose-600 flex items-center gap-1">
+                                      <AlertCircle className="w-3 h-3 flex-shrink-0" />
+                                      <span>{guestError.organisation}</span>
+                                    </p>
+                                  )}
+                                </div>
+
+                                {/* Guest Job Title */}
+                                <div>
+                                  <label htmlFor={`guest-${idx}-job`} className="block text-xs font-semibold text-[#7A5A44] mb-1">
+                                    {t.guestJobTitleLabel(idx + 1)} <span className="text-[#9A4A1B] font-bold">*</span>
+                                  </label>
+                                  <input
+                                    id={`guest-${idx}-job`}
+                                    type="text"
+                                    value={guest.job_title}
+                                    onChange={(e) => handleGuestFieldChange(idx, 'job_title', e.target.value)}
+                                    placeholder={t.guestJobTitlePlaceholder}
+                                    className={`w-full h-11 px-3.5 rounded-xl bg-white/90 border ${
+                                      guestError?.job_title
+                                        ? 'border-rose-400 ring-2 ring-rose-200'
+                                        : 'border-[#9A4A1B]/20 focus:border-[#C8622A] focus:ring-2 focus:ring-[#F4B968]/40'
+                                    } text-sm text-[#3B1F0E] placeholder:text-[#7A5A44]/60 transition-all outline-none`}
+                                  />
+                                  {guestError?.job_title && (
+                                    <p className="mt-1 text-xs font-semibold text-rose-600 flex items-center gap-1">
+                                      <AlertCircle className="w-3 h-3 flex-shrink-0" />
+                                      <span>{guestError.job_title}</span>
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
+
+            {/* reCAPTCHA glass panel */}
+            <div className="rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 p-3 sm:p-4 shadow-xs">
+              <RecaptchaWidget
+                ref={recaptchaRef}
+                currentLang={currentLang}
+                onSuccess={(token) => {
+                  setRecaptchaToken(token);
+                  if (errors.recaptcha) {
+                    setErrors((prev) => ({ ...prev, recaptcha: undefined }));
+                  }
+                }}
+                onExpire={() => {
+                  setRecaptchaToken(null);
+                  setErrors((prev) => ({ ...prev, recaptcha: t.valRecaptchaExpired }));
+                }}
+                onError={() => {
+                  setRecaptchaToken(null);
+                  setErrors((prev) => ({ ...prev, recaptcha: t.valRecaptchaFailed }));
+                }}
+                hasError={Boolean(errors.recaptcha)}
+                errorMessage={errors.recaptcha}
+              />
+            </div>
+
+            {/* Submit & Clear Action Buttons */}
+            <div className="flex items-center justify-between pt-2">
+              <button
+                type="submit"
+                disabled={isSubmitting || !recaptchaToken}
+                title={!recaptchaToken ? t.valRecaptchaRequired : t.submitButton}
+                className={`h-14 rounded-2xl px-9 font-bold text-white transition-all ${
+                  isSubmitting || !recaptchaToken
+                    ? 'opacity-50 cursor-not-allowed shadow-none bg-[linear-gradient(135deg,#D26E2A,#A8481B)]'
+                    : 'bg-[linear-gradient(135deg,#D26E2A,#A8481B)] shadow-[0_12px_24px_-10px_rgba(120,60,10,0.5)] hover:brightness-110 active:scale-95'
+                }`}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center gap-2">
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                    </svg>
+                    <span>{t.submittingButton}</span>
+                  </div>
+                ) : (
+                  <span>{t.submitButton}</span>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleClear}
+                disabled={isSubmitting}
+                className="text-sm font-medium text-[#7A5A44] hover:text-[#3B1F0E] transition-colors py-2 px-1 focus:outline-none focus:underline"
+              >
+                {t.clearButton}
+              </button>
+            </div>
           </div>
-        )}
-
-        {/* Google reCAPTCHA v2 Security Challenge */}
-        <RecaptchaWidget
-          ref={recaptchaRef}
-          currentLang={currentLang}
-          onSuccess={(token) => {
-            setRecaptchaToken(token);
-            if (errors.recaptcha) {
-              setErrors((prev) => ({ ...prev, recaptcha: undefined }));
-            }
-          }}
-          onExpire={() => {
-            setRecaptchaToken(null);
-            setErrors((prev) => ({ ...prev, recaptcha: t.valRecaptchaExpired }));
-          }}
-          onError={() => {
-            setRecaptchaToken(null);
-            setErrors((prev) => ({ ...prev, recaptcha: t.valRecaptchaFailed }));
-          }}
-          hasError={Boolean(errors.recaptcha)}
-          errorMessage={errors.recaptcha}
-        />
-
-        {/* Action Buttons: Submit & Subtle Secondary Clear Form */}
-        <div className="flex items-center justify-between pt-2">
-          <button
-            type="submit"
-            disabled={isSubmitting || !recaptchaToken}
-            title={!recaptchaToken ? t.valRecaptchaRequired : t.submitButton}
-            className={`inline-flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm text-white transition-all ${
-              isSubmitting || !recaptchaToken
-                ? 'bg-slate-300 cursor-not-allowed text-slate-500 shadow-none'
-                : 'bg-gradient-to-r from-[#8C6B8D] to-[#754F76] hover:from-[#7D5C7E] hover:to-[#684369] active:scale-95 shadow-lg shadow-[#8C6B8D]/25'
-            }`}
-          >
-            {isSubmitting ? (
-              <>
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                </svg>
-                <span>{t.submittingButton}</span>
-              </>
-            ) : (
-              <>
-                <Send className="w-4 h-4" />
-                <span>{t.submitButton}</span>
-              </>
-            )}
-          </button>
-
-          {/* Subtle Secondary Action with Confirmation Dialog */}
-          <button
-            type="button"
-            onClick={handleClear}
-            disabled={isSubmitting}
-            className="text-xs text-slate-400 hover:text-slate-600 transition-colors py-2 px-1 focus:outline-none focus:underline"
-          >
-            {t.clearButton}
-          </button>
         </div>
       </form>
     </div>
   );
 };
-

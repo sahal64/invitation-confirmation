@@ -15,11 +15,7 @@ const getInitialView = (): 'form' | 'admin' => {
 };
 
 export const App: React.FC = () => {
-  // Read stored language or default to 'en'
-  const [currentLang, setCurrentLang] = useState<Language>(() => {
-    const saved = localStorage.getItem('form_locale');
-    return saved === 'ru' ? 'ru' : 'en';
-  });
+  const currentLang: Language = 'en';
 
   const [view, setView] = useState<'form' | 'admin'>(getInitialView);
 
@@ -42,13 +38,9 @@ export const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('form_locale', currentLang);
-    document.title = translations[currentLang].formTitle;
-  }, [currentLang]);
-
-  const handleLanguageChange = (lang: Language) => {
-    setCurrentLang(lang);
-  };
+    localStorage.setItem('form_locale', 'en');
+    document.title = translations.en.formTitle;
+  }, []);
 
   const handleViewChange = (newView: 'form' | 'admin') => {
     setView(newView);
@@ -63,9 +55,9 @@ export const App: React.FC = () => {
 
   return (
     <div
-      className={`min-h-screen flex flex-col text-slate-900 selection:bg-[#9E7B9E] selection:text-white relative overflow-x-hidden ${
+      className={`min-h-screen flex flex-col text-slate-900 selection:bg-[#E8A048] selection:text-white relative overflow-x-hidden ${
         view === 'form'
-          ? 'bg-[#7A4565]'
+          ? 'bg-[#F4B968]'
           : 'bg-gradient-to-b from-[#f2f8f4] via-[#f7faf8] to-[#edf6f2]'
       }`}
     >
@@ -86,10 +78,9 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      {/* Header Bar with the single authoritative Language Switcher */}
+      {/* Header Bar */}
       <Header
         currentLang={currentLang}
-        onLanguageChange={handleLanguageChange}
         view={view}
         onViewChange={handleViewChange}
       />

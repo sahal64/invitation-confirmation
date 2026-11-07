@@ -13,8 +13,17 @@
   background-image: url('/national-day-bg.jpg');
   background-size: cover;
   background-repeat: no-repeat;
-  /* Mobile portrait: horizontally position so the light lavender region, S-curves, and dark mauve-purple are balanced */
-  background-position: 22% center;
+  /* Mobile portrait: position so the warm apricot area and the curved creamy sand tone are both visible */
+  background-position: 45% 45%;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: auto;
+}
+
+/* Specific tuning for small to standard mobile devices in portrait */
+@media (max-width: 640px) and (orientation: portrait) {
+  .form-page-bg {
+    background-position: 40% 40%;
+  }
 }
 
 /* Landscape orientation or tablet/desktop (min-width: 768px): center the background */

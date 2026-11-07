@@ -70,22 +70,22 @@ const DEFAULT_SAMPLE_SUBMISSIONS: Submission[] = import.meta.env.DEV
       {
         id: 'sample-002-smirnova',
         created_at: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
-        name: 'Екатерина Смирнова',
-        email: 'e.smirnova@consulting.ru',
+        name: 'Ekaterina Smirnova',
+        email: 'e.smirnova@consulting.com',
         organisation: 'Strategic Global Consulting LLC',
-        job_title: 'Директор по стратегическим коммуникациям',
+        job_title: 'Director of Strategic Communications',
         join: ['YES'],
         has_guest: true,
         guest_count: 1,
         guests: [
           {
-            name: 'Михаил Сидоров',
+            name: 'Mikhail Sidorov',
             organisation: 'Strategic Global Consulting LLC',
-            job_title: 'Главный специалист по связям с общественностью',
+            job_title: 'Chief Public Relations Officer',
           },
         ],
         comments: 4,
-        locale: 'ru',
+        locale: 'en',
         is_sample: true,
       },
       {

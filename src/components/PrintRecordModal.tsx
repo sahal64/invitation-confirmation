@@ -106,7 +106,7 @@ export const PrintRecordModal: React.FC<PrintRecordModalProps> = ({
               <div className="min-w-0">
                 <span className="text-slate-400 text-[10px] block font-medium uppercase tracking-wider">{t.submittedAt}</span>
                 <span className="font-semibold text-slate-800 text-xs">
-                  {new Date(submission.created_at).toLocaleString(currentLang === 'ru' ? 'ru-RU' : 'en-US')}
+                  {new Date(submission.created_at).toLocaleString('en-US')}
                 </span>
               </div>
             </div>

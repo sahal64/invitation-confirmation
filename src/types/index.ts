@@ -18,7 +18,7 @@ export interface Submission {
   guest_count?: number;
   guests?: GuestDetails[];
   comments?: number | null;
-  locale: Language;
+  locale: string;
   is_sample?: boolean;
 }
 

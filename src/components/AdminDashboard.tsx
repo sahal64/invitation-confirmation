@@ -229,7 +229,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
   };
 
   const handleClearSampleData = () => {
-    if (window.confirm(currentLang === 'ru' ? 'Удалить все тестовые ответы?' : 'Remove all sample preview records?')) {
+    if (window.confirm('Remove all sample preview records?')) {
       clearSampleSubmissions();
       loadData();
     }
@@ -267,15 +267,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
         matchesJoin = sub.join.includes('No');
       }
 
-      // Locale Filter
-      let matchesLocale = true;
-      if (filters.localeFilter !== 'ALL') {
-        matchesLocale = sub.locale === filters.localeFilter;
-      }
-
-      return matchesSearch && matchesJoin && matchesLocale;
+      return matchesSearch && matchesJoin;
     });
-  }, [submissions, filters.search, filters.joinFilter, filters.localeFilter]);
+  }, [submissions, filters.search, filters.joinFilter]);
 
   const sortedSubmissions = useMemo(() => {
     return [...filteredSubmissions].sort((a, b) => {
@@ -911,46 +905,31 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
 
               {/* Filter Pills & Counters */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pt-1 text-xs">
-                <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+                <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
                   {/* Status Dropdown */}
-                  <div className="flex items-center gap-1.5 bg-white px-2.5 py-2 sm:py-1.5 rounded-xl border border-slate-200 shadow-xs min-h-[40px] sm:min-h-0">
+                  <div className="flex items-center gap-1.5 bg-white px-2.5 py-2 sm:py-1.5 rounded-xl border border-slate-200 shadow-xs min-h-[40px] sm:min-h-0 w-full sm:w-auto">
                     <span className="text-slate-400 font-medium text-[11px] sm:text-xs">{t.filterJoin}:</span>
                     <select
                       value={filters.joinFilter}
                       onChange={(e) => setFilters({ ...filters, joinFilter: e.target.value as any, page: 1 })}
-                      className="bg-transparent text-slate-800 font-bold focus:outline-none cursor-pointer text-xs w-full"
+                      className="bg-transparent text-slate-800 font-bold focus:outline-none cursor-pointer text-xs w-full sm:w-auto"
                     >
                       <option value="ALL">{t.filterAll}</option>
                       <option value="YES">YES (Attending)</option>
                       <option value="No">No (Declined)</option>
                     </select>
                   </div>
-
-                  {/* Language Dropdown */}
-                  <div className="flex items-center gap-1.5 bg-white px-2.5 py-2 sm:py-1.5 rounded-xl border border-slate-200 shadow-xs min-h-[40px] sm:min-h-0">
-                    <span className="text-slate-400 font-medium text-[11px] sm:text-xs">{t.filterLanguage}:</span>
-                    <select
-                      value={filters.localeFilter}
-                      onChange={(e) => setFilters({ ...filters, localeFilter: e.target.value as any, page: 1 })}
-                      className="bg-transparent text-slate-800 font-bold focus:outline-none cursor-pointer text-xs w-full"
-                    >
-                      <option value="ALL">All Languages</option>
-                      <option value="en">English (EN)</option>
-                      <option value="ru">Russian (RU)</option>
-                    </select>
-                  </div>
                 </div>
 
                 <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
                   {/* Clear Filter Shortcut */}
-                  {(filters.search || filters.joinFilter !== 'ALL' || filters.localeFilter !== 'ALL') && (
+                  {(filters.search || filters.joinFilter !== 'ALL') && (
                     <button
                       onClick={() =>
                         setFilters((prev) => ({
                           ...prev,
                           search: '',
                           joinFilter: 'ALL',
-                          localeFilter: 'ALL',
                           page: 1,
                         }))
                       }
@@ -994,7 +973,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                         <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-md">
                           <Calendar className="w-3 h-3 text-slate-400 flex-shrink-0" />
                           <span className="truncate">
-                            {new Date(sub.created_at).toLocaleDateString(currentLang === 'ru' ? 'ru-RU' : 'en-US', {
+                            {new Date(sub.created_at).toLocaleDateString('en-US', {
                               month: 'short',
                               day: 'numeric',
                               year: 'numeric',
@@ -1200,14 +1179,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                           {/* Date Column */}
                           <td className="py-3.5 px-4 font-mono text-xs whitespace-nowrap">
                             <div className="font-semibold text-slate-800">
-                              {new Date(sub.created_at).toLocaleDateString(currentLang === 'ru' ? 'ru-RU' : 'en-US', {
+                              {new Date(sub.created_at).toLocaleDateString('en-US', {
                                 month: 'short',
                                 day: 'numeric',
                                 year: 'numeric',
                               })}
                             </div>
                             <div className="text-[11px] text-slate-400">
-                              {new Date(sub.created_at).toLocaleTimeString(currentLang === 'ru' ? 'ru-RU' : 'en-US', {
+                              {new Date(sub.created_at).toLocaleTimeString('en-US', {
                                 hour: '2-digit',
                                 minute: '2-digit',
                               })}

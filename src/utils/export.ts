@@ -40,7 +40,7 @@ export function exportToCSV(submissions: Submission[], lang: Language): void {
 
     const row: (string | number)[] = [
       sub.id,
-      new Date(sub.created_at).toLocaleString(lang === 'ru' ? 'ru-RU' : 'en-US'),
+      new Date(sub.created_at).toLocaleString('en-US'),
       `"${sub.name.replace(/"/g, '""')}"`,
       `"${(sub.organisation || '').replace(/"/g, '""')}"`,
       `"${(sub.email || '').replace(/"/g, '""')}"`,
@@ -99,7 +99,7 @@ export function exportToExcel(submissions: Submission[], lang: Language): void {
 
     const row: Record<string, string | number> = {
       [t.submissionId]: sub.id,
-      [t.submittedAt]: new Date(sub.created_at).toLocaleString(lang === 'ru' ? 'ru-RU' : 'en-US'),
+      [t.submittedAt]: new Date(sub.created_at).toLocaleString('en-US'),
       [t.colName]: sub.name,
       [t.colOrganisation]: sub.organisation || '-',
       [t.colEmail]: sub.email || '-',
