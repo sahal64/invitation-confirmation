@@ -7,7 +7,6 @@ import { RecaptchaWidget, RecaptchaWidgetRef } from './RecaptchaWidget';
 import {
   CheckCircle2,
   AlertCircle,
-  Sparkles,
   ChevronDown,
   ChevronUp,
   Users,
@@ -543,12 +542,6 @@ export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
           <div className="relative z-10 p-6 sm:p-[44px] space-y-6">
             {/* Header Area */}
             <div>
-              {/* Pill badge */}
-              <div className="inline-flex items-center gap-1.5 text-[12px] font-bold tracking-[0.08em] uppercase text-[#9A4A1B] mb-2 px-3 py-1 rounded-full bg-white/75 border border-white/60 shadow-xs">
-                <Sparkles className="w-3.5 h-3.5 text-[#9A4A1B]" />
-                <span>{t.nationalDayBadge}</span>
-              </div>
-
               {/* Title */}
               <h1 className="text-[26px] sm:text-[32px] font-extrabold text-[#3B1F0E] leading-tight mb-2">
                 {t.formTitle}
