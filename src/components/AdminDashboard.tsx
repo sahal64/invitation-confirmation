@@ -6,7 +6,6 @@ import {
   adminLogout,
   getAdminSession,
   fetchSubmissions,
-  isSupabaseConfigured,
   clearSampleSubmissions,
 } from '../services/supabase';
 import { exportToCSV, exportToExcel } from '../utils/export';
@@ -28,7 +27,6 @@ import {
   LogOut,
   Users,
   CheckCircle,
-  XCircle,
   ChevronLeft,
   ChevronRight,
   Lock,
@@ -36,17 +34,11 @@ import {
   KeyRound,
   AlertCircle,
   Trash2,
-  Calendar,
-  Briefcase,
-  Mail,
   Building2,
   Plus,
   RotateCcw,
   Check,
   X,
-  UserCheck,
-  Sparkles,
-  Pencil,
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -55,7 +47,6 @@ interface AdminDashboardProps {
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) => {
   const t = translations[currentLang];
-  const hasSupabase = isSupabaseConfigured();
 
   // Auth State
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -322,18 +313,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
   // ---------------------------------------------------------------------------
   if (!isAuthenticated) {
     return (
-      <div className="max-w-md mx-auto px-3 sm:px-4 py-8 sm:py-16">
+      <div className="max-w-md mx-auto px-4 py-12 sm:py-20">
         <div className="bg-white rounded-2xl shadow-xl shadow-slate-900/5 border border-slate-200 overflow-hidden">
-          <div className="h-3 bg-gradient-to-r from-slate-900 via-emerald-800 to-slate-900" />
-          <div className="p-5 sm:p-8">
-            <div className="w-11 h-11 sm:w-12 sm:h-12 bg-slate-100 rounded-xl flex items-center justify-center text-slate-800 mb-5 sm:mb-6 ring-4 ring-slate-50">
-              <Lock className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600" />
+          <div className="p-6 sm:p-8">
+            <div className="w-11 h-11 bg-slate-900 rounded-xl flex items-center justify-center text-white mb-6 shadow-xs">
+              <Lock className="w-5 h-5 text-white" />
             </div>
 
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
               {t.adminLoginTitle}
             </h1>
-            <p className="text-xs text-slate-500 mt-1 mb-5 sm:mb-6">
+            <p className="text-xs sm:text-sm text-slate-500 mt-1 mb-6">
               {t.adminLoginSubtitle}
             </p>
 
@@ -344,9 +334,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-3.5 sm:space-y-4">
+            <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                   {t.adminEmailLabel}
                 </label>
                 <input
@@ -355,12 +345,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
                   placeholder="admin@domain.com"
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm transition-all"
+                  className="w-full h-11 px-3.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 text-sm transition-all bg-white"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                   {t.adminPasswordLabel}
                 </label>
                 <input
@@ -369,20 +359,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm transition-all"
+                  className="w-full h-11 px-3.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 text-sm transition-all bg-white"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loginLoading}
-                className="w-full mt-2 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-md active:scale-95"
+                className="w-full mt-2 h-11 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-xs active:scale-95"
               >
                 {loginLoading ? (
                   <span>{t.adminLoggingIn}</span>
                 ) : (
                   <>
-                    <KeyRound className="w-4 h-4 text-emerald-400" />
+                    <KeyRound className="w-4 h-4 text-slate-300" />
                     <span>{t.adminLoginButton}</span>
                   </>
                 )}
@@ -391,14 +381,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
 
             {/* Dev helper only visible in local development */}
             {import.meta.env.DEV && (
-              <div className="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-slate-100">
+              <div className="mt-6 pt-5 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => {
                     setLoginEmail('admin@event.local');
                     setLoginPassword('admin123');
                   }}
-                  className="w-full py-2.5 px-3 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs transition-colors"
+                  className="w-full py-2 px-3 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium text-xs transition-colors"
                 >
                   Quick Fill Test Credentials (admin@event.local / admin123)
                 </button>
@@ -414,64 +404,56 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
   // AUTHENTICATED ADMIN DASHBOARD VIEW
   // ---------------------------------------------------------------------------
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
       {/* Top Header Card */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
-        <div className="h-1.5 bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-700" />
-        <div className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-          <div className="space-y-1 w-full sm:w-auto">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                <span>National Day 2026</span>
-              </span>
-              <h1 className="text-lg xs:text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-tight">
-                {t.adminTitle}
-              </h1>
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+            {t.adminTitle}
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            {t.adminSubtitle}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+          <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs">
+            <div className="w-6 h-6 rounded-full bg-slate-800 text-white font-bold text-[11px] flex items-center justify-center flex-shrink-0">
+              {adminEmail ? adminEmail[0].toUpperCase() : 'A'}
             </div>
-            <p className="text-xs sm:text-sm text-slate-500">{t.adminSubtitle}</p>
+            <span className="font-semibold text-slate-800 truncate max-w-[200px]">
+              {adminEmail || t.administrator}
+            </span>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
-            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-2.5 sm:px-3 py-1.5 rounded-xl min-w-0 flex-1 sm:flex-initial">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
-              <div className="min-w-0">
-                <div className="text-xs font-bold text-slate-800 truncate max-w-[140px] xs:max-w-[180px] sm:max-w-[200px]">
-                  {adminEmail || t.administrator}
-                </div>
-                <div className="text-[10px] text-slate-400 font-medium leading-none">Online &bull; Admin</div>
-              </div>
-            </div>
-
-            <button
-              onClick={handleLogout}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 hover:border-rose-200 hover:bg-rose-50 text-slate-700 hover:text-rose-700 text-xs font-bold transition-all shadow-xs flex-shrink-0 active:scale-95"
-              title="Sign out"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>{t.adminLogoutButton}</span>
-            </button>
-          </div>
+          <button
+            onClick={handleLogout}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 hover:border-rose-200 hover:bg-rose-50 text-slate-600 hover:text-rose-700 text-xs font-semibold transition-colors shadow-xs active:scale-95"
+            title="Sign out"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>{t.adminLogoutButton}</span>
+          </button>
         </div>
       </div>
 
       {/* Navigation Tabs Switcher */}
-      <div className="flex flex-col xs:flex-row items-stretch xs:items-center justify-between gap-2.5 border-b border-slate-200 pb-3">
-        <div className="grid grid-cols-2 xs:inline-flex p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80 w-full xs:w-auto">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
+        <div className="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200/80 w-full sm:w-auto">
           <button
             onClick={() => setActiveTab('submissions')}
-            className={`inline-flex items-center justify-center xs:justify-start gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+            className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
               activeTab === 'submissions'
-                ? 'bg-white text-emerald-800 shadow-sm border border-slate-200/60'
+                ? 'bg-white text-slate-900 shadow-xs border border-slate-200/70 font-bold'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Users className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-            <span className="truncate">{t.tabSubmissions}</span>
+            <Users className="w-4 h-4 text-slate-500" />
+            <span>{t.tabSubmissions}</span>
             <span
-              className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-extrabold ${
+              className={`px-2 py-0.5 rounded-full text-[11px] font-bold ${
                 activeTab === 'submissions'
-                  ? 'bg-emerald-100 text-emerald-800'
+                  ? 'bg-slate-900 text-white'
                   : 'bg-slate-200 text-slate-600'
               }`}
             >
@@ -481,18 +463,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
 
           <button
             onClick={() => setActiveTab('organisations')}
-            className={`inline-flex items-center justify-center xs:justify-start gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+            className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
               activeTab === 'organisations'
-                ? 'bg-white text-emerald-800 shadow-sm border border-slate-200/60'
+                ? 'bg-white text-slate-900 shadow-xs border border-slate-200/70 font-bold'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Building2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-            <span className="truncate">{t.tabOrganisations}</span>
+            <Building2 className="w-4 h-4 text-slate-500" />
+            <span>{t.tabOrganisations}</span>
             <span
-              className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-extrabold ${
+              className={`px-2 py-0.5 rounded-full text-[11px] font-bold ${
                 activeTab === 'organisations'
-                  ? 'bg-emerald-100 text-emerald-800'
+                  ? 'bg-slate-900 text-white'
                   : 'bg-slate-200 text-slate-600'
               }`}
             >
@@ -504,51 +486,47 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
         <button
           onClick={loadData}
           disabled={loadingData}
-          className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 bg-white/70 hover:bg-white text-slate-700 text-xs font-semibold transition-all shadow-xs disabled:opacity-50 active:scale-95 flex-shrink-0"
+          className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-all shadow-xs disabled:opacity-50 active:scale-95 flex-shrink-0"
           title="Refresh Data"
         >
-          <RotateCcw className={`w-3.5 h-3.5 ${loadingData ? 'animate-spin text-emerald-600' : 'text-slate-500'}`} />
+          <RotateCcw className={`w-3.5 h-3.5 ${loadingData ? 'animate-spin text-slate-700' : 'text-slate-500'}`} />
           <span>Refresh</span>
         </button>
       </div>
 
       {activeTab === 'organisations' ? (
         /* ========================================================================= */
-        /* DYNAMIC ORGANISATIONS MANAGEMENT VIEW                                    */
+        /* ORGANISATIONS MANAGEMENT VIEW                                             */
         /* ========================================================================= */
-        <div className="space-y-4 sm:space-y-6">
-          {/* Add Organisation Section */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3.5 sm:mb-4">
+        <div className="space-y-6">
+          {/* Add Organisation Card */}
+          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
               <div>
-                <h2 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
-                  <Building2 className="w-5 h-5 text-emerald-600" />
-                  <span>{t.manageOrganisations}</span>
+                <h2 className="text-base sm:text-lg font-bold text-slate-900">
+                  {t.manageOrganisations}
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
                   Organisations added here dynamically update the public confirmation form dropdown.
                 </p>
               </div>
-              <span className="self-start sm:self-auto px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 font-bold text-xs border border-emerald-200">
+              <span className="self-start sm:self-auto px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-bold text-xs border border-slate-200">
                 {t.organisationsCount(organisations.length)}
               </span>
             </div>
 
-            <form onSubmit={handleAddOrg} className="flex flex-col sm:flex-row gap-2">
-              <div className="relative flex-1">
-                <Building2 className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                <input
-                  type="text"
-                  value={newOrgName}
-                  onChange={(e) => setNewOrgName(e.target.value)}
-                  placeholder={t.addOrganisationPlaceholder}
-                  className="w-full h-11 pl-10 pr-4 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm bg-slate-50/50 focus:bg-white transition-all"
-                />
-              </div>
+            <form onSubmit={handleAddOrg} className="flex flex-col sm:flex-row gap-2.5">
+              <input
+                type="text"
+                value={newOrgName}
+                onChange={(e) => setNewOrgName(e.target.value)}
+                placeholder={t.addOrganisationPlaceholder}
+                className="flex-1 h-11 px-4 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 text-sm bg-white transition-all"
+              />
               <button
                 type="submit"
                 disabled={!newOrgName.trim()}
-                className="h-11 inline-flex items-center justify-center gap-1.5 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-bold text-xs sm:text-sm shadow-sm transition-all flex-shrink-0 active:scale-95"
+                className="h-11 inline-flex items-center justify-center gap-1.5 px-5 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold text-xs sm:text-sm shadow-xs transition-all flex-shrink-0 active:scale-95"
               >
                 <Plus className="w-4 h-4" />
                 <span>{t.addOrganisationButton}</span>
@@ -573,10 +551,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
             )}
           </div>
 
-          {/* Compact Organisations Directory Grid */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            {/* Search and Reset Toolbar */}
-            <div className="p-3.5 sm:p-5 border-b border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
+          {/* Clean Directory Table */}
+          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+            {/* Toolbar */}
+            <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
               <div className="relative flex-1 max-w-full sm:max-w-md">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
@@ -584,7 +562,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                   value={orgSearch}
                   onChange={(e) => setOrgSearch(e.target.value)}
                   placeholder={t.searchOrganisationsPlaceholder}
-                  className="w-full h-10 pl-9 pr-8 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm bg-white"
+                  className="w-full h-10 pl-9 pr-8 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 text-xs sm:text-sm bg-white"
                 />
                 {orgSearch && (
                   <button
@@ -597,7 +575,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                 )}
               </div>
 
-              <div className="flex items-center gap-2 justify-between sm:justify-end">
+              <div className="flex items-center gap-3 justify-between sm:justify-end">
                 <span className="text-xs text-slate-500 font-medium">
                   Showing {filteredOrganisations.length} of {organisations.length}
                 </span>
@@ -613,108 +591,99 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
               </div>
             </div>
 
-            {/* Compact Grid Layout - eliminates excessive vertical scrolling */}
+            {/* Structured Table */}
             {filteredOrganisations.length === 0 ? (
               <div className="py-12 px-4 text-center">
-                <Building2 className="w-10 h-10 text-slate-300 mx-auto mb-2" />
                 <div className="text-slate-500 text-sm font-semibold">{t.noOrganisationsFound}</div>
                 {orgSearch && (
                   <button
                     onClick={() => setOrgSearch('')}
-                    className="mt-2 text-xs font-bold text-emerald-600 hover:text-emerald-700"
+                    className="mt-2 text-xs font-bold text-slate-900 hover:underline"
                   >
                     Clear search filter
                   </button>
                 )}
               </div>
             ) : (
-              <div className="p-3.5 sm:p-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-2.5">
-                  {filteredOrganisations.map((org, index) => {
-                    const isEditing = editingOrg === org;
-                    return (
-                      <div
-                        key={org}
-                        className={`group flex items-center justify-between gap-2 px-3 py-2 rounded-xl border transition-all bg-white shadow-xs min-h-[44px] ${
-                          isEditing
-                            ? 'border-emerald-500 ring-2 ring-emerald-500/20 bg-emerald-50/20'
-                            : 'border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/30'
-                        }`}
-                      >
-                        {isEditing ? (
-                          <div className="flex items-center gap-1.5 w-full">
-                            <span className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-800 font-mono text-[10px] sm:text-[11px] font-bold flex items-center justify-center flex-shrink-0 border border-emerald-200">
-                              {String(index + 1).padStart(2, '0')}
+              <div className="divide-y divide-slate-100">
+                {filteredOrganisations.map((org, index) => {
+                  const isEditing = editingOrg === org;
+                  return (
+                    <div
+                      key={org}
+                      className="px-5 py-3 flex items-center justify-between gap-3 hover:bg-slate-50/70 transition-colors"
+                    >
+                      {isEditing ? (
+                        <div className="flex items-center gap-2 w-full">
+                          <span className="text-xs font-mono font-bold text-slate-400 w-6 flex-shrink-0">
+                            {index + 1}
+                          </span>
+                          <input
+                            type="text"
+                            value={editingOrgValue}
+                            onChange={(e) => setEditingOrgValue(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleSaveEditOrg(org);
+                              } else if (e.key === 'Escape') {
+                                handleCancelEditOrg();
+                              }
+                            }}
+                            autoFocus
+                            className="flex-1 h-9 px-3 rounded-lg border border-slate-400 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 bg-white"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleSaveEditOrg(org)}
+                            className="h-9 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors"
+                            title="Save changes (Enter)"
+                          >
+                            Save
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleCancelEditOrg}
+                            className="h-9 px-3 rounded-lg border border-slate-300 hover:bg-slate-100 text-slate-600 text-xs font-semibold transition-colors"
+                            title="Cancel (Esc)"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="flex items-center gap-3 min-w-0 flex-1">
+                            <span className="text-xs font-mono font-bold text-slate-400 w-6 flex-shrink-0">
+                              {index + 1}
                             </span>
-                            <input
-                              type="text"
-                              value={editingOrgValue}
-                              onChange={(e) => setEditingOrgValue(e.target.value)}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                  e.preventDefault();
-                                  handleSaveEditOrg(org);
-                                } else if (e.key === 'Escape') {
-                                  handleCancelEditOrg();
-                                }
-                              }}
-                              autoFocus
-                              className="flex-1 min-w-0 h-9 px-2.5 rounded-lg border border-emerald-400 text-xs sm:text-sm text-slate-900 font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-white"
-                            />
+                            <span className="text-sm font-semibold text-slate-800 truncate" title={org}>
+                              {org}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 flex-shrink-0">
                             <button
                               type="button"
-                              onClick={() => handleSaveEditOrg(org)}
-                              className="w-9 h-9 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-colors flex items-center justify-center flex-shrink-0 active:scale-95"
-                              title="Save changes (Enter)"
+                              onClick={() => handleStartEditOrg(org)}
+                              className="px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-600 text-xs font-medium transition-colors"
+                              title={`Edit "${org}"`}
                             >
-                              <Check className="w-4 h-4" />
+                              Edit
                             </button>
                             <button
                               type="button"
-                              onClick={handleCancelEditOrg}
-                              className="w-9 h-9 rounded-lg border border-slate-300 hover:bg-slate-100 text-slate-600 transition-colors flex items-center justify-center flex-shrink-0 active:scale-95"
-                              title="Cancel (Esc)"
+                              onClick={() => handleDeleteOrg(org)}
+                              className="px-2.5 py-1.5 rounded-lg border border-slate-200 hover:border-rose-200 hover:bg-rose-50 text-slate-600 hover:text-rose-700 text-xs font-medium transition-colors"
+                              title={`Delete "${org}"`}
                             >
-                              <X className="w-4 h-4" />
+                              Delete
                             </button>
                           </div>
-                        ) : (
-                          <>
-                            <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                              <span className="w-6 h-6 rounded-lg bg-emerald-50 text-emerald-700 font-mono text-[11px] font-bold flex items-center justify-center flex-shrink-0 border border-emerald-100">
-                                {String(index + 1).padStart(2, '0')}
-                              </span>
-                              <span className="text-xs sm:text-sm font-semibold text-slate-800 truncate" title={org}>
-                                {org}
-                              </span>
-                            </div>
-
-                            <div className="flex items-center gap-1 flex-shrink-0">
-                              <button
-                                type="button"
-                                onClick={() => handleStartEditOrg(org)}
-                                className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 transition-colors active:scale-95"
-                                title={`Edit "${org}"`}
-                                aria-label={`Edit ${org}`}
-                              >
-                                <Pencil className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteOrg(org)}
-                                className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors active:scale-95"
-                                title={`Delete "${org}"`}
-                                aria-label={`Delete ${org}`}
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -724,21 +693,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
         /* SUBMISSIONS MANAGEMENT VIEW                                               */
         /* ========================================================================= */
         <>
-          {/* Developer Diagnostic Alert (DEV MODE ONLY) */}
-          {import.meta.env.DEV && !hasSupabase && (
-            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 text-xs text-amber-900 flex items-center justify-between gap-3 shadow-xs">
-              <div className="flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0" />
-                <span>
-                  <strong>Developer Mode:</strong> Supabase environment variables not configured. Submissions are stored in local storage for local testing. Set <code className="bg-amber-100 px-1 py-0.5 rounded font-mono">VITE_SUPABASE_URL</code> in <code className="bg-amber-100 px-1 py-0.5 rounded font-mono">.env</code> to connect live database.
-                </span>
-              </div>
-            </div>
-          )}
-
           {/* Database Error Banner */}
           {dataError && (
-            <div className="bg-rose-50 border border-rose-200 rounded-2xl p-3.5 sm:p-4 text-xs text-rose-900 flex items-center justify-between gap-3">
+            <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 text-xs text-rose-900 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <AlertCircle className="w-5 h-5 text-rose-600 flex-shrink-0" />
                 <span>
@@ -754,99 +711,70 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
             </div>
           )}
 
-          {/* Modern 4-Card Analytics Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+          {/* Executive 4-Card Analytics Grid */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {/* Total Submissions */}
-            <div className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wide truncate">
-                  {t.totalSubmissions}
-                </span>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center flex-shrink-0">
-                  <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                </div>
-              </div>
-              <div className="mt-2.5 sm:mt-3">
-                <div className="text-xl xs:text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                {t.totalSubmissions}
+              </span>
+              <div className="mt-3 flex items-baseline justify-between">
+                <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
                   {stats.total}
-                </div>
-                <div className="text-[10px] sm:text-[11px] text-slate-400 font-medium mt-0.5 truncate">
-                  Total RSVPs received
-                </div>
+                </span>
+                <span className="text-xs font-medium text-slate-400">Total RSVPs</span>
               </div>
             </div>
 
             {/* Confirmed Attending */}
-            <div className="bg-white p-3 sm:p-5 rounded-2xl border border-emerald-200/80 shadow-sm flex flex-col justify-between">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-xs font-bold text-emerald-700 uppercase tracking-wide truncate">
-                  {t.attendingCount}
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                {t.attendingCount}
+              </span>
+              <div className="mt-3 flex items-baseline justify-between">
+                <span className="text-2xl sm:text-3xl font-extrabold text-emerald-700 tracking-tight">
+                  {stats.attending}
                 </span>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0">
-                  <UserCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                </div>
-              </div>
-              <div className="mt-2.5 sm:mt-3">
-                <div className="flex items-baseline gap-1.5 sm:gap-2 flex-wrap">
-                  <span className="text-xl xs:text-2xl sm:text-3xl font-black text-emerald-700 tracking-tight">
-                    {stats.attending}
-                  </span>
-                  <span className="text-[10px] sm:text-xs font-bold text-emerald-700 bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded border border-emerald-100">
-                    {stats.total > 0 ? Math.round((stats.attending / stats.total) * 100) : 0}%
-                  </span>
-                </div>
-                <div className="text-[10px] sm:text-[11px] text-emerald-600/80 font-medium mt-0.5 truncate">
-                  Confirmed primary guests
-                </div>
+                <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                  {stats.total > 0 ? Math.round((stats.attending / stats.total) * 100) : 0}%
+                </span>
               </div>
             </div>
 
-            {/* Total Headcount (Attending + Accompanied Guests) */}
-            <div className="bg-white p-3 sm:p-5 rounded-2xl border border-teal-200/80 shadow-sm flex flex-col justify-between">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-xs font-bold text-teal-700 uppercase tracking-wide truncate">
-                  Total Headcount
-                </span>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center flex-shrink-0">
-                  <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                </div>
-              </div>
-              <div className="mt-2.5 sm:mt-3">
-                <div className="text-xl xs:text-2xl sm:text-3xl font-black text-teal-800 tracking-tight">
+            {/* Total Headcount */}
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                Total Headcount
+              </span>
+              <div className="mt-3 flex items-baseline justify-between">
+                <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
                   {stats.attending + stats.totalGuests}
-                </div>
-                <div className="text-[10px] sm:text-[11px] text-teal-600 font-medium mt-0.5 truncate">
+                </span>
+                <span className="text-xs font-medium text-slate-500">
                   {stats.attending} primary + {stats.totalGuests} guests
-                </div>
+                </span>
               </div>
             </div>
 
             {/* Declined Invitations */}
-            <div className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-xs font-bold text-rose-600 uppercase tracking-wide truncate">
-                  {t.notAttendingCount}
-                </span>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center flex-shrink-0">
-                  <XCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                </div>
-              </div>
-              <div className="mt-2.5 sm:mt-3">
-                <div className="text-xl xs:text-2xl sm:text-3xl font-black text-rose-700 tracking-tight">
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                {t.notAttendingCount}
+              </span>
+              <div className="mt-3 flex items-baseline justify-between">
+                <span className="text-2xl sm:text-3xl font-extrabold text-slate-700 tracking-tight">
                   {stats.declined}
-                </div>
-                <div className="text-[10px] sm:text-[11px] text-slate-400 font-medium mt-0.5 truncate">
-                  Declined Invitations
-                </div>
+                </span>
+                <span className="text-xs font-medium text-slate-400">Declined</span>
               </div>
             </div>
           </div>
 
           {/* Submissions Data Center */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
             {/* Unified Command & Filter Bar */}
-            <div className="p-3.5 sm:p-5 border-b border-slate-200 space-y-3 bg-slate-50/40">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 sm:gap-3">
+            <div className="p-4 sm:p-5 border-b border-slate-200 space-y-3 bg-slate-50/40">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
                 {/* Search Bar */}
                 <div className="relative flex-1 w-full lg:max-w-md">
                   <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -855,7 +783,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                     value={filters.search}
                     onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
                     placeholder={t.searchPlaceholder}
-                    className="w-full h-10 sm:h-auto pl-10 pr-8 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm bg-white"
+                    className="w-full h-10 pl-10 pr-8 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 text-xs sm:text-sm bg-white"
                   />
                   {filters.search && (
                     <button
@@ -868,12 +796,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                   )}
                 </div>
 
-                {/* Export Buttons and Data Tools */}
+                {/* Export Buttons */}
                 <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto">
                   {hasSampleData && (
                     <button
                       onClick={handleClearSampleData}
-                      className="col-span-2 sm:col-span-1 h-10 sm:h-auto inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold border border-amber-200 transition-colors active:scale-95"
+                      className="col-span-2 sm:col-span-1 h-10 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold border border-amber-200 transition-colors active:scale-95"
                       title="Remove mock/sample submissions"
                     >
                       <Trash2 className="w-3.5 h-3.5 text-amber-700" />
@@ -884,7 +812,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                   <button
                     onClick={() => exportToCSV(sortedSubmissions, currentLang)}
                     disabled={sortedSubmissions.length === 0}
-                    className="h-10 sm:h-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-50 text-slate-700 text-xs font-bold shadow-xs transition-colors active:scale-95"
+                    className="h-10 inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-50 text-slate-700 text-xs font-semibold shadow-xs transition-colors active:scale-95"
                     title={t.exportCsv}
                   >
                     <Download className="w-3.5 h-3.5 text-slate-600" />
@@ -894,7 +822,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                   <button
                     onClick={() => exportToExcel(sortedSubmissions, currentLang)}
                     disabled={sortedSubmissions.length === 0}
-                    className="h-10 sm:h-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold shadow-xs transition-colors active:scale-95"
+                    className="h-10 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white text-xs font-semibold shadow-xs transition-colors active:scale-95"
                     title={t.exportExcel}
                   >
                     <FileSpreadsheet className="w-3.5 h-3.5 text-white" />
@@ -903,16 +831,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                 </div>
               </div>
 
-              {/* Filter Pills & Counters */}
+              {/* Filter Row */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pt-1 text-xs">
                 <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
                   {/* Status Dropdown */}
-                  <div className="flex items-center gap-1.5 bg-white px-2.5 py-2 sm:py-1.5 rounded-xl border border-slate-200 shadow-xs min-h-[40px] sm:min-h-0 w-full sm:w-auto">
-                    <span className="text-slate-400 font-medium text-[11px] sm:text-xs">{t.filterJoin}:</span>
+                  <div className="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-xs w-full sm:w-auto">
+                    <span className="text-slate-400 font-medium text-xs">{t.filterJoin}:</span>
                     <select
                       value={filters.joinFilter}
                       onChange={(e) => setFilters({ ...filters, joinFilter: e.target.value as any, page: 1 })}
-                      className="bg-transparent text-slate-800 font-bold focus:outline-none cursor-pointer text-xs w-full sm:w-auto"
+                      className="bg-transparent text-slate-800 font-semibold focus:outline-none cursor-pointer text-xs w-full sm:w-auto"
                     >
                       <option value="ALL">{t.filterAll}</option>
                       <option value="YES">YES (Attending)</option>
@@ -922,7 +850,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                 </div>
 
                 <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
-                  {/* Clear Filter Shortcut */}
                   {(filters.search || filters.joinFilter !== 'ALL') && (
                     <button
                       onClick={() =>
@@ -933,14 +860,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                           page: 1,
                         }))
                       }
-                      className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-800 px-2 py-1 rounded-lg hover:bg-emerald-50 transition-colors"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900 px-2 py-1 rounded-lg hover:bg-slate-100 transition-colors"
                     >
                       <X className="w-3 h-3" />
                       <span>Reset Filters</span>
                     </button>
                   )}
 
-                  {/* Record Counter */}
                   <div className="text-slate-500 font-medium text-xs ml-auto">
                     {t.showingRecords(
                       totalRecords === 0 ? 0 : startIndex + 1,
@@ -967,36 +893,30 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                   const isAttending = sub.join.includes('YES');
                   const guestCount = Number(sub.guest_count) || 0;
                   return (
-                    <div key={sub.id} className="p-3.5 xs:p-4 space-y-2.5 hover:bg-slate-50/70 transition-colors">
-                      {/* Top Bar: Date & Status */}
+                    <div key={sub.id} className="p-4 space-y-2.5 hover:bg-slate-50/70 transition-colors">
                       <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-md">
-                          <Calendar className="w-3 h-3 text-slate-400 flex-shrink-0" />
-                          <span className="truncate">
-                            {new Date(sub.created_at).toLocaleDateString('en-US', {
-                              month: 'short',
-                              day: 'numeric',
-                              year: 'numeric',
-                            })}
-                          </span>
-                        </div>
+                        <span className="font-mono text-xs text-slate-500">
+                          {new Date(sub.created_at).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          })}
+                        </span>
 
                         {isAttending ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex-shrink-0">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                             <CheckCircle className="w-3 h-3 text-emerald-600" />
                             <span>YES</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200 flex-shrink-0">
-                            <XCircle className="w-3 h-3 text-rose-600" />
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
                             <span>No</span>
                           </span>
                         )}
                       </div>
 
-                      {/* Attendee Info */}
                       <div>
-                        <div className="font-bold text-slate-900 text-sm sm:text-base flex items-center gap-1.5 flex-wrap">
+                        <div className="font-bold text-slate-900 text-sm flex items-center gap-1.5 flex-wrap">
                           <span>{sub.name}</span>
                           {sub.is_sample && (
                             <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 border border-amber-300">
@@ -1004,43 +924,30 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                             </span>
                           )}
                         </div>
-                        {sub.email && (
-                          <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-mono mt-0.5 break-all">
-                            <Mail className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
-                            <span>{sub.email}</span>
-                          </div>
-                        )}
                         {sub.organisation && (
-                          <div className="flex items-center gap-1.5 text-xs text-slate-800 font-semibold mt-1">
-                            <Building2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
-                            <span className="break-words">{sub.organisation}</span>
+                          <div className="text-xs text-slate-700 font-medium mt-1">
+                            {sub.organisation}
                           </div>
                         )}
-                        <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-0.5">
-                          <Briefcase className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-                          <span className="break-words">{sub.job_title}</span>
+                        <div className="text-xs text-slate-500 mt-0.5">
+                          {sub.job_title}
                         </div>
                       </div>
 
-                      {/* Bottom Bar: Guests pill + View Details button */}
                       <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs gap-2">
-                        <div className="flex items-center gap-1.5 flex-wrap">
+                        <div>
                           {guestCount > 0 ? (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                              <Users className="w-3 h-3 text-emerald-600" />
-                              <span>+{guestCount}</span>
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-slate-100 text-slate-700">
+                              +{guestCount} guests
                             </span>
                           ) : (
-                            <span className="text-slate-400 text-[11px] px-1.5 py-0.5 rounded bg-slate-100">0 guests</span>
+                            <span className="text-slate-400 text-xs">0 guests</span>
                           )}
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-100 text-slate-600">
-                            {sub.locale}
-                          </span>
                         </div>
 
                         <button
                           onClick={() => setSelectedSubmission(sub)}
-                          className="inline-flex items-center gap-1.5 font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:scale-95 px-3 py-1.5 rounded-xl text-xs transition-all shadow-xs flex-shrink-0 min-h-[34px]"
+                          className="inline-flex items-center gap-1 font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg text-xs transition-colors shadow-xs"
                         >
                           <Eye className="w-3.5 h-3.5" />
                           <span>{t.viewDetails}</span>
@@ -1052,22 +959,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
               )}
             </div>
 
-            {/* Desktop Table View (≥ 768px) */}
+            {/* Desktop Table View (≥ 768px) - Clean, Uncluttered */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs sm:text-sm">
                 <thead>
-                  <tr className="bg-slate-50/90 border-b border-slate-200 text-slate-500 text-[11px] font-bold uppercase tracking-wider">
+                  <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-500 text-[11px] font-semibold uppercase tracking-wider">
                     <th
                       onClick={() => toggleSort('created_at')}
-                      className="py-3 px-4 cursor-pointer hover:text-emerald-700 transition-colors select-none min-w-[140px]"
+                      className="py-3 px-4 cursor-pointer hover:text-slate-900 transition-colors select-none min-w-[140px]"
                     >
                       <div className="flex items-center gap-1">
                         <span>{t.colDate}</span>
                         {filters.sortBy === 'created_at' ? (
                           filters.sortOrder === 'desc' ? (
-                            <ArrowDown className="w-3.5 h-3.5 text-emerald-600" />
+                            <ArrowDown className="w-3.5 h-3.5 text-slate-700" />
                           ) : (
-                            <ArrowUp className="w-3.5 h-3.5 text-emerald-600" />
+                            <ArrowUp className="w-3.5 h-3.5 text-slate-700" />
                           )
                         ) : (
                           <ArrowUpDown className="w-3 h-3 text-slate-300" />
@@ -1077,15 +984,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
 
                     <th
                       onClick={() => toggleSort('name')}
-                      className="py-3 px-4 cursor-pointer hover:text-emerald-700 transition-colors select-none min-w-[160px]"
+                      className="py-3 px-4 cursor-pointer hover:text-slate-900 transition-colors select-none min-w-[160px]"
                     >
                       <div className="flex items-center gap-1">
                         <span>{t.colName}</span>
                         {filters.sortBy === 'name' ? (
                           filters.sortOrder === 'desc' ? (
-                            <ArrowDown className="w-3.5 h-3.5 text-emerald-600" />
+                            <ArrowDown className="w-3.5 h-3.5 text-slate-700" />
                           ) : (
-                            <ArrowUp className="w-3.5 h-3.5 text-emerald-600" />
+                            <ArrowUp className="w-3.5 h-3.5 text-slate-700" />
                           )
                         ) : (
                           <ArrowUpDown className="w-3 h-3 text-slate-300" />
@@ -1095,15 +1002,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
 
                     <th
                       onClick={() => toggleSort('organisation')}
-                      className="py-3 px-4 cursor-pointer hover:text-emerald-700 transition-colors select-none min-w-[160px]"
+                      className="py-3 px-4 cursor-pointer hover:text-slate-900 transition-colors select-none min-w-[160px]"
                     >
                       <div className="flex items-center gap-1">
                         <span>{t.colOrganisation}</span>
                         {filters.sortBy === 'organisation' ? (
                           filters.sortOrder === 'desc' ? (
-                            <ArrowDown className="w-3.5 h-3.5 text-emerald-600" />
+                            <ArrowDown className="w-3.5 h-3.5 text-slate-700" />
                           ) : (
-                            <ArrowUp className="w-3.5 h-3.5 text-emerald-600" />
+                            <ArrowUp className="w-3.5 h-3.5 text-slate-700" />
                           )
                         ) : (
                           <ArrowUpDown className="w-3 h-3 text-slate-300" />
@@ -1113,15 +1020,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
 
                     <th
                       onClick={() => toggleSort('job_title')}
-                      className="py-3 px-4 cursor-pointer hover:text-emerald-700 transition-colors select-none min-w-[150px]"
+                      className="py-3 px-4 cursor-pointer hover:text-slate-900 transition-colors select-none min-w-[150px]"
                     >
                       <div className="flex items-center gap-1">
                         <span>{t.colJobTitle}</span>
                         {filters.sortBy === 'job_title' ? (
                           filters.sortOrder === 'desc' ? (
-                            <ArrowDown className="w-3.5 h-3.5 text-emerald-600" />
+                            <ArrowDown className="w-3.5 h-3.5 text-slate-700" />
                           ) : (
-                            <ArrowUp className="w-3.5 h-3.5 text-emerald-600" />
+                            <ArrowUp className="w-3.5 h-3.5 text-slate-700" />
                           )
                         ) : (
                           <ArrowUpDown className="w-3 h-3 text-slate-300" />
@@ -1133,15 +1040,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
 
                     <th
                       onClick={() => toggleSort('guest_count')}
-                      className="py-3 px-4 cursor-pointer hover:text-emerald-700 transition-colors select-none min-w-[100px]"
+                      className="py-3 px-4 cursor-pointer hover:text-slate-900 transition-colors select-none min-w-[100px]"
                     >
                       <div className="flex items-center gap-1">
                         <span>{t.colGuest}</span>
                         {filters.sortBy === 'guest_count' ? (
                           filters.sortOrder === 'desc' ? (
-                            <ArrowDown className="w-3.5 h-3.5 text-emerald-600" />
+                            <ArrowDown className="w-3.5 h-3.5 text-slate-700" />
                           ) : (
-                            <ArrowUp className="w-3.5 h-3.5 text-emerald-600" />
+                            <ArrowUp className="w-3.5 h-3.5 text-slate-700" />
                           )
                         ) : (
                           <ArrowUpDown className="w-3 h-3 text-slate-300" />
@@ -1149,7 +1056,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                       </div>
                     </th>
 
-                    <th className="py-3 px-4 min-w-[70px]">{t.colLanguage}</th>
                     <th className="py-3 px-4 text-right min-w-[110px]">{t.colActions}</th>
                   </tr>
                 </thead>
@@ -1157,13 +1063,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                 <tbody className="divide-y divide-slate-100 text-slate-800">
                   {loadingData ? (
                     <tr>
-                      <td colSpan={8} className="py-12 text-center text-slate-400">
+                      <td colSpan={7} className="py-12 text-center text-slate-400">
                         Loading submissions...
                       </td>
                     </tr>
                   ) : paginatedSubmissions.length === 0 ? (
                     <tr>
-                      <td colSpan={8} className="py-12 text-center text-slate-400">
+                      <td colSpan={7} className="py-12 text-center text-slate-400">
                         {t.noSubmissionsFound}
                       </td>
                     </tr>
@@ -1174,7 +1080,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                       return (
                         <tr
                           key={sub.id}
-                          className="hover:bg-emerald-50/40 transition-colors group"
+                          className="hover:bg-slate-50 transition-colors"
                         >
                           {/* Date Column */}
                           <td className="py-3.5 px-4 font-mono text-xs whitespace-nowrap">
@@ -1193,9 +1099,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                             </div>
                           </td>
 
-                          {/* Attendee Name & Email */}
+                          {/* Attendee Name */}
                           <td className="py-3.5 px-4 whitespace-nowrap">
-                            <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                            <div className="font-semibold text-slate-900 flex items-center gap-1.5">
                               <span>{sub.name}</span>
                               {sub.is_sample && (
                                 <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 border border-amber-300">
@@ -1203,43 +1109,31 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                                 </span>
                               )}
                             </div>
-                            {sub.email && (
-                              <div className="text-xs text-slate-500 font-mono truncate max-w-[180px]">
-                                {sub.email}
-                              </div>
-                            )}
                           </td>
 
-                          {/* Organisation */}
-                          <td className="py-3.5 px-4 text-slate-800 font-semibold max-w-[180px] truncate" title={sub.organisation || 'None'}>
+                          {/* Organisation - Clean Plain Text */}
+                          <td className="py-3.5 px-4 text-slate-700 font-medium max-w-[180px] truncate" title={sub.organisation || 'None'}>
                             {sub.organisation ? (
-                              <div className="flex items-center gap-1.5">
-                                <Building2 className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-                                <span className="truncate">{sub.organisation}</span>
-                              </div>
+                              <span className="truncate">{sub.organisation}</span>
                             ) : (
-                              <span className="text-slate-300 font-normal">&mdash;</span>
+                              <span className="text-slate-300">&mdash;</span>
                             )}
                           </td>
 
-                          {/* Job Title / Role */}
+                          {/* Job Title - Clean Plain Text */}
                           <td className="py-3.5 px-4 text-slate-600 max-w-[180px] truncate" title={sub.job_title}>
-                            <div className="flex items-center gap-1.5">
-                              <Briefcase className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-                              <span className="truncate">{sub.job_title}</span>
-                            </div>
+                            <span className="truncate">{sub.job_title}</span>
                           </td>
 
                           {/* Attendance Status */}
                           <td className="py-3.5 px-4 whitespace-nowrap">
                             {isAttending ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                 <CheckCircle className="w-3 h-3 text-emerald-600" />
                                 <span>YES</span>
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200">
-                                <XCircle className="w-3 h-3 text-rose-600" />
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
                                 <span>No</span>
                               </span>
                             )}
@@ -1248,27 +1142,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
                           {/* Guest Count */}
                           <td className="py-3.5 px-4 whitespace-nowrap">
                             {guestCount > 0 ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                                <Users className="w-3 h-3 text-emerald-600" />
-                                <span>+{guestCount}</span>
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-700">
+                                +{guestCount} guests
                               </span>
                             ) : (
-                              <span className="text-slate-300 font-medium">0</span>
+                              <span className="text-slate-300 font-medium">&mdash;</span>
                             )}
-                          </td>
-
-                          {/* Locale */}
-                          <td className="py-3.5 px-4 whitespace-nowrap">
-                            <span className="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase bg-slate-100 text-slate-600 border border-slate-200">
-                              {sub.locale}
-                            </span>
                           </td>
 
                           {/* Action Button */}
                           <td className="py-3.5 px-4 text-right whitespace-nowrap">
                             <button
                               onClick={() => setSelectedSubmission(sub)}
-                              className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:text-white bg-emerald-50 hover:bg-emerald-600 px-3 py-1.5 rounded-xl border border-emerald-200/80 transition-all shadow-xs"
+                              className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-300 transition-colors shadow-xs"
                             >
                               <Eye className="w-3.5 h-3.5" />
                               <span>{t.viewDetails}</span>
@@ -1283,7 +1169,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang }) =
             </div>
 
             {/* Pagination Footer */}
-            <div className="p-3.5 sm:p-4 border-t border-slate-200 bg-slate-50/70 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3">
+            <div className="p-3.5 sm:p-4 border-t border-slate-200 bg-slate-50/60 flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="text-xs text-slate-500 font-medium text-center">
                 Page <span className="font-bold text-slate-800">{currentPage}</span> of{' '}
                 <span className="font-bold text-slate-800">{totalPages}</span>
