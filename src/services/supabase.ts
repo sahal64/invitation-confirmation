@@ -400,13 +400,36 @@ export async function submitResponse(
 export async function fetchSubmissions(): Promise<{ data: Submission[]; error?: string }> {
   if (isSupabaseConfigured() && supabase) {
     try {
-      const { data, error } = await supabase
-        .from('invitation_submissions')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const allRows: any[] = [];
+      const CHUNK_SIZE = 1000;
+      let from = 0;
 
-      if (error) {
-        return { data: getLocalSubmissions(), error: error.message };
+      while (true) {
+        const { data, error } = await supabase
+          .from('invitation_submissions')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .range(from, from + CHUNK_SIZE - 1);
+
+        if (error) {
+          if (allRows.length > 0) {
+            console.error('Error fetching remaining submissions chunk:', error.message);
+            break;
+          }
+          return { data: getLocalSubmissions(), error: error.message };
+        }
+
+        if (!data || data.length === 0) {
+          break;
+        }
+
+        allRows.push(...data);
+
+        if (data.length < CHUNK_SIZE) {
+          break;
+        }
+
+        from += CHUNK_SIZE;
       }
 
       const localList = getLocalSubmissions();
@@ -414,7 +437,7 @@ export async function fetchSubmissions(): Promise<{ data: Submission[]; error?: 
 
       // Seamlessly enrich submissions with organization and guest counts
       // (ensures local dev preview displays full data even if Supabase SQL migration has not yet run)
-      const enriched: Submission[] = ((data as any[]) || []).map((remote) => {
+      const enriched: Submission[] = allRows.map((remote) => {
         const local = localById.get(remote.id) || localList.find((s) => s.name === remote.name);
         let parsedGuests = remote.guests;
         if (typeof parsedGuests === 'string') {
@@ -444,7 +467,7 @@ export async function fetchSubmissions(): Promise<{ data: Submission[]; error?: 
       });
 
       // Also append any newly created local records that are not yet returned by Supabase
-      const remoteIds = new Set(((data as any[]) || []).map((r) => r.id));
+      const remoteIds = new Set(allRows.map((r) => r.id));
       const localOnly = localList.filter((s) => !remoteIds.has(s.id) && !s.is_sample);
 
       return { data: [...localOnly, ...enriched] };
