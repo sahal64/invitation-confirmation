@@ -29,20 +29,12 @@ const MIME_TYPES = {
 const server = http.createServer(async (req, res) => {
   // 1. API: /api/submit-form endpoint
   if (req.url === '/api/submit-form' && req.method === 'POST') {
-    let body = '';
-    req.on('data', (chunk) => (body += chunk));
-    req.on('end', async () => {
-      try {
-        const payload = JSON.parse(body || '{}');
-        const { name, organisation, job_title, join, locale, recaptchaToken } = payload;
-
-        if (!name || !organisation || !job_title || !join) {
-          res.writeHead(400, { 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Required fields are missing' }));
-        }
-
-        // Verify with Google reCAPTCHA
-        const secretKey = process.env.RECAPTCHA_SECRET_KEY || '';
+    res.writeHead(403, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({
+      success: false,
+      error: 'Event registration has concluded. Submissions are no longer accepted.',
+    }));
+  }
         if (secretKey && recaptchaToken) {
           try {
             const verifyParams = new URLSearchParams();

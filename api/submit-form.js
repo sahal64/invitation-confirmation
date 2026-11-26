@@ -12,6 +12,12 @@ export default async function handler(req, res) {
     return res.status(405).json({ success: false, error: 'Method not allowed' });
   }
 
+  // Registration closed guard
+  return res.status(403).json({
+    success: false,
+    error: 'Event registration has concluded. Submissions are no longer accepted.',
+  });
+
   try {
     const { name, organisation, job_title, join, locale, recaptchaToken } = req.body || {};
 

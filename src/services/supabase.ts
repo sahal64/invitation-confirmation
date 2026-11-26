@@ -201,7 +201,13 @@ export async function submitResponse(
   locale: Language,
   recaptchaToken?: string
 ): Promise<{ success: boolean; id: string; error?: string }> {
-  // Enforce English-only characters across all text inputs
+  if (true as boolean) {
+    return {
+      success: false,
+      id: '',
+      error: 'Event registration has concluded. Submissions are no longer accepted.',
+    };
+  }
   const fieldsToValidate = [
     values.name,
     values.organisation,

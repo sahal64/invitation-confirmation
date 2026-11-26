@@ -10,6 +10,9 @@ import {
   ChevronDown,
   Users,
   RotateCcw,
+  CalendarCheck2,
+  ShieldCheck,
+  Lock,
 } from 'lucide-react';
 
 interface PublicFormProps {
@@ -45,6 +48,95 @@ function syncGuestsArray(currentGuests: GuestDetails[] = [], targetCount: number
 
 export const PublicForm: React.FC<PublicFormProps> = ({ currentLang }) => {
   const t = translations[currentLang];
+
+  // ===========================================================================
+  // EVENT REGISTRATION CLOSED STATE
+  // Toggle this flag if the event concludes or registrations need to close.
+  // ===========================================================================
+  const isRegistrationClosed = true;
+
+  if (isRegistrationClosed) {
+    return (
+      <div className="max-w-[620px] mx-auto px-4 py-8 sm:py-14">
+        <div 
+          className="relative rounded-[32px] border border-white/85 shadow-[0_44px_70px_-26px_rgba(140,70,15,0.4)] backdrop-blur-[22px] overflow-hidden"
+          style={{ background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(255, 236, 205, 0.55))' }}
+        >
+          {/* Glare Layer 1 */}
+          <div 
+            className="pointer-events-none absolute inset-0 z-0"
+            style={{
+              background: 'linear-gradient(112deg, rgba(255, 255, 255, 0.6) 0% 30%, rgba(255, 255, 255, 0) 30% 100%)',
+            }}
+          />
+          {/* Glare Layer 2 (Highlight edge line) */}
+          <div 
+            className="pointer-events-none absolute inset-0 z-0"
+            style={{
+              background: 'linear-gradient(112deg, transparent 0% 33%, rgba(255, 255, 255, 0.25) 33% 36%, transparent 36% 100%)',
+            }}
+          />
+
+          <div className="relative z-10 p-7 sm:p-11 text-center space-y-6">
+            {/* Top Seal / Badge */}
+            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-gradient-to-br from-[#FAF3EB] to-[#F5DEC7] text-[#9E4716] rounded-full flex items-center justify-center ring-8 ring-[#F5DEC7]/50 shadow-md">
+              <CalendarCheck2 className="w-9 h-9 sm:w-11 sm:h-11" />
+            </div>
+
+            {/* Event pill */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FCE8D3]/90 border border-[#F3CCA5] text-[#8C3A0F] text-xs font-bold uppercase tracking-wider shadow-xs">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Official Event RSVP</span>
+            </div>
+
+            {/* Headings */}
+            <div className="space-y-2">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#3D2214] tracking-tight">
+                Registration Has Concluded
+              </h1>
+              <p className="text-sm sm:text-base text-[#6E4E37] leading-relaxed max-w-lg mx-auto">
+                Thank you for your response and participation. The RSVP and invitation confirmation period for the <strong>UAE’s 55th National Day Celebration</strong> has now officially ended.
+              </p>
+            </div>
+
+            {/* Event Summary Details Box */}
+            <div className="bg-white/70 border border-[#F0DCBA] rounded-2xl p-4 sm:p-5 text-left text-xs sm:text-sm text-[#5C3D26] space-y-2.5 shadow-xs">
+              <div className="flex items-center justify-between border-b border-[#F0DCBA]/60 pb-2">
+                <span className="text-[#8C6D54] font-medium">Event</span>
+                <span className="font-bold text-[#3D2214]">UAE National Day 2026</span>
+              </div>
+              <div className="flex items-center justify-between border-b border-[#F0DCBA]/60 pb-2">
+                <span className="text-[#8C6D54] font-medium">Date &amp; Time</span>
+                <span className="font-semibold text-[#3D2214]">25-11-2026 &bull; 6:00 PM – 10:00 PM</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[#8C6D54] font-medium">Form Status</span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100/80 border border-amber-300 text-amber-900 font-semibold text-xs">
+                  RSVP Closed
+                </span>
+              </div>
+            </div>
+
+            {/* Guidance Note */}
+            <p className="text-xs text-[#8C6D54] leading-normal">
+              For any urgent protocol inquiries or attendance confirmation updates, please contact the organizing committee directly.
+            </p>
+
+            {/* Admin Access Link */}
+            <div className="pt-2 border-t border-[#F0DCBA]/70">
+              <a
+                href="#admin"
+                className="inline-flex items-center gap-1.5 text-xs text-[#8C6D54] hover:text-[#3D2214] font-semibold transition-colors py-1.5 px-3 rounded-lg hover:bg-black/5"
+              >
+                <Lock className="w-3.5 h-3.5" />
+                <span>Administrator &amp; Protocol Access</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const [values, setValues] = useState<FormValues>(INITIAL_VALUES);
   const [errors, setErrors] = useState<FormErrors>({});
